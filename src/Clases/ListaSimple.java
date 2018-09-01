@@ -1,4 +1,4 @@
-package Dots.Clases;
+package Clases;
 
 public class ListaSimple {
     private Nodo inicio;
