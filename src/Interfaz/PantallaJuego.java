@@ -58,11 +58,12 @@ class MarcoJuego extends JFrame{
 
 class LaminaJuego extends JPanel{
     
-    @Override
+    
     /**
      * Funcion encargada de dibujar sobre la lamina
      * @param g Objeto de tipo Graphics
      */
+    @Override
     public void paintComponent(Graphics g){
         
         super.paintComponent(g);
@@ -80,29 +81,26 @@ class LaminaJuego extends JPanel{
     public void drawCircles(Graphics2D g, Color color){
         
         
-        Ellipse2D[] circulo;
-        circulo = new Ellipse2D [64]; // Crea un array de circulos
+        Punto[] puntos = new Punto [64]; // Crea un array de circulos
         
         int xi = 80;
         int yi = 60;
         int radio = 5;
         int espacio = 50;
+        int cont = 0;
         g.setPaint(color);
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
-                circulo[i*j] = new Ellipse2D.Double(); //Se quiere crear un circulo con precision double
-                circulo[i*j].setFrameFromCenter(xi,yi,xi+radio, yi+radio);  // Coordenadaas y dimensionesdel circulo
-                
-                g.fill(circulo[i*j]); //Rellena el circulo
-                g.draw(circulo[i*j]); //Dibuja el circulo
-                
-                xi += radio+espacio;
+                puntos[cont] = new Punto(cont,xi,yi,g);
+                cont+=1;
+                xi+=radio+espacio;
             }
             xi = 80;
             yi += radio+espacio;
         }
+        System.out.println(cont);
     }
         
        
         
-    }
+}
