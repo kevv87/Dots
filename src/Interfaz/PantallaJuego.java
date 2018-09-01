@@ -80,8 +80,6 @@ class LaminaJuego extends JPanel{
         
         g2 = (Graphics2D) g;
         drawCircles(Color.BLACK);
-        
-        LaminaJuego.drawLine(0, 1);
          
     }
     
@@ -119,7 +117,7 @@ class LaminaJuego extends JPanel{
      * @param id2 Identificacion del segundo punto
      * @param g Grafico donde se dibujara el punto.
      */
-    public static void drawLine(int id1, int id2){
+    public static void drawLine(int id1, int id2, Color color){
         Punto p1 = puntos[id1];
         Punto p2 = puntos[id2];
         int x1 = p1.getX();
@@ -127,6 +125,7 @@ class LaminaJuego extends JPanel{
         int y1 = p1.getY();
         int y2 = p2.getY();
         
+        g2.setPaint(color);
         g2.draw(new Line2D.Double(x1,y1, x2, y2));
         
     }
