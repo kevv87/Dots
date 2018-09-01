@@ -12,9 +12,7 @@ import java.awt.geom.Ellipse2D;
  * Clase encargada de la creacion de un punto grafico.
  * @author kevv87
  */
-public class Punto {
-    
-    private final int id;
+public class Punto{  //Hereda para poder hacer uso de polimorfismo
     private final int x;
     private final int y;
     private final int radio = 5;
@@ -26,8 +24,7 @@ public class Punto {
      * @param y Posicion en pixeles de la coordenada y del punto
      * @param g Objeto del tipo Graphics2D donde se va a dibujar el punto
      */
-    public Punto(int id, int x, int y, Graphics2D g){
-        this.id = id;
+    public Punto(int x, int y, Graphics2D g){
         this.x = x;
         this.y = y;
         
@@ -37,9 +34,9 @@ public class Punto {
         g.draw(circulo); //Dibuja el circulo
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getRadio() {
+        return radio;
+    }    
 
     public int getX() {
         return x;
@@ -48,11 +45,5 @@ public class Punto {
     public int getY() {
         return y;
     }
-
-    public int getRadio() {
-        return radio;
-    }
-    
-    
     
 }
