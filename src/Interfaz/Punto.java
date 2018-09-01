@@ -19,7 +19,6 @@ public class Punto{  //Hereda para poder hacer uso de polimorfismo
     
     /**
      * Constructor
-     * @param id Identificacion del punto
      * @param x Posicion en pixeles de la coordenada x del punto
      * @param y Posicion en pixeles de la coordenada y del punto
      * @param g Objeto del tipo Graphics2D donde se va a dibujar el punto
