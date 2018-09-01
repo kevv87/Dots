@@ -20,6 +20,9 @@ import javax.swing.JPanel;
  */
 public class PantallaJuego {
     
+    /**
+     * Constructor
+     */
     public PantallaJuego(){
     
         MarcoJuego pantalla = new MarcoJuego();
@@ -37,11 +40,14 @@ class MarcoJuego extends JFrame{
     private final int width;
     private final int height;
     
+    /**
+     * Constructor
+     */
     public MarcoJuego(){
         xo = 300;
         yo = 150;
         width = 600;
-        height = 600;
+        height = 550;
         
         setTitle("Dots - Playing!");
         setBounds(xo,yo,width,height);
@@ -53,38 +59,46 @@ class MarcoJuego extends JFrame{
 class LaminaJuego extends JPanel{
     
     @Override
+    /**
+     * Funcion encargada de dibujar sobre la lamina
+     * @param g Objeto de tipo Graphics
+     */
     public void paintComponent(Graphics g){
         
         super.paintComponent(g);
         
         Graphics2D g2 = (Graphics2D) g;
-        drawCircles(g2);
+        drawCircles(g2, Color.BLACK);
          
     }
     
-    public void drawCircles(Graphics2D g){
+    /**
+    *Funcion encargada de la creacion de los circulos del juego
+    * @param g Objeto de tipo Graphics2D
+    * @param color Objeto Color
+    */
+    public void drawCircles(Graphics2D g, Color color){
         
         
         Ellipse2D[] circulo;
-        circulo = new Ellipse2D [64];
+        circulo = new Ellipse2D [64]; // Crea un array de circulos
         
-        int xi = 50;
-        int yi = 50;
+        int xi = 80;
+        int yi = 60;
         int radio = 5;
         int espacio = 50;
-        g.setPaint(Color.BLACK);
+        g.setPaint(color);
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
-                circulo[i*j] = new Ellipse2D.Double();
-                circulo[i*j].setFrameFromCenter(xi,yi,xi+radio, yi+radio);
+                circulo[i*j] = new Ellipse2D.Double(); //Se quiere crear un circulo con precision double
+                circulo[i*j].setFrameFromCenter(xi,yi,xi+radio, yi+radio);  // Coordenadaas y dimensionesdel circulo
+                
+                g.fill(circulo[i*j]); //Rellena el circulo
+                g.draw(circulo[i*j]); //Dibuja el circulo
+                
                 xi += radio+espacio;
-                g.fill(circulo[i*j]);
-                g.draw(circulo[i*j]);
-                circulo[0].setFrameFromCenter(xi,yi,xi+radio,yi+radio);
-                g.fill(circulo[0]);
-                g.draw(circulo[0]);
             }
-            xi = 50;
+            xi = 80;
             yi += radio+espacio;
         }
     }
