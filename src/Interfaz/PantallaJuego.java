@@ -5,11 +5,10 @@
  */
 package Interfaz;
 
-import Clases.ListaSimple;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
+import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -55,6 +54,7 @@ class MarcoJuego extends JFrame{
         setTitle("Dots - Playing!");
         setBounds(xo,yo,width,height);
         add(new LaminaJuego());
+        
     }
     
 }
@@ -80,6 +80,17 @@ class LaminaJuego extends JPanel{
         
         g2 = (Graphics2D) g;
         drawCircles(Color.BLACK);
+        int [] id_arr = new int [8];
+        id_arr[0] = 0;
+        id_arr[1] = 1;
+        id_arr[2] = 8;
+        id_arr[3] = 9;
+        id_arr[0] = 9;
+        id_arr[1] = 10;
+        id_arr[2] = 3;
+        id_arr[3] = 2;
+        
+        LaminaJuego.fillPolygon(id_arr);
          
     }
     
@@ -128,6 +139,19 @@ class LaminaJuego extends JPanel{
         g2.setPaint(color);
         g2.draw(new Line2D.Double(x1,y1, x2, y2));
         
+    }
+    
+    /**
+     * Funcion encargada de rellenar las figuras que generan los poligonos.
+     * @param id_arr Array con los ids de los puntos que componen el poligono
+     */
+    public static void fillPolygon(int [] id_arr){
+        Polygon poligono = new Polygon();
+        for(int i = 0; i < id_arr.length;i++){
+            poligono.addPoint(puntos[id_arr[i]].getX(),puntos[id_arr[i]].getY());
+        }
+        g2.draw(poligono);
+        g2.fill(poligono);
     }
     
         
