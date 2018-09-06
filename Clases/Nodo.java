@@ -6,7 +6,7 @@ package Clases;
 
 public class Nodo {
 
-    private int valor;
+    private Object valor;
     private Nodo siguiente;
 
     /**
@@ -30,7 +30,7 @@ public class Nodo {
 
 
     //GETTERS
-    public int getValor() {
+    public Object getValor() {
         return valor;
     }
 
