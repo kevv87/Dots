@@ -12,7 +12,7 @@ import java.awt.geom.Ellipse2D;
  * Clase encargada de la creacion de un punto grafico.
  * @author kevv87
  */
-public class Punto{
+public class Punto{  //Hereda para poder hacer uso de polimorfismo
     private final int x;
     private final int y;
     private final int radio = 5;
