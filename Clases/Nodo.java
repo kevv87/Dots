@@ -1,4 +1,4 @@
-package Dots.Clases;
+package Clases;
 
 /**Class Nodo
  * Cada nodo representa una posicion de puntos adyacentes a un punto en especifico.
