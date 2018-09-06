@@ -13,7 +13,7 @@ class MarcoJuego extends JFrame{
     /**
      * Constructor
      */
-    public MarcoJuego(){
+    public MarcoJuego() throws Exception{
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -38,8 +38,7 @@ class MarcoJuego extends JFrame{
         id_arr[5] = 10;
         id_arr[6] = 3;
         id_arr[7] = 2;
-        
-        LaminaJuego.drawLine(0,1, Color.BLACK);
+        lamina.drawLine(0,1, Color.BLACK);
         
     }
     
