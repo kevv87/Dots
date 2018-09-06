@@ -39,6 +39,8 @@ class MarcoJuego extends JFrame{
         id_arr[6] = 3;
         id_arr[7] = 2;
         lamina.drawLine(0,1, Color.BLACK);
+        lamina.drawLine(3,4, Color.BLACK);
+        lamina.drawLine(0,1, Color.WHITE);
         
     }
     
