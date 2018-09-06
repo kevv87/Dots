@@ -44,7 +44,7 @@ public class Nodo {
         this.siguiente = next;
     }
 
-    public void setValor(int valor) {
+    public void setValor(Object valor) {
         this.valor = valor;
     }
 }
