@@ -9,6 +9,7 @@ class MarcoJuego extends JFrame{
     private final int yo;
     private final int width;
     private final int height;
+    private LaminaJuego lamina;
     
     /**
      * Constructor
@@ -26,7 +27,7 @@ class MarcoJuego extends JFrame{
         setTitle("Dots - Playing!");
         setBounds(xo,yo,width,height);
         
-        LaminaJuego lamina = new LaminaJuego();
+        lamina = new LaminaJuego();
         add(lamina);
         
         int [] id_arr = new int [8];
@@ -38,9 +39,6 @@ class MarcoJuego extends JFrame{
         id_arr[5] = 10;
         id_arr[6] = 3;
         id_arr[7] = 2;
-        lamina.drawLine(0,1, Color.BLACK);
-        lamina.drawLine(3,4, Color.BLACK);
-        lamina.drawLine(0,1, Color.WHITE);
         
     }
     
