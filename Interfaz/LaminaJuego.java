@@ -3,11 +3,9 @@ package Interfaz;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import javax.swing.JPanel;
-import Clases.ListaLineas;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +14,7 @@ class LaminaJuego extends JPanel{
     
    private Punto[] puntos = new Punto[64];
    private ListaLineas lineas = new ListaLineas();
+   private ListaPoligonos poligonos = new ListaPoligonos();
    
    public LaminaJuego(){
        puntos = new Punto [64]; // Crea un array de circulos
@@ -24,6 +23,8 @@ class LaminaJuego extends JPanel{
         int radio = 5;
         int espacio = 50;
         int cont = 0;
+        
+        // Dibujando puntos
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
                 puntos[cont] = new Punto(xi,yi);
@@ -32,6 +33,11 @@ class LaminaJuego extends JPanel{
             }
             xi = 80;
             yi += radio+espacio;
+        }
+        
+        //Dibujando lineas
+        for(int i=0; i<lineas.getTamanio();i++){
+            g2.setPaint();
         }
    }
    
@@ -94,18 +100,13 @@ class LaminaJuego extends JPanel{
     }
     
     /**
-     * Funcion encargada de rellenar las figuras que generan los poligonos.
-     * @param id_arr Array con los ids de los puntos que componen el poligono
-     *//*
-    public static void fillPolygon(int [] id_arr, Color color){
-        Polygon poligono = new Polygon();
-        for(int i = 0; i < id_arr.length;i++){
-            poligono.addPoint(puntos[id_arr[i]].getX(),puntos[id_arr[i]].getY());
-        }
-        g2.setPaint(color);
-        g2.draw(poligono);
-        g2.fill(poligono);
-    }*/
+     * Funcion encargada de .
+     * @param poligono Array con los ids de los puntos que componen el poligono en orden horario 
+     */
+    public void addPolygon(Poligono poligono){
+        poligonos.agregarAlInicio(poligono);
+        repaint();
+    }
     
         
        

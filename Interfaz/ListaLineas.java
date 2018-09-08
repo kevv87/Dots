@@ -1,5 +1,6 @@
-package Clases;
+package Interfaz;
 
+import Clases.ListaSimple;
 import java.awt.geom.Line2D;
 /*
  * To change this license header, choose License Headers in Project Properties.
