@@ -16,7 +16,12 @@ public class Poligono extends java.awt.Polygon{
     Color color;
     
     public Poligono(Color color){
+        super();
         this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
     }
     
 }

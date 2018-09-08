@@ -1,7 +1,6 @@
 package Interfaz;
 
 import Clases.ListaSimple;
-import java.awt.geom.Line2D;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,8 +21,8 @@ public class ListaLineas extends ListaSimple{
      * @throws java.lang.Exception
      */
     @Override
-    public Line2D getValor(int pos) throws Exception{
-        Line2D result = (Line2D)super.getValor(pos);
+    public Linea getValor(int pos) throws Exception{
+        Linea result = (Linea)super.getValor(pos);
         return result;
     }
     

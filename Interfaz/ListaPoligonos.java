@@ -20,8 +20,8 @@ public class ListaPoligonos extends ListaSimple{
      * @throws java.lang.Exception
      */
     @Override
-    public Polygon getValor(int pos) throws Exception{
-        Polygon result = (Polygon)super.getValor(pos);
+    public Poligono getValor(int pos) throws Exception{
+        Poligono result = (Poligono)super.getValor(pos);
         return result;
     }
 }

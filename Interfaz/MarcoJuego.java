@@ -40,6 +40,8 @@ class MarcoJuego extends JFrame{
         id_arr[6] = 3;
         id_arr[7] = 2;
         
+        lamina.addLine(0,1, Color.yellow);
+        lamina.addPolygon(id_arr, Color.RED);
     }
     
 }

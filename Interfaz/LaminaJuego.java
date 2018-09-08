@@ -35,10 +35,6 @@ class LaminaJuego extends JPanel{
             yi += radio+espacio;
         }
         
-        //Dibujando lineas
-        for(int i=0; i<lineas.getTamanio();i++){
-            g2.setPaint();
-        }
    }
    
     /**
@@ -51,7 +47,7 @@ class LaminaJuego extends JPanel{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        // Dibujando circulos
+        // Dibujando puntos
         int x;
         int y;
         int radio;
@@ -71,7 +67,21 @@ class LaminaJuego extends JPanel{
         // Dibujando lineas
         for(int i = 0;i<lineas.getTamanio();i++){
             try {
-                g2.draw(lineas.getValor(i));
+                Linea linea = lineas.getValor(i);
+                g2.setPaint(linea.getColor());
+                g2.draw(linea);
+            } catch (Exception ex) {
+                Logger.getLogger(LaminaJuego.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+        //Dibujando poligonos
+        for(int i = 0;i<poligonos.getTamanio();i++){
+            try {
+                Poligono poligono = poligonos.getValor(i);
+                g2.setPaint(poligono.getColor());
+                g2.fill(poligono);
             } catch (Exception ex) {
                 Logger.getLogger(LaminaJuego.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -84,7 +94,7 @@ class LaminaJuego extends JPanel{
      * @param id1 Identificacion del primer punto
      * @param id2 Identificacion del segundo punto
      */
-    public void drawLine(int id1, int id2, Color color) throws Exception{
+    public void addLine(int id1, int id2, Color color) throws Exception{
         
         Punto punto1 = puntos[id1];
         Punto punto2 = puntos[id2];
@@ -94,21 +104,23 @@ class LaminaJuego extends JPanel{
         int y2 = punto2.getY();
         
         if(!lineas.isIn(x1, y1, x2, y2)){
-            lineas.agregarAlInicio(new Line2D.Double(x1,y1,x2,y2));
+            lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
         }
-        
+        repaint();
     }
     
     /**
      * Funcion encargada de .
-     * @param poligono Array con los ids de los puntos que componen el poligono en orden horario 
+     * @param poligono Array con los ids de los puntos que componen el poligono en orden horario
+     * @param color Color que se desea que tenga el poligono
      */
-    public void addPolygon(Poligono poligono){
+    public void addPolygon(int [] ids, Color color){
+        Poligono poligono = new Poligono(color);
+        for(int id:ids){
+            Punto punto = puntos[id];
+            poligono.addPoint(punto.getX(), punto.getY());
+        }
         poligonos.agregarAlInicio(poligono);
         repaint();
     }
-    
-        
-       
-        
 }
