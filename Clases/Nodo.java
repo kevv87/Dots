@@ -1,4 +1,4 @@
-package Dots.Clases;
+package Clases;
 
 /**Class Nodo
  * Cada nodo representa una posicion de puntos adyacentes a un punto en especifico.
@@ -6,7 +6,7 @@ package Dots.Clases;
 
 public class Nodo {
 
-    private int valor;
+    private Object valor;
     private Nodo siguiente;
 
     /**
@@ -30,7 +30,7 @@ public class Nodo {
 
 
     //GETTERS
-    public int getValor() {
+    public Object getValor() {
         return valor;
     }
 
@@ -44,7 +44,7 @@ public class Nodo {
         this.siguiente = next;
     }
 
-    public void setValor(int valor) {
+    public void setValor(Object valor) {
         this.valor = valor;
     }
 }

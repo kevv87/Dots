@@ -1,4 +1,4 @@
-package Dots.Clases;
+package Clases;
 
 /**
  * Clase Punto
