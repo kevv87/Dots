@@ -110,13 +110,13 @@ class LaminaJuego extends JPanel{
         int y2 = punto2.getY();
 
         double distancia = Math.pow((Math.pow(y2-y1,2) + Math.pow(x2-x1,2)),0.5); // hipotenusa entre puntos/distancia entre puntos
-        int limite = 80; //distancia máxima entre puntos
-        System.out.println(lineas.isIn(x1, y1, x2, y2));
+        int limite = 80; //distancia maxima entre puntos
 
         if(!lineas.isIn(x1, y1, x2, y2)){
             if(distancia < limite){
                 lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
-
+                //lPuntos.buscaPorReferencia(id1).getListaRelaciones().agregarAlInicio(id2); Aun por revisar
+                //lPuntos.buscaPorReferencia(id2).getListaRelaciones().agregarAlInicio(id1);
             }
 
             else{

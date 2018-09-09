@@ -86,4 +86,29 @@ public class ListaPuntos {
         return nLista;
     }
 
+    public Punto buscaPorReferencia(int i){ //Aun por revisar
+
+        Punto tmp = head;
+
+        if (i == 0){
+            return head;
+        }
+
+        else if ( i < tamanio){
+
+            for (int cont = 0; cont <= i; cont++){
+                tmp = tmp.getSiguiente();
+            }
+
+            return tmp;
+        }
+
+        else{
+            return null;
+        }
+
+
+
+    }
+
 }
