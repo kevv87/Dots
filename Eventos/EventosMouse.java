@@ -21,17 +21,16 @@ import java.util.logging.Logger;
  * @author kevv87
  */
 public class EventosMouse implements MouseListener{
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
+        int x = e.getX();  // Consigue la coordenada en x de donde se origina el evento
         int y = e.getY();
         Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
         
-        for(Punto punto:lamina.getPuntos()){
-            if(punto.contiene(x,y)){
-                Punto punto_click = punto;
-                System.out.println("Se clickeo en id: "+punto_click.getId());
+        for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
+            if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
+                Punto punto_click = punto;s
                 try {
                     Server.setClickedPointId(punto_click.getId());
                 } catch (Exception ex) {
