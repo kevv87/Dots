@@ -11,8 +11,6 @@ import java.awt.event.MouseListener;
 import Interfaz.MarcoJuego;
 import Interfaz.Punto;
 import ServerProvisional.Server;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +28,7 @@ public class EventosMouse implements MouseListener{
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
-                Punto punto_click = puntos;
+                Punto punto_click = punto;
                 try {
                     Server.setClickedPointId(punto_click.getId());
                 } catch (Exception ex) {
