@@ -10,8 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import Interfaz.MarcoJuego;
 import Interfaz.Punto;
+import ServerProvisional.Server;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,15 +26,17 @@ public class EventosMouse implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        Rectangle mouse = new Rectangle(e.getX(), e.getY(), 0,0);
-        System.out.println("Se clickeo en:"+e.getX()+", "+e.getY());
         Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
         
         for(Punto punto:lamina.getPuntos()){
             if(punto.contiene(x,y)){
                 Punto punto_click = punto;
-                System.out.println("FUCK");
                 System.out.println("Se clickeo en id: "+punto_click.getId());
+                try {
+                    Server.setClickedPointId(punto_click.getId());
+                } catch (Exception ex) {
+                    Logger.getLogger(EventosMouse.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     
