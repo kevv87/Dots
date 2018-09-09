@@ -1,27 +1,23 @@
-package Dots.Clases;
+package Clases;
+
+import java.util.List;
 
 public class ListaPuntos {
 
-    private int posY; //posicion de la fila
     private int tamanio; //cantidad de puntos en la fila
     private Punto head; //puntero a primer punto de la fila
     private ListaPuntos siguiente;//puntero a siguiente fila
 
     /**
      * Constructor
-     * @param posY posicion de la fila
      */
-    ListaPuntos(int posY){
-        this.posY = posY;
+    public ListaPuntos(){
         head = null;
         siguiente = null;
     }
 
     //GETTERS
 
-    public int getPosY() {
-        return posY;
-    }
 
     public Punto getHead() {
         return head;
@@ -38,9 +34,6 @@ public class ListaPuntos {
 
     //SETTERS
 
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
 
     public void setHead(Punto head) {
         this.head = head;
@@ -60,7 +53,7 @@ public class ListaPuntos {
      */
 
     public void agregarAlFinal(int valor) {
-        // Define un nuevo Punto.
+        // Define un nuevo PuntoGr.
         Punto nuevo = new Punto(valor);
         // Consulta si la lista esta vacia.
         if (head == null) {
@@ -80,6 +73,17 @@ public class ListaPuntos {
         }
         // Incrementa el contador de tamaño de la lista
         tamanio++;
+    }
+
+    public ListaPuntos agregaNodosVacios(int cantidad){
+
+        ListaPuntos nLista = new ListaPuntos();
+
+        for (int i = 0; i<cantidad; i++){
+            nLista.agregarAlFinal(i);
+        }
+
+        return nLista;
     }
 
 }

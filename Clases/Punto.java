@@ -1,29 +1,29 @@
-package Dots.Clases;
+package Clases;
 
 /**
- * Clase Punto
+ * Clase PuntoGr
  */
 public class Punto {
 
-    private int posX; // valor de columna de matriz.
+    private int id; // valor de columna de matriz.
     private int boolInt; // integer que sirve de bool (0, 1 ,2)
     private ListaSimple listaRelaciones; //lista que guarda relacion de punto con puntos adyacentes
     private Punto siguiente; //puntero a siguiente punto.
 
     /**
      * Constructor
-     * @param columna posicion en X del punto.
+     * @param columna ID del punto.
      */
     Punto(int columna){
-        posX = columna;
+        id = columna;
         boolInt = 0;
         listaRelaciones = new ListaSimple();
         siguiente = null;
     }
 
     // GETTERS
-    public int getPosX() {
-        return posX;
+    public int getID() {
+        return id;
     }
 
     public Punto getSiguiente() {
@@ -52,8 +52,8 @@ public class Punto {
         this.siguiente = siguiente;
     }
 
-    public void setPosX(int posX) {
-        this.posX = posX;
+    public void setID(int id) {
+        this.id = id;
     }
 
 }

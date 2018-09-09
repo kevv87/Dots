@@ -1,13 +1,13 @@
-package Dots.Clases;
+package Clases;
 
 public class ListaSimple {
     private Nodo inicio;
-    private int tamanio;
+    protected int tamanio;
 
     /**
      * Constructor por defecto.
      */
-    ListaSimple(){
+    public ListaSimple(){
         inicio = null;
         tamanio = 0;
     }
@@ -31,7 +31,7 @@ public class ListaSimple {
      * Agrega un nuevo nodo al inicio de la lista.
      * @param valor a agregar.
      */
-    public void agregarAlInicio(int valor){
+    public void agregarAlInicio(Object valor){
         // Define un nuevo nodo.
         Nodo nuevo = new Nodo();
         // Agrega al valor al nodo.
@@ -106,7 +106,7 @@ public class ListaSimple {
      * @return un numero entero entre [0,n-1] n = numero de nodos de la lista.
      * @throws Exception nn
      */
-    public int getValor(int posicion) throws Exception{
+    public Object getValor(int posicion) throws Exception{
         // Verifica si la posicion ingresada se encuentre en el rango
         // >= 0 y < que el numero de elementos del la lista.
         if(posicion>=0 && posicion<tamanio){
@@ -134,7 +134,7 @@ public class ListaSimple {
      * @param referencia valor a buscar.
      * @return true si existe el valor en la lista.
      */
-    public boolean buscar(int referencia){
+    public boolean buscar(Object referencia){
         // Crea una copia de la lista.
         Nodo aux = inicio;
         // Bandera para indicar si el valor existe.
@@ -161,7 +161,7 @@ public class ListaSimple {
      * @return un valor entero entre [0,n] que indica la posicion del nodo.
      * @throws Exception nn
      */
-    public int getPosicion(int referencia) throws Exception{
+    public int getPosicion(Object referencia) throws Exception{
         // Consulta si el valor existe en la lista.
         if (buscar(referencia)) {
             // Crea una copia de la lista.
