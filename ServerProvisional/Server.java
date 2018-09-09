@@ -17,6 +17,7 @@ import java.awt.Color;
 public class Server {
     
     private static int clickedPointId=-1;
+    private static int player = 1;
     
     /**
      * Funcion encargada de analizar dos puntos y si están lo suficientemente cerca, unirlos. 
@@ -35,8 +36,15 @@ public class Server {
             Punto punto2 = lamina.getPuntos()[clickedPointId];
             double distancia = distance(punto1.getX(),punto1.getY(),punto2.getX(),punto2.getY()); 
             if(distancia<=80){
-                lamina.addLine(id, clickedPointId, Color.RED);  // Dibuja linea roja
+                Color color;
+                if(player == 1){
+                    color = Color.RED;
+                }else{
+                    color = Color.BLUE;
+                }
+                lamina.addLine(id, clickedPointId, color);  // Dibuja linea roja
             }
+            player *= -1;  // Cambia turnos
             clickedPointId = -1;  // Borra memoria
         }
     }
