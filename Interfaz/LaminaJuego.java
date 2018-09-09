@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import javax.swing.JPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,6 +92,8 @@ public class LaminaJuego extends JPanel{
      * Funcion encargada de dibujar lineas entre puntos.
      * @param id1 Identificacion del primer punto
      * @param id2 Identificacion del segundo punto
+     * @param color color del que se quiere hacer la linea
+     * @throws java.lang.Exception
      */
     public void addLine(int id1, int id2, Color color) throws Exception{
         

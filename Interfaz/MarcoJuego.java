@@ -13,6 +13,7 @@ public class MarcoJuego extends JFrame{
     
     /**
      * Constructor
+     * @throws java.lang.Exception
      */
     public MarcoJuego() throws Exception{
         
@@ -44,10 +45,12 @@ public class MarcoJuego extends JFrame{
         return yo;
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
