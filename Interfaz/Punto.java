@@ -16,6 +16,7 @@ public class Punto{
     private final int x;
     private final int y;
     private final int radio = 5;
+    private final int id;
     
     /**
      * Constructor
@@ -23,10 +24,10 @@ public class Punto{
      * @param y Posicion en pixeles de la coordenada y del punto
      * @param g Objeto del tipo Graphics2D donde se va a dibujar el punto
      */
-    public Punto(int x, int y){
+    public Punto(int x, int y, int id){
         this.x = x;
         this.y = y;
-        
+        this.id = id;
         
     }
 
