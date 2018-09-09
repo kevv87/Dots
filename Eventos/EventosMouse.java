@@ -30,7 +30,7 @@ public class EventosMouse implements MouseListener{
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
-                Punto punto_click = punto;s
+                Punto punto_click = puntos;
                 try {
                     Server.setClickedPointId(punto_click.getId());
                 } catch (Exception ex) {
