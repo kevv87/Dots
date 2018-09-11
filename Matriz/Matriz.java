@@ -1,23 +1,24 @@
-package Clases;
+package Matriz;
 
 public class Matriz {
 
-    private ListaPuntos head;
+    private ListaPuntos headMatriz;
 
     /**
      * Constructor por defecto
      */
+    
     Matriz(){
-        head = null;
+        headMatriz = null;
     }
 
     //GETTER
     public ListaPuntos getHead() {
-        return head;
+        return headMatriz;
     }
 
     //SETTER
     public void setHead(ListaPuntos head) {
-        this.head = head;
+        this.headMatriz = head;
     }
 }

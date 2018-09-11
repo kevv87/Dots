@@ -1,4 +1,4 @@
-package Clases;
+package Matriz;
 
 /**Class Nodo
  * Cada nodo representa una posicion de puntos adyacentes a un punto en especifico.

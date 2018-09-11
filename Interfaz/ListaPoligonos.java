@@ -5,7 +5,7 @@
  */
 package Interfaz;
 
-import Clases.ListaSimple;
+import Matriz.ListaSimple;
 import java.awt.Polygon;
 
 /**
