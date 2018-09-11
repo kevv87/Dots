@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import javax.swing.JPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class LaminaJuego extends JPanel{
+public class LaminaJuego extends JPanel{
     
     
    private Punto[] puntos = new Punto[64];
@@ -27,7 +26,7 @@ class LaminaJuego extends JPanel{
         // Dibujando puntos
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
-                puntos[cont] = new Punto(xi,yi);
+                puntos[cont] = new Punto(xi,yi, cont);
                 cont+=1;
                 xi+=radio+espacio;
             }
@@ -93,6 +92,8 @@ class LaminaJuego extends JPanel{
      * Funcion encargada de dibujar lineas entre puntos.
      * @param id1 Identificacion del primer punto
      * @param id2 Identificacion del segundo punto
+     * @param color color del que se quiere hacer la linea
+     * @throws java.lang.Exception
      */
     public void addLine(int id1, int id2, Color color) throws Exception{
         
@@ -108,10 +109,22 @@ class LaminaJuego extends JPanel{
         }
         repaint();
     }
+
+    public Punto[] getPuntos() {
+        return puntos;
+    }
+
+    public ListaLineas getLineas() {
+        return lineas;
+    }
+
+    public ListaPoligonos getPoligonos() {
+        return poligonos;
+    }
     
     /**
      * Funcion encargada de .
-     * @param poligono Array con los ids de los puntos que componen el poligono en orden horario
+     * @param ids Array de ids de los puntos que forman el poligono
      * @param color Color que se desea que tenga el poligono
      */
     public void addPolygon(int [] ids, Color color){
