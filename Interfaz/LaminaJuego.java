@@ -1,6 +1,5 @@
 package Interfaz;
 
-import Clases.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,38 +8,31 @@ import javax.swing.JPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class LaminaJuego extends JPanel{
+public class LaminaJuego extends JPanel{
     
     
-   private PuntoGr[] puntos = new PuntoGr[64];
+   private Punto[] puntos = new Punto[64];
    private ListaLineas lineas = new ListaLineas();
    private ListaPoligonos poligonos = new ListaPoligonos();
-   private ListaPuntos lPuntos = new ListaPuntos();
-
    
    public LaminaJuego(){
-       puntos = new PuntoGr[64]; // Crea un array de circulos
-       lPuntos.agregaNodosVacios(64); // Crea una lista de puntos
-
-       int xi = 80;
-       int yi = 60;
-       int radio = 5;
-       int espacio = 50;
-       int cont = 0;
-
-       // Dibujando puntos
-       for(int i = 0;i<8;i++){
-            System.out.println("fila: " + i );
+       puntos = new Punto [64]; // Crea un array de circulos
+        int xi = 80;
+        int yi = 60;
+        int radio = 5;
+        int espacio = 50;
+        int cont = 0;
+        
+        // Dibujando puntos
+        for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
-                puntos[cont] = new PuntoGr(xi,yi);
+                puntos[cont] = new Punto(xi,yi, cont);
                 cont+=1;
-                System.out.println("\n columna: " + j);
-                System.out.println("\n pos X: " + xi+ ",  pos Y: " + yi);
                 xi+=radio+espacio;
             }
             xi = 80;
             yi += radio+espacio;
-       }
+        }
         
    }
    
@@ -50,6 +42,7 @@ class LaminaJuego extends JPanel{
      */
     @Override
     public void paintComponent(Graphics g){
+        System.out.println("Hey");
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
@@ -59,7 +52,7 @@ class LaminaJuego extends JPanel{
         int radio;
         g2.setPaint(Color.BLACK);
             for(int j = 0;j<puntos.length;j++){
-                PuntoGr actual = puntos[j];
+                Punto actual = puntos[j];
                 x = actual.getX();
                 y = actual.getY();
                 radio = actual.getRadio();
@@ -99,44 +92,45 @@ class LaminaJuego extends JPanel{
      * Funcion encargada de dibujar lineas entre puntos.
      * @param id1 Identificacion del primer punto
      * @param id2 Identificacion del segundo punto
+     * @param color color del que se quiere hacer la linea
+     * @throws java.lang.Exception
      */
     public void addLine(int id1, int id2, Color color) throws Exception{
         
-        PuntoGr punto1 = puntos[id1];
-        PuntoGr punto2 = puntos[id2];
+        Punto punto1 = puntos[id1];
+        Punto punto2 = puntos[id2];
         int x1 = punto1.getX();
         int y1 = punto1.getY();
         int x2 = punto2.getX();
         int y2 = punto2.getY();
-
-        double distancia = Math.pow((Math.pow(y2-y1,2) + Math.pow(x2-x1,2)),0.5); // hipotenusa entre puntos/distancia entre puntos
-        int limite = 80; //distancia maxima entre puntos
-
+        
         if(!lineas.isIn(x1, y1, x2, y2)){
-            if(distancia < limite){
-                lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
-                //lPuntos.buscaPorReferencia(id1).getListaRelaciones().agregarAlInicio(id2); Aun por revisar
-                //lPuntos.buscaPorReferencia(id2).getListaRelaciones().agregarAlInicio(id1);
-            }
-
-            else{
-                System.out.println("no es posible conectar puntos que no sean vecinos");
-            }
-
+            lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
         }
-
         repaint();
+    }
+
+    public Punto[] getPuntos() {
+        return puntos;
+    }
+
+    public ListaLineas getLineas() {
+        return lineas;
+    }
+
+    public ListaPoligonos getPoligonos() {
+        return poligonos;
     }
     
     /**
      * Funcion encargada de .
-     * @param ids Array con los ids de los puntos que componen el poligono en orden horario
+     * @param ids Array de ids de los puntos que forman el poligono
      * @param color Color que se desea que tenga el poligono
      */
     public void addPolygon(int [] ids, Color color){
         Poligono poligono = new Poligono(color);
         for(int id:ids){
-            PuntoGr punto = puntos[id];
+            Punto punto = puntos[id];
             poligono.addPoint(punto.getX(), punto.getY());
         }
         poligonos.agregarAlInicio(poligono);

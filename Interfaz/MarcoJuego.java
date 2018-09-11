@@ -1,18 +1,19 @@
 package Interfaz;
 
-import java.awt.Color;
+import Eventos.EventosMouse;
 import javax.swing.JFrame;
 
-class MarcoJuego extends JFrame{
+public class MarcoJuego extends JFrame{
     
     private final int xo;
     private final int yo;
     private final int width;
     private final int height;
-    private LaminaJuego lamina;
+    private static LaminaJuego lamina;
     
     /**
      * Constructor
+     * @throws java.lang.Exception
      */
     public MarcoJuego() throws Exception{
         
@@ -30,19 +31,34 @@ class MarcoJuego extends JFrame{
         lamina = new LaminaJuego();
         add(lamina);
         
-        int [] id_arr = new int [8];
-        id_arr[0] = 0;
-        id_arr[1] = 1;
-        id_arr[2] = 8;
-        id_arr[3] = 9;
-        id_arr[4] = 9;
-        id_arr[5] = 10;
-        id_arr[6] = 3;
-        id_arr[7] = 2;
+        EventosMouse evento = new EventosMouse();
+        addMouseListener(evento);
         
-
-        lamina.addLine(1,2, Color.yellow);
-        //lamina.addPolygon(id_arr, Color.RED);
+        
     }
+
+    public int getXo() {
+        return xo;
+    }
+
+    public int getYo() {
+        return yo;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    public static LaminaJuego getLamina() {
+        return lamina;
+    }
+    
+    
     
 }
