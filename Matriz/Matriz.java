@@ -46,7 +46,7 @@ public class Matriz {
         this.cant_Filas = cant_Filas;
     }
 
-    //[FUNCIONES PRINCIPALES]//////////////////////////////////////
+    ////[FACADE]/////[FUNCIONES PRINCIPALES]//////////////////////////////////////
 
     /**
      * Inicializa la matriz con puntos a los que se les asigna integers ordenados de menor a mayor.
