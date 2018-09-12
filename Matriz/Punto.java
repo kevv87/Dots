@@ -6,6 +6,11 @@ package Matriz;
 public class Punto {
 
     private int id; //
+    private int n_fila;
+    private int n_columna;
+
+
+
     private int boolInt; // integer que sirve de bool (0, 1 ,2)
     private ListaSimple listaRelaciones; //lista que guarda relacion de punto con puntos adyacentes
     private Punto siguiente; //puntero a siguiente punto.
@@ -38,6 +43,9 @@ public class Punto {
         return listaRelaciones;
     }
 
+    public int getN_fila() { return n_fila; }
+
+    public int getN_columna() { return n_columna; }
     //SETTERS
 
     public void setBoolInt(int boolInt) {
@@ -53,5 +61,9 @@ public class Punto {
     }
 
     public void setId(int id) { this.id = id; }
+
+    public void setN_columna(int n_columna) { this.n_columna = n_columna; }
+
+    public void setN_fila(int n_fila) { this.n_fila = n_fila; }
 
 }
