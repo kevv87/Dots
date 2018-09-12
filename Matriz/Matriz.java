@@ -109,7 +109,6 @@ public class Matriz {
 
             punto1.getListaRelaciones().agregarAlInicio(punto2.getId());
             punto2.getListaRelaciones().agregarAlInicio(punto1.getId());
-
         }
 
     }
@@ -142,7 +141,7 @@ public class Matriz {
      * @param numFila numero de la fila (según el eje 'y' de la matriz).
      */
 
-    public void agregarFilaAlFinal(int numFila) {
+    private void agregarFilaAlFinal(int numFila) {
         // Define una nueva Fila
         ListaPuntos nuevaFila = new ListaPuntos(numFila);
         // Consulta si la matriz esta vacia.
@@ -172,7 +171,7 @@ public class Matriz {
      * @return Punto buscado.
      */
 
-    public Punto buscarPunto(int id){
+    private Punto buscarPunto(int id){
 
         ListaPuntos tmp = headMatriz;
 
@@ -197,7 +196,7 @@ public class Matriz {
      * @param punto2 punto anexo.
      * @return true si la longitud es menor o igual a 1 tanto en 'X' como 'Y'.
      */
-    public boolean validarLongitudSegmento(Punto punto1, Punto punto2){
+    private boolean validarLongitudSegmento(Punto punto1, Punto punto2){
 
         int distSegX = Math.abs(punto1.getN_columna() - punto2.getN_columna()); //distancia en eje X del segmento
         int distSegY = Math.abs(punto1.getN_fila() - punto2.getN_fila()); // distancia en eje Y del segmento
@@ -218,7 +217,7 @@ public class Matriz {
      * @param punto2 punto 2
      * @return true si la conexion es posible
      */
-    public boolean validarConexionSegmento(Punto punto1, Punto punto2){ // si el segmento ya existe o si se encuentra dentro de un area.
+    private boolean validarConexionSegmento(Punto punto1, Punto punto2){ // si el segmento ya existe o si se encuentra dentro de un area.
 
         //primero valida longitud del segmento
         boolean bool_longitud = validarLongitudSegmento(punto1, punto2);
