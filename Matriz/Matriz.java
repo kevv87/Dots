@@ -109,6 +109,9 @@ public class Matriz {
 
             punto1.getListaRelaciones().agregarAlInicio(punto2.getId());
             punto2.getListaRelaciones().agregarAlInicio(punto1.getId());
+
+            punto1.getListaRelaciones().listar();
+            punto2.getListaRelaciones().listar();
         }
 
     }
@@ -176,7 +179,8 @@ public class Matriz {
         ListaPuntos tmp = headMatriz;
 
         while (tmp != null){
-            Punto tmp2 = headMatriz.getHead();
+
+            Punto tmp2 = tmp.getHead();
 
             while (tmp2!= null){
                 if(tmp2.getId() == id){

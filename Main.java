@@ -11,6 +11,7 @@ public class Main {
         Matriz m = new Matriz();
         m.inicializaMatriz(8,8);
         m.printMatriz();
+        m.conectarSegmento(7,8);
         PantallaJuego juego = new PantallaJuego();
 
     }
