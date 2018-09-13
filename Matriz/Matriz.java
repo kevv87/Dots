@@ -204,14 +204,8 @@ public class Matriz {
 
         int distSegX = Math.abs(punto1.getN_columna() - punto2.getN_columna()); //distancia en eje X del segmento
         int distSegY = Math.abs(punto1.getN_fila() - punto2.getN_fila()); // distancia en eje Y del segmento
-
-        if (distSegX <= 1 && distSegY <= 1){
-            return true; //es un segmento aceptable;
-        }
-
-        else{
-            return false; //la distancia del segmento es mayor a la permitida
-        }
+        
+        return distSegX <= 1 && distSegY <= 1;
     }
 
 
@@ -229,16 +223,8 @@ public class Matriz {
         if (bool_longitud){
 
             boolean existeConexion = punto1.getListaRelaciones().buscar(punto2.getId());
-
-            if (!existeConexion){  //valida si el segmento ya existe .
-
-                // [AGREGAR] valida si se encuentra dentro de un area.
-                return true;
-
-            }
-            else{
-                return false;
-            }
+            return !existeConexion;
+            
         }
         return false;
     }
