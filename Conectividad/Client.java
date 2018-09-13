@@ -58,9 +58,8 @@ public class Client{
               pantallaJuego.setActivo(false);
           }else if(line.startsWith("DWL")){  //Dibuje una linea
               System.out.println(line);
-              int punto1 = Integer.parseInt(line.substring(3, 5));
-              int punto2 = Integer.parseInt(line.substring(6,8));
-              
+              int punto1 = Integer.parseInt(line.substring(3, 4));
+              int punto2 = Integer.parseInt(line.substring(5,6));
               LaminaJuego lamina = pantallaJuego.getLamina();
               lamina.addLine(punto1, punto2, Color.RED);
           }else if(line.startsWith("CLR")){  // Cambie su color

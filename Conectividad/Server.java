@@ -30,11 +30,13 @@ public class Server{
     while(!found){
         player1 = new Player(listener.accept());
         found = true;
+        System.out.println("Jugador 1!");
       }
       found = false;
       while(!found){
         player2 = new Player(listener.accept());
         found = true;
+        System.out.println("Jugador 2!");
       }
       
       //Configuracion inicial de clientes
