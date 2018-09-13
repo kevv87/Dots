@@ -1,4 +1,7 @@
-import Interfaz.*;
+
+import Conectividad.Client;
+
+
 
 /**
  *
@@ -6,6 +9,6 @@ import Interfaz.*;
  */
 public class Main {
     public static void main(String[] args) throws Exception{
-        PantallaJuego juego = new PantallaJuego();
+        new Client();
     }
 }
