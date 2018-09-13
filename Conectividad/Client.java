@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 
 /**
@@ -37,8 +38,8 @@ public class Client{
     /**
      * Metodo que maneja toda la logica del cliente, desde crear la conexion hasta manejar el protocolo
      */
-    private void run() throws IOException, Exception{
-
+    private void run() throws IOException, MismatchedInputException, Exception{
+      ObjectMapper mapper = new ObjectMapper();
       String line;
 
       // Crea la conexion e inicializa los streams
@@ -49,27 +50,32 @@ public class Client{
 
       while(true){  // Debe procesar todos los mensajes del server
           line = in.readLine();  //Lee un mensaje entrante
-          
-          // Protocolo.
-          if(line == null){  // Maneja los mensajes nulos
-          }else if(line.startsWith("MSG")){  //Imprima en consola
-            System.out.println(line.substring(4)+"\n");
-          }else if(line.startsWith("YT")){  // Es su turno
-            pantallaJuego.setActivo(true);
-          }else if(line.startsWith("NYT")){  //No es su turno
-              pantallaJuego.setActivo(false);
-          }else if(line.startsWith("DWL")){  //Dibuje una linea
-              System.out.println(line);
+          System.out.println(line);
+          Mensaje mensaje = mapper.readValue(line, Mensaje.class);
+          String msj = mensaje.getAccion();
 
-              int punto1 = Integer.parseInt(line.substring(3, 4));
-              int punto2 = Integer.parseInt(line.substring(5,6));
+
+          // Protocolo.
+          if(msj == null){  // Maneja los mensajes nulos
+          }else if(msj.startsWith("MSG")){  //Imprima en consola
+            System.out.println(line.substring(4)+"\n");
+          }else if(msj.startsWith("YT")){  // Es su turno
+            pantallaJuego.setActivo(true);
+          }else if(msj.startsWith("NYT")){  //No es su turno
+              pantallaJuego.setActivo(false);
+          }else if(msj.startsWith("DWL")){  //Dibuje una linea
+              System.out.println(msj);
+              int punto1 = Integer.parseInt(msj.substring(3,4));
+              int punto2 = Integer.parseInt(msj.substring(5,6));
 
               LaminaJuego lamina = pantallaJuego.getLamina();
-              lamina.addLine(punto1, punto2, Color.RED);
-          }else if(line.startsWith("CLR")){  // Cambie su color
-              if(line.substring(3).equals("BLU")){
+              lamina.addLine(punto1, punto2, color);
+          }else if(msj.startsWith("CLR")){  // Cambie su color
+              if(msj.substring(3).equals("BLU")){
                   color = Color.BLUE;
+                  System.out.println("entré: "+msj);
               }else{
+                  System.out.println("entré: "+msj);
                   color = Color.RED;
               }
           }
