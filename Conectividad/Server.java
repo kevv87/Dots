@@ -44,7 +44,7 @@ public class Server{
       
       //Gameloop
       while(true){
-          send(current,"YT");  // es el turno del jugador 1
+          send(current,"YT");  // Establece turno
           
           String punto1 = listen(current);
           while("".equals(punto1)){
@@ -54,9 +54,15 @@ public class Server{
           while("".equals(punto2)){
               punto2 = listen(current);
           }
+          
+          if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
+              stop();
+              break;
+          }
+          
           send(current,"NYT");
           System.out.println(punto1+","+punto2);
-          send(current, "DWL"+punto1+","+punto2);
+          broadcast("DWL"+punto1+","+punto2);
           
           current *= -1;  // Cambio de turno
       }
@@ -87,6 +93,15 @@ public class Server{
       }
       
       recipient.getOut().println(msg);
+  }
+  
+  /**
+   * Emite un mensaje a ambos jugadores.
+   * @param msg Mensaje a emitir.
+   */
+  public static void broadcast(String msg){
+      player1.getOut().println(msg);
+      player2.getOut().println(msg);
   }
   
   /**
