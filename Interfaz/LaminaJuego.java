@@ -15,6 +15,9 @@ public class LaminaJuego extends JPanel{
    private ListaLineas lineas = new ListaLineas();
    private ListaPoligonos poligonos = new ListaPoligonos();
    
+   /**
+    * Constructor
+    */
    public LaminaJuego(){
        puntos = new Punto [64]; // Crea un array de circulos
         int xi = 80;
@@ -35,6 +38,7 @@ public class LaminaJuego extends JPanel{
         }
         
    }
+
    
     /**
      * Funcion encargada de dibujar sobre la lamina
