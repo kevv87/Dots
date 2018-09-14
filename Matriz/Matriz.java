@@ -66,7 +66,7 @@ public class Matriz {
             int id = 0;
 
             agregarFilaAlFinal(id); //primeramente añade una fila, para poder tener acceso a la posicion de memoria del head
-            ListaPuntos tmpH = headMatriz;
+            ListaPuntos tmpH_Matriz = headMatriz;
 
             //headMatriz = new ListaPuntos(0);
             //ListaPuntos tmpH = headMatriz;
@@ -74,14 +74,14 @@ public class Matriz {
             for(int i = 1; i <= c_Filas; i++){ //por cada fila
 
                 for(int j=0; j<c_Columnas; j++){ //añade c_Columnas de puntos
-                    tmpH.agregarAlFinal(id++,i-1,j);
+                    tmpH_Matriz.agregarAlFinal(id++,i-1,j);
 
 
                 }
 
                 if (i <= (c_Filas-1)){ // cuando se tiene la cantidad de filas desedas, deje de agregar filas
                     agregarFilaAlFinal(i);
-                    tmpH = tmpH.getSiguiente();
+                    tmpH_Matriz = tmpH_Matriz.getSiguiente();
                 }
 
             }
