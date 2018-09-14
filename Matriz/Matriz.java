@@ -109,9 +109,6 @@ public class Matriz {
 
             punto1.getListaRelaciones().agregarAlInicio(punto2.getId());
             punto2.getListaRelaciones().agregarAlInicio(punto1.getId());
-
-            punto1.getListaRelaciones().listar();
-            punto2.getListaRelaciones().listar();
         }
 
     }
