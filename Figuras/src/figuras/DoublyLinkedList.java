@@ -71,6 +71,8 @@ public class DoublyLinkedList {
             return dentro;
         }
     }
+    //_________________________________________
+    //Las dos listas nuevas van a tener como inicio el punto que buscan y como final el punto que buscan
     //esta funcion recorre a partir del Head hasta el punto donde cerró la figura y retorna una lista que corresponde a los puntos del nuevo perimetro cerrado, quita la figura formada del resto del perimetro
     public DoublyLinkedList recorrerAdelante(Punto dato, Perimetro Per){
         DoublyLinkedList NuevaLista = new DoublyLinkedList();

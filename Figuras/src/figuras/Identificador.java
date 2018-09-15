@@ -19,8 +19,32 @@ public class Identificador{
     public LinkedList segmentosPorPts(DoublyLinkedList L, Perimetro Per){
         LinkedList<Segmento> aux_Segmentos = new LinkedList();
         NodoDoble current = L.getInicio();
-        while(current.getElemento()!=)
+        while(current.getSiguiente().getSiguiente()!=null){
+            //Ordena los puntos, punto A es el que está más hacia la esquina superior izquierda
+            Punto Punto_A=current.getElemento();
+            Punto Punto_B=current.getElemento().getSiguiente();
+            if (Punto_A.getPosY()==Punto_B.getPosY()){  //Se guarda como primer elemento el punto que esté más a la izquierda en caso de estar en misma fila
+                if(Punto_B.getPosX()<Punto_A.getPosX()){
+                    Punto temp = Punto_A;
+                    Punto_A=Punto_B;
+                    Punto_B=temp;
+                }    
+            }else if(Punto_B.getPosY()<Punto_A.getPosY()){
+                Punto temp = Punto_A;
+                Punto_A=Punto_B;
+                Punto_B=temp;
+            }
+            //Recorrer lista de segmentos que tenga los puntos que busco
+            Nodo<Segmento> SegmentoBusco = Per.getSegmentos().getInicio();
+            while(Punto_A!=SegmentoBusco.getElemento().getPunto_A() && Punto_B!=SegmentoBusco.getElemento().getPunto_B()){
+                SegmentoBusco=SegmentoBusco.getSiguiente();
+            }
+            aux_Segmentos.anadirFinal(SegmentoBusco.getElemento());
+            Per.getSegmentos().eliminar(SegmentoBusco);
+        }
+        return aux_Segmentos;
     }
+        
     
     public int segmentosSuma(Perimetro Per){
         int segmentos=0;
@@ -59,7 +83,7 @@ public class Identificador{
             if(Per.getPuntos().buscarPunto(Per.getPuntos().getUltimo().getSiguiente().getElemento())){
                 aux_Perimetro.setHead(Per.getPuntos().getUltimo().getSiguiente().getElemento());    //Asigna primer valor de la lista de Puntos
                 aux_Perimetro.setPuntos(Per.getPuntos().recorrerAtras(aux_Perimetro.getHead(), Per));   //Se asigna lista de puntos al auxiliar y estos se borran del perimetro original abierto
-                aux_Perimetro.setSegmentos(Per.getSegmentos().segmentosPorPts(aux_Perimetro.getPuntos()), Per); //Se asigna lista de segmentos de acuerdo a los puntos que contiene y actualiza los segmentos del perimetro abierto
+                aux_Perimetro.setSegmentos(segmentosPorPts(aux_Perimetro.getPuntos(), Per)); //Se asigna lista de segmentos de acuerdo a los puntos que contiene y actualiza los segmentos del perimetro abierto
             }
             //Cerrar por inicio.anterior==elemento en el medio
             else if(Per.getPuntos().buscarPunto(Per.getPuntos().getInicio().getAnterior().getElemento())){

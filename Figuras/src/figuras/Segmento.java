@@ -19,20 +19,15 @@ public class Segmento {
      * @param Punto_A y Punto_B como puntos del segmento.
      */
     Segmento(Punto A, Punto B){
+        Punto_A=A;
+        Punto_B=B;
         if (A.getPosY()==B.getPosY()){  //Se guarda como primer elemento el punto que esté más a la izquierda en caso de estar en misma fila
-            if(A.getPosX()<B.getPosX()){
-                Punto_A=A;
-                Punto_B=B;
-                        
-            } else{
+            if(B.getPosX()<A.getPosX()){
                 Punto_A=B;
                 Punto_B=A;
-            }
+            }    
         } else{
-            if(A.getPosY()<B.getPosY()){    //Se guarda como primer elemento el punto que esté más arriba.
-                Punto_A=A;
-                Punto_B=B;
-            } else{
+            if(B.getPosY()<A.getPosY()){    //Se guarda como primer elemento el punto que esté más arriba.
                 Punto_A=B;
                 Punto_B=A;
             }

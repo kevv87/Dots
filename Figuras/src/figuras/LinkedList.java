@@ -59,6 +59,16 @@ public class LinkedList<T>{
             return dentro;
         }
     }
+    
+    public void eliminar(T dato){
+        if(Inicio!=null){
+            Nodo<T> aux = Inicio;
+            while(aux.getSiguiente().getElemento()!=dato){
+                aux=aux.getSiguiente();
+            }
+            aux.setSiguiente(aux.getSiguiente().getSiguiente());
+        }
+    }
 
     public Nodo<T> getInicio() {
         return Inicio;
