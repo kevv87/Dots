@@ -87,8 +87,12 @@ public class Identificador{
             }
             //Cerrar por inicio.anterior==elemento en el medio
             else if(Per.getPuntos().buscarPunto(Per.getPuntos().getInicio().getAnterior().getElemento())){
-                
+                aux_Perimetro.setHead(Per.getPuntos().getInicio().getAnterior().getElemento());
+                aux_Perimetro.setPuntos(Per.getPuntos().recorrerAdelante(aux_Perimetro.getHead(), Per));
+                aux_Perimetro.setSegmentos(segmentosPorPts(aux_Perimetro.getPuntos(), Per));
             }
+            //Cerrar por inicio y final pertenecientes a un perimetro cerrado. sí importa
+            //else if()
             //Cerrar por inicio y final pertenecientes a un mismo perimetro *ya sea abierto o cerrado*
             else if(PuntosCerrados.buscar(Per.getHead()) && PuntosCerrados.buscar(Per.getUltimo())){
                 
