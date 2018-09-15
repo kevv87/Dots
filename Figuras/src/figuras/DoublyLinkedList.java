@@ -42,6 +42,18 @@ public class DoublyLinkedList {
             Ultimo=nuevo;
         }
     }
+    public void eliminar(Perimetro Per, NodoDoble N){
+        NodoDoble aux = Per.getPuntos().getInicio();
+        while(aux!=null){
+            if(aux.getSiguiente()==N){
+                NodoDoble temp=aux.getSiguiente().getSiguiente();
+                aux.setSiguiente(temp);
+                temp.setAnterior(null);
+            } else{
+                aux=aux.getSiguiente();
+            }
+        }
+    }
     
     public boolean buscarPunto(Punto punto){
         boolean dentro=false;
@@ -59,16 +71,31 @@ public class DoublyLinkedList {
             return dentro;
         }
     }
-    
-    public LinkedList recorrerAdelante(Punto dato, Perimetro Per){
-        LinkedList<Punto> NuevaLista = new LinkedList();
+    //esta funcion recorre a partir del Head hasta el punto donde cerró la figura y retorna una lista que corresponde a los puntos del nuevo perimetro cerrado, quita la figura formada del resto del perimetro
+    public DoublyLinkedList recorrerAdelante(Punto dato, Perimetro Per){
+        DoublyLinkedList NuevaLista = new DoublyLinkedList();
         NuevaLista.anadirInicio(dato);
         NodoDoble auxiliar = Per.getPuntos().getInicio();
         while(auxiliar.getSiguiente().getElemento()!=dato){
-            NuevaLista.anadirFinal(dato);
-            Per.getSegmentos().eliminarNodo(auxiliar);
+            NuevaLista.anadirFinal(auxiliar.getElemento());
+            Per.getPuntos().eliminar(Per, auxiliar);
             auxiliar=auxiliar.getSiguiente();
         }
+        NuevaLista.anadirFinal(dato);
+        return NuevaLista;
+    }
+    //funcion recorre a partir de ultimo elemento hasta llegar al punto donde cierra, borra del perimetro original el nodo que es del perimetro cerrado nuevo y retorna la lista de los Puntos del area cerrada
+    public DoublyLinkedList recorrerAtras(Punto dato, Perimetro Per){
+        DoublyLinkedList NuevaLista = new DoublyLinkedList();
+        NuevaLista.anadirInicio(dato);
+        NodoDoble auxiliar = Per.getPuntos().getUltimo();
+        while(auxiliar.getElemento()!=dato){
+            NuevaLista.anadirInicio(auxiliar.getElemento());
+            Per.getPuntos().eliminar(Per, auxiliar);
+            auxiliar=auxiliar.getAnterior();
+        }
+        NuevaLista.anadirInicio(dato);
+        return NuevaLista;
     }
 
     public NodoDoble getInicio() {

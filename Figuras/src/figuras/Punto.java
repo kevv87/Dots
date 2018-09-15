@@ -18,6 +18,7 @@ public class Punto {
     private int PosX; // valor de columna de matriz.
     private int PosY;
     private Punto Siguiente; //puntero a siguiente punto.
+    private boolean EnUso;  //si pertenece a un perimetro cerrado
 
     /**
      * Constructor
@@ -27,6 +28,7 @@ public class Punto {
         PosX = columna;
         PosY= fila;
         Siguiente = null;
+        EnUso = false;
     }
 
     // GETTERS
@@ -40,6 +42,10 @@ public class Punto {
 
     public int getPosY() {
         return PosY;
+    }
+
+    public boolean isEnUso() {
+        return EnUso;
     }
     
 
@@ -57,6 +63,10 @@ public class Punto {
 
     public void setPosY(int posY) {
         this.PosY = posY;
+    }
+
+    public void setEnUso(boolean EnUso) {
+        this.EnUso = EnUso;
     }
     
 

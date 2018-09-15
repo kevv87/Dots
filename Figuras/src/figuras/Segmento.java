@@ -61,6 +61,7 @@ public class Segmento {
             return false;
         }
     }
+    
 
     public Punto getPunto_A() {
         return Punto_A;
