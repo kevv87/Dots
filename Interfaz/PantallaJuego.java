@@ -5,6 +5,9 @@
  */
 package Interfaz;
 
+import Eventos.EventosMouse;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
+
 
 /**
  * Clase encargada de crear la pantalla del juego
@@ -18,6 +21,7 @@ public class PantallaJuego {
      * Constructor
      */
     public PantallaJuego() throws Exception {
+
     
         MarcoJuego pantalla = new MarcoJuego();
         

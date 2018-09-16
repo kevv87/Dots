@@ -5,51 +5,34 @@
  */
 package Interfaz;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 
 /**
  * Clase encargada de la creacion de un punto grafico.
  * @author kevv87
  */
-public class Punto{  
+public class PuntoGr {
     private final int x;
     private final int y;
     private final int radio = 5;
-    private final int id;
     
     /**
      * Constructor
      * @param x Posicion en pixeles de la coordenada x del punto
      * @param y Posicion en pixeles de la coordenada y del punto
-     * @param id Id del punto
+     * @param g Objeto del tipo Graphics2D donde se va a dibujar el punto
      */
-    public Punto(int x, int y, int id){
+    public PuntoGr(int x, int y){
         this.x = x;
         this.y = y;
-        this.id = id;
         
-    }
-    
-
-
-    /**
-     * Retorna true si las coordenadas dadas estan dentro del circulo
-     * @param x coordenada en x a verificar
-     * @param y coordenada en y a verificar
-     * @return True si el punto (x,y) se encuentra dentro de la figura
-     */
-    public boolean contiene(int x, int y){
-        double distancia = Math.sqrt(Math.abs(Math.pow(this.x-x, 2)+Math.pow(this.y-y,2)));
-        return distancia <= radio;
+        
     }
 
     public int getRadio() {
         return radio;
     }    
-
-    
-    public int getId(){
-        return id;
-    }
 
     public int getX() {
         return x;
