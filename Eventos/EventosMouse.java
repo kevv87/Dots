@@ -24,7 +24,6 @@ public class EventosMouse implements MouseListener{
         int x = e.getX();  // Consigue la coordenada en x de donde se origina el evento
         int y = e.getY();
         Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
-        
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
                 Punto punto_click = punto;

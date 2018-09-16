@@ -1,4 +1,4 @@
-package Clases;
+package Matriz;
 
 public class ListaPuntos {
 
@@ -77,6 +77,34 @@ public class ListaPuntos {
             }
             // Agrega el nuevo punto al final de la lista.
             tmp.setSiguiente(nuevo);
+        }
+        // Incrementa el contador de tamaño de la lista
+        tamanio++;
+    }
+
+
+    public void agregarAlFinal(int valor, int nFila, int nColumna) {
+        // Define un nuevo Punto.
+        Punto nuevo = new Punto(valor);
+        // Consulta si la lista esta vacia.
+        if (head == null) {
+            // Inicializa la lista agregando como inicio al nuevo punto.
+            head = nuevo;
+            head.setN_columna(nColumna);
+            head.setN_fila(nFila);
+            // Caso contrario recorre la lista hasta llegar al ultimo punto
+            // y agrega el nuevo.
+        } else {
+            // Crea una copia de la lista.
+            Punto tmp = head;
+            // Recorre la lista hasta llegar al ultimo punto.
+            while (tmp.getSiguiente() != null) {
+                tmp = tmp.getSiguiente();
+            }
+            // Agrega el nuevo punto al final de la lista.
+            tmp.setSiguiente(nuevo);
+            tmp.getSiguiente().setN_fila(nFila);
+            tmp.getSiguiente().setN_columna(nColumna);
         }
         // Incrementa el contador de tamaño de la lista
         tamanio++;

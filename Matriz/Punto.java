@@ -1,30 +1,35 @@
-package Clases;
+package Matriz;
 
 /**
  * Clase Punto
  */
 public class Punto {
 
-    private int posX; // valor de columna de matriz.
+    private int id; //
+    private int n_fila;
+    private int n_columna;
+
+
+
     private int boolInt; // integer que sirve de bool (0, 1 ,2)
     private ListaSimple listaRelaciones; //lista que guarda relacion de punto con puntos adyacentes
     private Punto siguiente; //puntero a siguiente punto.
 
     /**
      * Constructor
-     * @param columna posicion en X del punto.
+     * @param id posicion en X del punto.
      */
-    Punto(int columna){
-        posX = columna;
+    Punto(int id){
+        this.id = id;
         boolInt = 0;
         listaRelaciones = new ListaSimple();
         siguiente = null;
     }
 
     // GETTERS
-    public int getPosX() {
-        return posX;
-    }
+
+
+    public int getId() { return id; }
 
     public Punto getSiguiente() {
         return siguiente;
@@ -38,6 +43,9 @@ public class Punto {
         return listaRelaciones;
     }
 
+    public int getN_fila() { return n_fila; }
+
+    public int getN_columna() { return n_columna; }
     //SETTERS
 
     public void setBoolInt(int boolInt) {
@@ -52,8 +60,10 @@ public class Punto {
         this.siguiente = siguiente;
     }
 
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
+    public void setId(int id) { this.id = id; }
+
+    public void setN_columna(int n_columna) { this.n_columna = n_columna; }
+
+    public void setN_fila(int n_fila) { this.n_fila = n_fila; }
 
 }
