@@ -125,6 +125,33 @@ public class LaminaJuego extends JPanel{
         }
         repaint();
     }
+    
+    /**
+     * Funcion encargada de dibujar lineas entre puntos
+     * @param punto1 Punto donde empezar a dibujar la linea
+     * @param punto2 Punto donde finaliza la linea
+     */
+    public void addLine(Punto punto1, Punto punto2, Color color) throws Exception{
+        int x1 = punto1.getX();
+        int y1 = punto1.getY();
+        int x2 = punto2.getX();
+        int y2 = punto2.getY();
+
+        double distancia = Math.pow((Math.pow(y2-y1,2) + Math.pow(x2-x1,2)),0.5); // hipotenusa entre puntos/distancia entre puntos
+        int limite = 80; //distancia máxima entre puntos
+
+        if(!lineas.isIn(x1, y1, x2, y2)){
+            if(distancia < limite){
+                lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
+            }
+
+            else{
+                System.out.println("no es posible conectar puntos que no sean vecinos");
+            }
+
+        }
+        repaint();
+    }
 
     public Punto[] getPuntos() {
         return puntos;

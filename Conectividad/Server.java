@@ -5,9 +5,11 @@
  */
 package Conectividad;
 
+import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.awt.Color;
 
 /**
  * Clase encargada de correr el servidor y llevar a cabo toda la logica del juego
@@ -43,41 +45,57 @@ public class Server{
       }
 
       Mensaje mensaje = new Mensaje("CLRBLU");
-      String msjJson = mapper.writeValueAsString(mensaje);
-      //Configuracion inicial de clientes
-      send(1,msjJson);  // el jugador 1 tiene color azul
-      mensaje.setAccion("CLRRED");
-      msjJson = mapper.writeValueAsString(mensaje);
-      send(2,msjJson);  // el jugador 2 tiene color rojo
-      System.out.println("Jugador 2 color: " + msjJson);
-
+      String msjJson ;
+      
+      Punto punto1;
+      Punto punto2;
+      String msj;
       //Gameloop
       while(true){
+          
+          String color;
+          if(current == 1){
+             color = "red";
+          }else{
+              color = "blue";
+          }
+          
           mensaje.setAccion("YT");
           msjJson = mapper.writeValueAsString(mensaje);
           send(current,msjJson);  // Establece turno
-
-          String punto1 = listen(current);
-          while("".equals(punto1)){
-              punto1 = listen(current);
+          
+          
+          msj = listen(current);
+          while("".equals(msj)){
+              msj = listen(current);
           }
-          String punto2 = listen(current);
-          while("".equals(punto2)){
-              punto2 = listen(current);
+          System.out.println(msj);
+          punto1 = mapper.readValue(msj, Punto.class);
+          
+          
+          msj = listen(current);
+          while("".equals(msj)){
+              msj = listen(current);
           }
+          punto2 = mapper.readValue(msj, Punto.class);
 
-          if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
+          
+          if(msj == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
               stop();
               break;
           }
+          
           mensaje.setAccion("NYT");
           msjJson = mapper.writeValueAsString(mensaje);
           send(current,msjJson);
           System.out.println(punto1+","+punto2);
 
-          mensaje.setAccion("DWL" +punto1+","+punto2);
+          mensaje.setAccion("DWL");
           msjJson = mapper.writeValueAsString(mensaje);
           broadcast(msjJson);
+          broadcast(mapper.writeValueAsString(punto1));
+          broadcast(mapper.writeValueAsString(punto2));
+          broadcast(color);
 
           current *= -1;  // Cambio de turno
       }

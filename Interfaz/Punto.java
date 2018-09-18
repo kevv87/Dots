@@ -29,7 +29,15 @@ public class Punto{
         
     }
     
-
+    /**
+     * Dummy constuctor
+    */
+    public Punto(){
+        this.x = 0;
+        this.y = 0;
+        this.id = -1;
+    }
+    
 
     /**
      * Retorna true si las coordenadas dadas estan dentro del circulo
