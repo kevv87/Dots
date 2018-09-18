@@ -15,11 +15,22 @@ public class Punto {
     private ListaSimple listaRelaciones; //lista que guarda relacion de punto con puntos adyacentes
     private Punto siguiente; //puntero a siguiente punto.
 
+
+    /**
+     * Constructor por defecto
+     */
+    public Punto(){
+        this.id = 0;
+        boolInt = 0;
+        listaRelaciones = new ListaSimple();
+        siguiente = null;
+    }
+
     /**
      * Constructor
      * @param id posicion en X del punto.
      */
-    Punto(int id){
+    public Punto(int id){
         this.id = id;
         boolInt = 0;
         listaRelaciones = new ListaSimple();
