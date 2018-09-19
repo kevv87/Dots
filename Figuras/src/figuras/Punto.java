@@ -16,7 +16,7 @@ package figuras;
 public class Punto {
 
     private int PosX; // valor de columna de matriz.
-    private int PosY;
+    private int PosY;   //Valor de la fila
     private Punto Siguiente; //puntero a siguiente punto.
     private boolean EnUso;  //si pertenece a un perimetro cerrado
 

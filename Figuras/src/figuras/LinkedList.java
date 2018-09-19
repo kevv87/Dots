@@ -9,7 +9,7 @@ package figuras;
  *
  * @author 
  */
-public class LinkedList<T>{
+public class LinkedList<T>{ //Lista para nodos genericos
     
     private Nodo<T> Inicio;
     private int Tamanio;
@@ -18,6 +18,7 @@ public class LinkedList<T>{
         Inicio=null;
         Tamanio=0;
     }
+    
     public void anadirInicio(T dato){
         Nodo<T> nuevo = new Nodo<T>(dato);
         if(Inicio == null)

@@ -12,7 +12,7 @@ package figuras;
 public class Segmento {
     private Punto Punto_A;   //punto A del segmento
     private Punto Punto_B;   //punto B del segmento
-    private boolean Suma;
+    private boolean Suma;   //Si el segmento sigue activo o no
     private int Direccion;  //0,1,2,3 vertical, horizontal, diagonal izq superior a derecha inferior, diagonal izq inferior a derecha superior, respectivamente
     /**
      * Constructor
@@ -43,8 +43,8 @@ public class Segmento {
         }
         Suma=true;
     }
-
-    public boolean colineales(Segmento A, Segmento B){
+    //Funcion para determinar si dos segmentos son colineales
+    public boolean colineales(Segmento A, Segmento B){  
         if(A.getPunto_A()==B.getPunto_A()||A.getPunto_A()==B.getPunto_B()||A.getPunto_B()==B.getPunto_A()||A.getPunto_B()==B.getPunto_B()){
             if(A.Direccion==B.Direccion){
                 return true;
@@ -57,15 +57,11 @@ public class Segmento {
         }
     }
     
-
+    //  GETTERS
     public Punto getPunto_A() {
         return Punto_A;
     }
-
-    public void setPunto_A(Punto Punto_A) {
-        this.Punto_A = Punto_A;
-    }
-
+    
     public Punto getPunto_B() {
         return Punto_B;
     }
@@ -74,22 +70,25 @@ public class Segmento {
         return Direccion;
     }
     
-
-    public void setPunto_B(Punto Punto_B) {
-        this.Punto_B = Punto_B;
-    }
-
     public boolean isSuma() {
         return Suma;
     }
-
-    public void setSuma(boolean suma) {
-        this.Suma = suma;
+    
+    //  SETTERS
+    public void setPunto_A(Punto Punto_A) {
+        this.Punto_A = Punto_A;
     }
-
+    
+    public void setPunto_B(Punto Punto_B) {
+        this.Punto_B = Punto_B;
+    }
+    
     public void setDireccion(int Direccion) {
         this.Direccion = Direccion;
     }
     
-       
+    public void setSuma(boolean suma) {
+        this.Suma = suma;
+    }
+          
 }      

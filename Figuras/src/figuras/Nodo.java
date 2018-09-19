@@ -9,7 +9,7 @@ package figuras;
  *
  * @author Sebastián
  */
-public class Nodo<T> {
+public class Nodo<T> {  //Nodo generico para usar con distintos elementos
     private T Elemento;
     private Nodo Siguiente;
     
@@ -22,17 +22,19 @@ public class Nodo<T> {
         Elemento=null;
         Siguiente=null;
     }
-
+    
+    //  GETTERS
     public T getElemento() {
         return Elemento;
     }
-
-    public void setElemento(T elemento) {
-        this.Elemento = elemento;
-    }
-
+    
     public Nodo getSiguiente() {
         return Siguiente;
+    }
+    
+    //  SETTERS
+    public void setElemento(T elemento) {
+        this.Elemento = elemento;
     }
 
     public void setSiguiente(Nodo siguiente) {

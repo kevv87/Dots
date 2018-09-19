@@ -91,13 +91,18 @@ public class Identificador{
                 aux_Perimetro.setPuntos(Per.getPuntos().recorrerAdelante(aux_Perimetro.getHead(), Per));
                 aux_Perimetro.setSegmentos(segmentosPorPts(aux_Perimetro.getPuntos(), Per));
             }
-            //Cerrar por inicio y final pertenecientes a un perimetro cerrado. sí importa
-            //else if()
-            //Cerrar por inicio y final pertenecientes a un mismo perimetro *ya sea abierto o cerrado*
-            else if(PuntosCerrados.buscar(Per.getHead()) && PuntosCerrados.buscar(Per.getUltimo())){
-                
+            //Cerrar por inicio y final pertenecientes a un perimetro abierto o cerrado.
+            else if(PuntosCerrados.buscar(Per.getPuntos().getInicio().getAnterior().getElemento()) &&PuntosCerrados.buscar(Per.getPuntos().getUltimo().getSiguiente().getElemento())){
+                Nodo<Perimetro> nuevo = Perimetros.getInicio();
+                boolean Encontrado = false;
+                while(nuevo.getSiguiente()!=null && Encontrado!=false){
+                    if(nuevo.getElemento().getPuntos().buscarPunto(Per.getPuntos().getInicio().getAnterior().getElemento()) && nuevo.getElemento().getPuntos().buscarPunto(Per.getPuntos().getInicio().getAnterior().getElemento())){
+                        Encontrado=true;
+                    }
+                }
             }
-            else{
+            //Cerrar por composicion de perimetros
+            else{                
                 return 0;
             }
         }
