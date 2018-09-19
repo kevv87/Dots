@@ -1,4 +1,4 @@
-package Clases;
+package Matriz;
 
 public class ListaSimple {
     protected Nodo inicio;

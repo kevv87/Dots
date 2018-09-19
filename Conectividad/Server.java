@@ -5,12 +5,20 @@
  */
 package Conectividad;
 
+
 import Clases.ColaJugadores;
 import Clases.Player;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import Interfaz.Punto;
+import java.io.IOException;
+import java.net.ServerSocket;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.awt.Color;
+
 
 /**
  * Clase encargada de correr el servidor y llevar a cabo toda la logica del juego
@@ -95,6 +103,11 @@ public class Server{
      * @throws java.lang.InterruptedException
    */
   public static void juego() throws IOException, InterruptedException{
+    String msj;
+    Punto punto1;
+    Punto punto2;
+    ObjectMapper mapper = new ObjectMapper();
+    
     // Server loop
     while(true){
         boolean found = false;
@@ -111,28 +124,34 @@ public class Server{
         player2 = cola.dequeue();  
         broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
         Player current_player;
-          //Configuracion inicial de clientes
-          send(player1,"CLRBLU");  // el jugador 1 tiene color azul
-          send(player2,"CLRRED");  // el jugador 2 tiene color rojo
 
 
           //Gameloop
           while(true){
+              
+              String color;
+              if(current == 1){
+                 color = "red";
+              }else{
+                 color = "blue";
+              }
+              
               if(current == 1){
                   current_player = player1;
               }else{
                   current_player = player2;
               }
               send(current_player,"YT");  // Establece turno
-
-              String punto1 = listen(current);
-              while("".equals(punto1)){
-                  punto1 = listen(current);
-              }
-              String punto2 = listen(current);
-              while("".equals(punto2)){
-                  punto2 = listen(current);
-              }
+              
+              msj = listen(current);
+              System.out.println(msj);
+              
+              punto1 = mapper.readValue(msj, Punto.class);
+              
+              msj = listen(current);
+              
+              punto2 = mapper.readValue(msj, Punto.class);
+              
 
               if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
                   stop_socket();
@@ -140,8 +159,9 @@ public class Server{
               }
 
               send(current_player,"NYT");
-              System.out.println(punto1+","+punto2);
-              broadcast("DWL"+punto1+","+punto2);
+              broadcast(mapper.writeValueAsString(punto1));
+              broadcast(mapper.writeValueAsString(punto2));
+              broadcast(color);
 
               current *= -1;  // Cambio de turno
         }      
@@ -162,6 +182,7 @@ public class Server{
    * @param msg El mensaje a enviar.
    */
   public static void send(Player player, String msg){
+      
       player.getOut().println(msg);
   }
   
@@ -170,6 +191,7 @@ public class Server{
    * @param msg Mensaje a emitir.
    */
   public static void broadcast(String msg){
+
       player1.getOut().println(msg);
       player2.getOut().println(msg);
   }

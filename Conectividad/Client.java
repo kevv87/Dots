@@ -2,7 +2,11 @@ package Conectividad;
 
 import Interfaz.LaminaJuego;
 import Interfaz.MarcoJuego;
+
 import gnu.io.CommPortIdentifier;
+
+import Interfaz.Punto;
+
 import java.awt.Color;
 import static java.awt.image.ImageObserver.ERROR;
 
@@ -13,6 +17,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Enumeration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 
 /**
@@ -25,7 +32,6 @@ public class Client{
     private BufferedReader in; // entrada
     private static PrintWriter out; //salida
     private MarcoJuego pantallaJuego;
-    private Color color;
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -102,8 +108,8 @@ public class Client{
     /**
      * Metodo que maneja toda la logica del cliente, desde crear la conexion hasta manejar el protocolo
      */
-    private void run() throws IOException, Exception{
-
+    private void run() throws IOException, MismatchedInputException, Exception{
+      ObjectMapper mapper = new ObjectMapper();
       String line;
 
       // Crea la conexion e inicializa los streams
@@ -115,34 +121,44 @@ public class Client{
       while(true){  // Debe procesar todos los mensajes del server
           line = in.readLine();  //Lee un mensaje entrante
           
+
+
           // Protocolo.
-          if(line == null){  // Maneja los mensaes nulos
+          if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
-            System.out.println(line.substring(4)+"\n");
           }else if(line.startsWith("YT")){  // Es su turno
             pantallaJuego.setActivo(true);
-            enviarDatosArduino("1");
           }else if(line.startsWith("NYT")){  //No es su turno
               pantallaJuego.setActivo(false);
-              enviarDatosArduino("0");
           }else if(line.startsWith("DWL")){  //Dibuje una linea
-              System.out.println(line);
               int punto1 = Integer.parseInt(line.substring(3, 4));
               int punto2 = Integer.parseInt(line.substring(5,6));
               LaminaJuego lamina = MarcoJuego.getLamina();
               lamina.addLine(punto1, punto2, Color.RED);
-          }else if(line.startsWith("CLR")){  // Cambie su color
-              if(line.substring(3).equals("BLU")){
-                  color = Color.BLUE;
-              }else{
+          }else if(line.startsWith("NYT")){  //No es su turno
+              pantallaJuego.setActivo(false);
+          }else if(line.startsWith("DWL")){  //Dibuje una linea
+              System.out.println(line);
+              Punto punto1 = mapper.readValue(in.readLine(), Punto.class);
+              Punto punto2 = mapper.readValue(in.readLine(), Punto.class);
+              String colorm = in.readLine();
+              Color color;
+              if("red".equals(colorm)){
                   color = Color.RED;
+              }else{
+                  color = Color.BLUE;
               }
+              LaminaJuego lamina = pantallaJuego.getLamina();
+              lamina.addLine(punto1, punto2, color);
           }else if(line.startsWith("ENC")){
               System.out.println("Estoy en cola");
           }else if(line.startsWith("NEC")){
               System.out.println("Sali de cola!");
           }else{
-              System.out.println("mensaje no identificado");
+              System.out.println("mensaje no identificado");     
+              System.out.println(line);
+              
+
           }
       }
     }

@@ -1,9 +1,15 @@
 package Interfaz;
 
 import Conectividad.Client;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MarcoJuego extends JFrame{
     
@@ -37,7 +43,7 @@ public class MarcoJuego extends JFrame{
         lamina = new LaminaJuego();
         add(lamina);
         
-        EventosMouse evento = new EventosMouse();
+       EventosMouse evento = new EventosMouse();
         addMouseListener(evento);
         
         
@@ -47,6 +53,8 @@ public class MarcoJuego extends JFrame{
     
     @Override
     public void mouseClicked(MouseEvent e) {
+        ObjectMapper mapper = new ObjectMapper();
+        
         if(!activo){
             return;
         }
@@ -56,15 +64,14 @@ public class MarcoJuego extends JFrame{
         Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
-            if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
-                Punto punto_click = punto;
-                int id = punto_click.getId();
-                String msg = ""+id;
-                if(id<10){
-                    msg = "0"+id;
+            if(punto.contiene(x,y)){  try {
+                // si el punto contiene a la coordenada donde se clickeo
+                System.out.println(punto);
+                
+                Client.send(mapper.writeValueAsString(punto));
+                } catch (JsonProcessingException ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println(msg);
-                Client.send(punto_click.getId()+"");
             }
         }
  
@@ -96,6 +103,7 @@ public class MarcoJuego extends JFrame{
 
     public int getXo() {
         return xo;
+
     }
 
     public int getYo() {
@@ -105,6 +113,7 @@ public class MarcoJuego extends JFrame{
     @Override
     public int getWidth() {
         return width;
+
     }
 
     @Override

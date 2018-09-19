@@ -1,10 +1,3 @@
-
-import Clases.ColaJugadores;
-import Clases.Player;
-import Conectividad.Client;
-
-
-
 /**
  *
  * @author kevv87
@@ -12,5 +5,6 @@ import Conectividad.Client;
 public class Main {
     public static void main(String[] args){
         
+
     }
 }
