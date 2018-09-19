@@ -18,12 +18,30 @@ public class Player{
   private Socket socket;
   private BufferedReader in;
   private PrintWriter out;
+  private Player siguiente = null;
+
+    public void setSiguiente(Player siguiente) {
+        this.siguiente = siguiente;
+    }
+
+    public Player getSiguiente() {
+        return siguiente;
+    }
 
   public Player(Socket socket) throws IOException{
     this.socket = socket;
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     out = new PrintWriter(socket.getOutputStream(), true);
   }
+  
+  public Player(String name){
+      this.socket = null;
+      this.name = name;
+  }
+
+    public String getName() {
+        return name;
+    }
 
   public BufferedReader getIn(){
     return in;

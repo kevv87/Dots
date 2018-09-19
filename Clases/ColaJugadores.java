@@ -9,45 +9,28 @@ package Clases;
  * La cola de jugadores de la pantalla de espera.
  * @author kevv87
  */
-public class ColaJugadores extends ListaSimple{
+public class ColaJugadores {
     
+    Player first;
     
-    /**
-     * Constructor
-     */
     public ColaJugadores(){
-        super();
-        
+        first = null;
     }
     
-    /**
-     * Introduce a un nuevo jugador en la cola de espera.
-     * @param player Jugador a introducir en la cola.
-     */
-    public void enqueue(Player player){
-        insertarPorPosicion(tamanio-1, new Nodo(player));
+    public void enqueue(Player jugador){
+        Player tmp = first;
+        first = jugador;
+        first.setSiguiente(tmp);
     }
     
-    /**
-     * Quita el primer jugador de la cola
-     * @return El jugador al frente de la cola
-     */
     public Player dequeue(){
-        if(tamanio > 0){
-        Nodo result = inicio;
-        removerPorPosicion(0);
-        return (Player) result.getValor();
-        }else{
-            return null;
-        }
+        Player result = first;
+        first = first.getSiguiente();
+        return result;
     }
     
-    /**
-     * Retorna el primer elemento de la cola, sin eliminarlo
-     * @return Objeto player
-     */
     public Player peek(){
-        return (Player) inicio.getValor();
+        return first;
     }
     
 }
