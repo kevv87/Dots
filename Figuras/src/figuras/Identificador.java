@@ -152,5 +152,32 @@ public class Identificador{
         aux_Perimetro.setCerrado(true);
         return aux_Perimetro.getPuntaje();
     }
+    
+    //GETTERS
+    public LinkedList<Perimetro> getPerimetros() {
+        return Perimetros;
+    }
+
+    public LinkedList<Punto> getPuntosCreados() {
+        return PuntosCreados;
+    }
+
+    public LinkedList<Punto> getPuntosCerrados() {
+        return PuntosCerrados;
+    }
+    //STTERS
+    public void setPerimetros(LinkedList<Perimetro> Perimetros) {
+        this.Perimetros = Perimetros;
+    }
+
+    public void setPuntosCreados(LinkedList<Punto> PuntosCreados) {
+        this.PuntosCreados = PuntosCreados;
+    }
+
+    public void setPuntosCerrados(LinkedList<Punto> PuntosCerrados) {
+        this.PuntosCerrados = PuntosCerrados;
+    }
+    
+    
 }    
     
