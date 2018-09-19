@@ -49,6 +49,10 @@ public class Server{
    */
   private static class Handler extends Thread{
       private String tipo;
+
+        public String getTipo() {
+            return tipo;
+        }
       
       public Handler(String tipo){
           this.tipo = tipo;
@@ -144,7 +148,6 @@ public class Server{
               send(current_player,"YT");  // Establece turno
               
               msj = listen(current);
-              System.out.println(msj);
               
               punto1 = mapper.readValue(msj, Punto.class);
               
@@ -152,13 +155,13 @@ public class Server{
               
               punto2 = mapper.readValue(msj, Punto.class);
               
-
               if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
                   stop_socket();
                   break;
               }
 
               send(current_player,"NYT");
+              broadcast("DWL");
               broadcast(mapper.writeValueAsString(punto1));
               broadcast(mapper.writeValueAsString(punto2));
               broadcast(color);

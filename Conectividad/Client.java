@@ -130,11 +130,6 @@ public class Client{
             pantallaJuego.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
               pantallaJuego.setActivo(false);
-          }else if(line.startsWith("DWL")){  //Dibuje una linea
-              int punto1 = Integer.parseInt(line.substring(3, 4));
-              int punto2 = Integer.parseInt(line.substring(5,6));
-              LaminaJuego lamina = MarcoJuego.getLamina();
-              lamina.addLine(punto1, punto2, Color.RED);
           }else if(line.startsWith("NYT")){  //No es su turno
               pantallaJuego.setActivo(false);
           }else if(line.startsWith("DWL")){  //Dibuje una linea
