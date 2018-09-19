@@ -33,7 +33,6 @@ public class LaminaJuego extends JPanel{
                 cont+=1;
                 xi+=radio+espacio;
             }
-            System.out.println(cont);
             xi = 80;
             yi += radio+espacio;
         }
