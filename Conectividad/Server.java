@@ -42,6 +42,7 @@ public class Server{
         System.out.println("Jugador 2!");
       }
 
+      MensajeLinea mensajeLinea = new MensajeLinea();
       Mensaje mensaje = new Mensaje("CLRBLU");
       String msjJson = mapper.writeValueAsString(mensaje);
       //Configuracion inicial de clientes
@@ -75,8 +76,9 @@ public class Server{
           send(current,msjJson);
           System.out.println(punto1+","+punto2);
 
-          mensaje.setAccion("DWL" +punto1+","+punto2);
-          msjJson = mapper.writeValueAsString(mensaje);
+          mensajeLinea.setAccion("DWL");
+          mensajeLinea.setIds(Integer.parseInt(punto1),Integer.parseInt(punto2));
+          msjJson = mapper.writeValueAsString(mensajeLinea);
           broadcast(msjJson);
 
           current *= -1;  // Cambio de turno
