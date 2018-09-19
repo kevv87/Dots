@@ -29,10 +29,11 @@ public class LaminaJuego extends JPanel{
         // Dibujando puntos
         for(int i = 0;i<8;i++){
             for(int j = 0;j<8;j++){
-                puntos[cont] = new Punto(xi,yi, cont);
+                puntos[cont] = new Punto(xi,yi,cont);
                 cont+=1;
                 xi+=radio+espacio;
             }
+            System.out.println(cont);
             xi = 80;
             yi += radio+espacio;
         }
