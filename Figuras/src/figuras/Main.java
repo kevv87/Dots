@@ -10,6 +10,5 @@ package figuras;
  * @author Sebastián
  */
 public class Main {
-    public static void main(String[] args){
-Identificador()    }
+    public static void main(String[] args){    }
 }
