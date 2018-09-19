@@ -12,9 +12,51 @@ package figuras;
 public class Identificador{
     
     private LinkedList<Perimetro> Perimetros;
-    private LinkedList<Segmento> Segmentos;
+    private LinkedList<Punto> PuntosCreados;
     private LinkedList<Punto> PuntosCerrados;
     
+    //Funcion que recibe los dos puntos unidos por los jugadores
+    public void entrada (int ID1, int ID2){ //La interfaz envía los dos puntos unidos por el usuario y entrada los recibe
+        
+        Punto Punto1 = new Punto(ID1%8, (int)ID1/8);
+        Punto Punto2 = new Punto(ID2%8, (int)ID2/8);
+
+        if(PuntosCreados.buscar(Punto1)){
+            //Busco algun perimetro donde el punto sea head o ultimo
+            Nodo<Perimetro> PerimAux = Perimetros.getInicio();
+            while(PerimAux.getSiguiente()!=null){
+                if(PerimAux.getElemento().getHead()==Punto1){   //Head
+                    PerimAux.getElemento().getPuntos().anadirInicio(Punto2);
+                } else if(PerimAux.getElemento().getUltimo()==Punto1){  //Ultimo
+                    PerimAux.getElemento().getPuntos().anadirFinal(Punto2);
+                }
+            }
+            PuntosCreados.anadirFinal(Punto2);
+        }
+        else if(PuntosCreados.buscar(Punto2)){
+            //Busco algun perimetro donde el punto sea head o ultimo
+            Nodo<Perimetro> PerimAux = Perimetros.getInicio();
+            while(PerimAux.getSiguiente()!=null){
+                if(PerimAux.getElemento().getHead()==Punto2){   //Head
+                    PerimAux.getElemento().getPuntos().anadirInicio(Punto1);
+                } else if(PerimAux.getElemento().getUltimo()==Punto2){  //Ultimo
+                    PerimAux.getElemento().getPuntos().anadirFinal(Punto1);
+                }
+            }
+            PuntosCreados.anadirFinal(Punto1);
+        }
+        else{
+            Perimetro nuevo = new Perimetro(Punto1, Punto2);
+            Perimetros.anadirFinal(nuevo);
+        }
+        //ALGO DEBE HACERSE CON EL RETURN PUNTAJE DE ESTE METODO
+        Nodo<Perimetro> PerimAux = Perimetros.getInicio();
+        while(PerimAux.getSiguiente()!=null){
+            cerrarPerimetro(PerimAux.getElemento());
+            PerimAux=PerimAux.getSiguiente();
+        }
+
+    }
     //Funcion para añadir segmentos a la lista del perimetro comparando los puntos del mismo, 
     public LinkedList segmentosPorPts(DoublyLinkedList L, Perimetro Per){
         LinkedList<Segmento> aux_Segmentos = new LinkedList();
