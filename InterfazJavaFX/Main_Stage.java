@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
 
 public class Main_Stage extends Application implements EventHandler<ActionEvent>{
 
@@ -18,6 +21,7 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
 
     public void start(Stage primaryStage) throws Exception {
 
+        Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
         window = primaryStage;
         window.setTitle("DOTS");
         window.setOnCloseRequest(e -> {
@@ -25,11 +29,7 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
             closeRequest();
         });
 
-
-        Menu menu = new Menu();
-        menu.start();
-
-        window.setScene(menu.scene);
+        window.setScene(new Scene(root, 500,400));
         window.show();
 
     }
