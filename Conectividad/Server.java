@@ -5,9 +5,12 @@
  */
 package Conectividad;
 
+import Clases.ColaJugadores;
 import Clases.Player;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase encargada de correr el servidor y llevar a cabo toda la logica del juego
@@ -21,63 +24,135 @@ public class Server{
   private static Player player2 = null;
   private static ServerSocket listener;
   private static int current = 1;
+  private static ColaJugadores cola = new ColaJugadores();
   
   public static void main(String[] args) throws Exception{
     System.out.println("The chat server is running");
     listener = new ServerSocket(PORT);  //Escuchando el socket
-
-    boolean found = false;
-    // Buscando jugadores
-    while(!found){
-        player1 = new Player(listener.accept());
-        found = true;
-        System.out.println("Jugador 1!");
-      }
-      found = false;
-      while(!found){
-        player2 = new Player(listener.accept());
-        found = true;
-        System.out.println("Jugador 2!");
+    new Handler("juego").start();
+    new Handler("cola").start();
+    
+  }
+  
+  
+  /**
+   * Clase encargada de manejar los hilos
+   * @author kevv87
+   */
+  private static class Handler extends Thread{
+      private String tipo;
+      
+      public Handler(String tipo){
+          this.tipo = tipo;
       }
       
-      //Configuracion inicial de clientes
-      send(1,"CLRBLU");  // el jugador 1 tiene color azul
-      send(2,"CLRRED");  // el jugador 2 tiene color rojo
-      
-      
-      //Gameloop
-      while(true){
-          send(current,"YT");  // Establece turno
-          
-          String punto1 = listen(current);
-          while("".equals(punto1)){
-              punto1 = listen(current);
+      /**
+       * Metodo encargado de la funcion de cada hilo distinto
+       */
+      public void run(){
+          if (tipo.equals("juego")){
+              try {
+                  juego();
+              } catch (IOException ex) {
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (InterruptedException ex) {
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              }
+          }else if(tipo.equals("cola")){
+              try {
+                  cola();
+              } catch (IOException ex) {
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              }
           }
-          String punto2 = listen(current);
-          while("".equals(punto2)){
-              punto2 = listen(current);
-          }
-          
-          if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
-              stop();
-              break;
-          }
-          
-          send(current,"NYT");
-          System.out.println(punto1+","+punto2);
-          broadcast("DWL"+punto1+","+punto2);
-          
-          current *= -1;  // Cambio de turno
       }
+      
+  }
+  
+  
+  /**
+   * Hilo encargado de la cola
+     * @throws java.io.IOException
+   */
+  public static void cola() throws IOException{
+      try{ 
+        while(true){
+            Player new_player = new Player(listener.accept());
+            cola.enqueue(new_player);
+            send(new_player,"ENC");  // Le dice al jugador que esta en cola.
+            System.out.println("Nuevo jugador en cola!");
+            System.out.println("Tamanno de la cola: "+cola.getTamanio());
+            
+        }
+      }finally{
+          stop_socket();
+      }
+  }
+  
+  /**
+   * Hilo encargado del juego
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
+   */
+  public static void juego() throws IOException, InterruptedException{
+    // Server loop
+    while(true){
+        boolean found = false;
+        // Esperando jugadores
+        while(!found){
+            if(cola.getTamanio()>=2){
+                found = true;
+            }else{
+                Thread.sleep(1000);  //Delay
+            }
+        }
+
+        player1 = cola.dequeue();
+        player2 = cola.dequeue();  
+        broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
+        Player current_player;
+          //Configuracion inicial de clientes
+          send(player1,"CLRBLU");  // el jugador 1 tiene color azul
+          send(player2,"CLRRED");  // el jugador 2 tiene color rojo
 
 
+          //Gameloop
+          while(true){
+              if(current == 1){
+                  current_player = player1;
+              }else{
+                  current_player = player2;
+              }
+              send(current_player,"YT");  // Establece turno
 
+              String punto1 = listen(current);
+              while("".equals(punto1)){
+                  punto1 = listen(current);
+              }
+              String punto2 = listen(current);
+              while("".equals(punto2)){
+                  punto2 = listen(current);
+              }
+
+              if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
+                  stop_socket();
+                  break;
+              }
+
+              send(current_player,"NYT");
+              System.out.println(punto1+","+punto2);
+              broadcast("DWL"+punto1+","+punto2);
+
+              current *= -1;  // Cambio de turno
+        }      
+    }
   }
   
   /**
    * Detiene los sockets y libera los puertos.
+     * @throws java.io.IOException
    */
-  public static void stop() throws IOException{
+  public static void stop_socket() throws IOException{
       listener.close();
   }
   
@@ -86,16 +161,8 @@ public class Server{
    * @param player El numero del jugador al cual se le quiere entregar el mensaje
    * @param msg El mensaje a enviar.
    */
-  public static void send(int player, String msg){
-      Player recipient;
-      
-      if(player == 1){
-          recipient = player1;
-      }else{
-          recipient = player2;
-      }
-      
-      recipient.getOut().println(msg);
+  public static void send(Player player, String msg){
+      player.getOut().println(msg);
   }
   
   /**

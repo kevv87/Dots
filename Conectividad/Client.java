@@ -40,7 +40,9 @@ public class Client{
     
     private static final int DATA_RATE = 9600;
     
-    
+    /**
+     * Inicializa la conexion con el arduino
+     */
     public void inicializarConexion(){
         CommPortIdentifier puertoID =null;
         Enumeration puertoEnum = CommPortIdentifier.getPortIdentifiers();
@@ -69,6 +71,11 @@ public class Client{
         }
     }
     
+    
+    /**
+     * Envia datos al serial al que escucha el arduino
+     * @param datos Datos a enviar.
+     */
     private void enviarDatosArduino(String datos){
         try{
             output.write(datos.getBytes());
@@ -78,10 +85,16 @@ public class Client{
     }
     /**
      * Constructor
+     * @throws java.lang.Exception
      */
     public Client() throws Exception{
         pantallaJuego = new MarcoJuego();
-        inicializarConexion();
+        /*
+        try{
+            inicializarConexion();
+        }catch(Exception e){
+            System.out.println("Error con arduino");
+        }*/
     }
     
     
@@ -116,7 +129,7 @@ public class Client{
               System.out.println(line);
               int punto1 = Integer.parseInt(line.substring(3, 4));
               int punto2 = Integer.parseInt(line.substring(5,6));
-              LaminaJuego lamina = pantallaJuego.getLamina();
+              LaminaJuego lamina = MarcoJuego.getLamina();
               lamina.addLine(punto1, punto2, Color.RED);
           }else if(line.startsWith("CLR")){  // Cambie su color
               if(line.substring(3).equals("BLU")){
@@ -124,6 +137,12 @@ public class Client{
               }else{
                   color = Color.RED;
               }
+          }else if(line.startsWith("ENC")){
+              System.out.println("Estoy en cola");
+          }else if(line.startsWith("NEC")){
+              System.out.println("Sali de cola!");
+          }else{
+              System.out.println("mensaje no identificado");
           }
       }
     }

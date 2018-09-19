@@ -11,22 +11,31 @@ package Clases;
  */
 public class ColaJugadores {
     
-    Player first;
+    private Player first;
+
+    public int getTamanio() {
+        return tamanio;
+    }
+    private int tamanio;
     
     public ColaJugadores(){
         first = null;
+        tamanio = 0;
     }
     
     public void enqueue(Player jugador){
         Player tmp = first;
         first = jugador;
         first.setSiguiente(tmp);
+        tamanio++;
     }
     
     public Player dequeue(){
         Player result = first;
         first = first.getSiguiente();
+        tamanio--;
         return result;
+        
     }
     
     public Player peek(){
