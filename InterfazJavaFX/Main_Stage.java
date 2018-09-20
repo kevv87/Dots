@@ -31,7 +31,6 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
 
         window.setScene(new Scene(root, 500,400));
         window.show();
-
     }
 
     @Override

@@ -21,9 +21,7 @@ import javafx.scene.Node;
 public class ServerController {
 
     public ListaSimple lista  = new ListaSimple(); //Variable estatica
-    public Button okButton;
-    public ColorPicker colorButton;
-    public Button backButton;
+
     public TextField usernameTextF;
     public TextField serverIDTextF;
     public boolean booli;
