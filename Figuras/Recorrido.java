@@ -10,8 +10,6 @@ package Figuras;
  * @author Sebastián
  */
 public class Recorrido {
-    private LinkedList<Punto> Puntos;
-    private LinkedList<Punto> Posibles;
     
     public boolean BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
@@ -21,9 +19,11 @@ public class Recorrido {
         Marcador.setElemento(Actual);
         boolean Continuar=true;
         boolean Cerrado=false;
+        LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
+        Posibilidades.eliminar(Anterior);
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
-            if(Marcador.getElemento()==Camino.getInicio().getElemento()){ //Cambiar por origen
+            if(Marcador.getElemento()==Origen){ //Cambiar por origen
                 System.out.println(Camino);
                 Cerrado=true;
                 Continuar=false;
@@ -33,28 +33,24 @@ public class Recorrido {
                 Continuar=false;
             //Recorre los puntos según sus referencias    
             } else{
-                LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
-                while(Posibilidades.getTamanio()>0){    //Revisar enciclamiento, perhaps unnecessary
-                    while(Posibilidades.getTamanio()!=1){
-                        Nodo<Punto> Marcador1 = new Nodo(null);
-                        Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
-                        if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
-                            Camino.anadirFinal(Marcador1.getElemento());
-                            System.out.println(Camino);
-                            Cerrado=true;
-                            Continuar=false;                        
-                        } else{
-                            Posibilidades.eliminar(Marcador1.getElemento());
-                            }
-                        }
-                    }
-                    while(Posibilidades.getTamanio()==1){   //Revisar condicion finalizacion
-                        //Camino.anadirFinal(Marcador.getElemento());
-                        //Marcador=Marcador.getElemento().getReferencias().getInicio();
-                    }
-                    
+                while(Posibilidades.getTamanio()==1 && Posibilidades.getInicio().getElemento()!=Origen){
+                    Camino.anadirFinal(Marcador.getElemento());
+                    Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
+                    Posibilidades=Marcador.getElemento().getReferencias();
                 }
-            }
+                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){
+                    Nodo<Punto> Marcador1 = new Nodo(null);
+                    Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
+                    if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
+                        Camino.anadirFinal(Marcador1.getElemento());    //Funcion sumar listas
+                        System.out.println(Camino);
+                        Cerrado=true;
+                        Continuar=false;
+                        return true;
+                    }
+                }    
+            }    
+        }
         return Cerrado;
     }
     //Funcion que recibe dos puntos del usuario
@@ -85,4 +81,5 @@ public class Recorrido {
         }
         return Menor.getElemento();
     }
+  
 }
