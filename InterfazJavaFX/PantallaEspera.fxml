@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <stylesheets>
+      <URL value="@pantallaEspera.css" />
+   </stylesheets>
+   <children>
+      <Pane prefHeight="400.0" prefWidth="500.0">
+         <children>
+            <CheckBox layoutX="218.0" layoutY="331.0" mnemonicParsing="false" text="PLAY" />
+            <Canvas height="200.0" layoutX="28.0" layoutY="34.0" width="200.0" />
+            <Canvas height="200.0" layoutX="275.0" layoutY="34.0" width="200.0" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

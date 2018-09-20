@@ -39,7 +39,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </ColorPicker>
-                  <Button fx:id="backButton" layoutX="8.0" layoutY="76.0" mnemonicParsing="false" text="Back">
+                  <Button fx:id="backButton" layoutX="8.0" layoutY="76.0" mnemonicParsing="false" text="Back" onAction="#changeToMainScreenButtonPushed">
                      <cursor>
                         <Cursor fx:constant="OPEN_HAND" />
                      </cursor>

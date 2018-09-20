@@ -7,10 +7,26 @@ package InterfazJavaFX;
 
 import java.awt.*;
 import java.net.URL;
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.ResourceBundle;
-
 import Matriz.ListaSimple;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import javafx.event.ActionEvent;
+
+
+
 
 /**
  * FXML Controller class
@@ -18,6 +34,8 @@ import javafx.fxml.Initializable;
  * @author kevv87
  */
 public class MenuController implements Initializable {
+
+    ListaSimple userDataList = new ListaSimple();
 
     /**
      * Initializes the controller class.
@@ -27,10 +45,26 @@ public class MenuController implements Initializable {
         // TODO
     }
 
-    public void play() throws Exception{
-        ConnectWindow ventana = new ConnectWindow();
-        ListaSimple lista = ventana.display();
-        System.out.println("lista: " + lista);
+    public void play(ActionEvent event) throws Exception{
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("ServerPanel.fxml"));
+        Parent tableViewParent = loader.load();
+
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        //This line gets the Stage information
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+
+
+    }
+
+    public void printList() throws Exception{
+        System.out.println();
+        userDataList.listar();
     }
     
 }

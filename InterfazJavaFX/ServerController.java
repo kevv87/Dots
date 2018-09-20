@@ -15,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
 
 public class ServerController {
 
@@ -35,5 +37,23 @@ public class ServerController {
         lista.agregarAlInicio(serverID);
 
         return lista;
+    }
+
+    public void changeToMainScreenButtonPushed(ActionEvent event) throws Exception {
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("Menu.fxml"));
+        Parent menuParent = loader.load();
+
+        Scene menuScene = new Scene(menuParent);
+
+        //access the controller and call a method
+        MenuController controller = loader.getController();
+        controller.userDataList = lista;
+        //This line gets the Stage information
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(menuScene);
+        window.show();
     }
 }
