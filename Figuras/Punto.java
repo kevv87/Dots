@@ -19,6 +19,7 @@ public class Punto {
     private int PosY;   //Valor de la fila
     private Punto Siguiente; //puntero a siguiente punto.
     private boolean EnUso;  //si pertenece a un perimetro cerrado
+    private LinkedList<Punto> Referencias;
 
     /**
      * Constructor
@@ -47,6 +48,10 @@ public class Punto {
     public boolean isEnUso() {
         return EnUso;
     }
+
+    public LinkedList<Punto> getReferencias() {
+        return Referencias;
+    }
     
 
 
@@ -67,6 +72,10 @@ public class Punto {
 
     public void setEnUso(boolean EnUso) {
         this.EnUso = EnUso;
+    }
+
+    public void setReferencias(LinkedList<Punto> Referencias) {
+        this.Referencias = Referencias;
     }
     
 
