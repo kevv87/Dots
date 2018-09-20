@@ -83,11 +83,8 @@ public class Server{
 
           current *= -1;  // Cambio de turno
       }
-
-
-
   }
-  
+
   /**
    * Detiene los sockets y libera los puertos.
    */
@@ -128,6 +125,7 @@ public class Server{
    * @return El mensaje que le envia el cliente
    */
   public static String listen(int player) throws IOException{
+
       Player emitter;
       
       if(player == 1){
@@ -135,8 +133,6 @@ public class Server{
       }else{
           emitter = player2;
       }
-      
       return emitter.getIn().readLine();
   }
-
 }
