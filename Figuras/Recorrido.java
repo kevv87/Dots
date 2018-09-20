@@ -23,20 +23,16 @@ public class Recorrido {
 
         boolean Continuar=true;
         boolean Cerrado=false;
-<<<<<<< HEAD
 
-=======
         LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
         Posibilidades.eliminar(Anterior);
->>>>>>> 7142bb607c251cd389ec4e5efd1add8468d0628a
+
         while(Continuar){
 
             //Primera condicion de finalizacion, cerró la figura
-<<<<<<< HEAD
-            if(Marcador.getElemento() == Origen){ //***Cambiar por origen
-=======
+
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
->>>>>>> 7142bb607c251cd389ec4e5efd1add8468d0628a
+
                 System.out.println(Camino);
                 Cerrado=true;
                 Continuar=false;
@@ -48,50 +44,11 @@ public class Recorrido {
 
             //Recorre los puntos según sus referencias    
             } else{
-<<<<<<< HEAD
-                LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
-                while(Posibilidades.getTamanio()>0){
 
-                    Nodo<Punto> Marcador1 = new Nodo(null);//**Revisar enciclamiento, perhaps unnecessary
-
-                    if(Posibilidades.getTamanio()>1){ //cambiado por if
-
-                        Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
-                        if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
-                            Camino.anadirFinal(Marcador1.getElemento());
-                            System.out.println(Camino);
-                            Cerrado=true;
-                            Continuar=false;                        
-                        } else{
-                            Posibilidades.eliminar(Marcador1.getElemento());
-                            }
-                        }
-
-                    else if (Posibilidades.getTamanio()==1){
-
-                        Marcador1.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
-                        if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
-                            Camino.anadirFinal(Marcador1.getElemento());
-                            System.out.println(Camino);
-                            Continuar=false;
-                        } else{
-                            Cerrado=true;
-                            Posibilidades.eliminar(Marcador1.getElemento());
-                        }
-
-                        //Revisar condicion finalizacion
-                        //Camino.anadirFinal(Marcador.getElemento());
-                        //Marcador=Marcador.getElemento().getReferencias().getInicio();
-                    }
-                    }
-
-                    
-=======
                 while(Posibilidades.getTamanio()==1 && Posibilidades.getInicio().getElemento()!=Origen){
                     Camino.anadirFinal(Marcador.getElemento());
                     Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
-                    Posibilidades=Marcador.getElemento().getReferencias();
->>>>>>> 7142bb607c251cd389ec4e5efd1add8468d0628a
+
                 }
                 while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){
                     Nodo<Punto> Marcador1 = new Nodo(null);
