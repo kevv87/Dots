@@ -30,6 +30,7 @@ public class Punto {
         PosY= fila;
         Siguiente = null;
         EnUso = false;
+        Referencias= new LinkedList();
     }
 
     // GETTERS
