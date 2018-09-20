@@ -57,6 +57,7 @@ public class Server{
       public Handler(String tipo){
           this.tipo = tipo;
       }
+
       
       /**
        * Metodo encargado de la funcion de cada hilo distinto
@@ -124,10 +125,12 @@ public class Server{
             }
         }
 
+
         player1 = cola.dequeue();
         player2 = cola.dequeue();  
         broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
         Player current_player;
+
 
 
           //Gameloop

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InterfazJavaFX.PantallaEsperaController">
+   <stylesheets>
+      <URL value="@pantallaEspera.css" />
+   </stylesheets>
+   <children>
+      <Pane prefHeight="400.0" prefWidth="500.0">
+         <children>
+            <ImageView fitHeight="400.0" fitWidth="500.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../img/digital_art_minimalism_simple_background_dots_lines_2D_geometry_CGI-20970.jpg!d.jpeg" />
+               </image>
+            </ImageView>
+            <CheckBox fx:id="checkBoxButton" layoutX="218.0" layoutY="331.0" mnemonicParsing="false" text="READY" />
+            <ColorPicker fx:id="colorPickerUser" layoutX="91.0" layoutY="243.0" />
+            <ColorPicker fx:id="colorPickerOponent" layoutX="316.0" layoutY="243.0" />
+            <ImageView fx:id="userImageView" fitHeight="130.0" fitWidth="150.0" layoutX="68.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/img1.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="oponentImageView" fitHeight="130.0" fitWidth="150.0" layoutX="285.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/img1.jpg" />
+               </image>
+            </ImageView>
+            <ChoiceBox fx:id="choiceBox" layoutX="68.0" layoutY="200.0" prefWidth="150.0" />
+            <Label fx:id="oponentUsername" layoutX="310.0" layoutY="191.0" prefHeight="46.0" prefWidth="101.0" text="Información oponente" textAlignment="CENTER" wrapText="true" />
+            <HBox layoutX="35.0" layoutY="290.0" prefHeight="18.0" prefWidth="201.0">
+               <children>
+                  <Label text="Jugador:" underline="true" wrapText="true" />
+                  <Region prefHeight="18.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="usernameLabel" prefHeight="17.0" prefWidth="128.0" text="Label" />
+               </children>
+            </HBox>
+            <Button fx:id="buttonBack" onAction="#changeToMainScreenButtonPushed" layoutX="226.0" layoutY="359.0" mnemonicParsing="false" text="Back" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
