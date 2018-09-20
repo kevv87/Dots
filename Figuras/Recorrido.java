@@ -53,6 +53,8 @@ public class Recorrido {
                         Cerrado=true;
                         Continuar=false;
                         return true;
+                    } else{
+                        
                     }
                 }    
             }    
@@ -80,9 +82,13 @@ public class Recorrido {
     //Funcion que determina de una lista, cual de los puntos se acerca más al que busco.x 
     public Punto BuscarMenorD(Punto Origen, LinkedList<Punto> Lista){
          Nodo<Punto> Menor = Lista.getInicio();
-         while(Menor.getSiguiente()!=null){
-            if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Menor.getSiguiente().getElemento())){
-                Menor=Menor.getSiguiente();
+         Nodo<Punto> Aux = Lista.getInicio();
+         while(Aux.getSiguiente()!=null){
+            if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Aux.getSiguiente().getElemento())){
+                Menor=Aux;
+                Aux=Aux.getSiguiente();
+            } else{
+                Aux=Aux.getSiguiente();
             }
              
         }
