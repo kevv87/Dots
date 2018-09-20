@@ -37,8 +37,8 @@ public class Perimetro {
             }
         }
         head.setSiguiente(ultimo);
-        this.puntos.anadirFinal(head);
-        this.puntos.anadirFinal(ultimo);
+        puntos.anadirFinal(head);
+        puntos.anadirFinal(ultimo);
         Segmento nuevo = new Segmento (head, ultimo);
         segmentos.anadirInicio(nuevo);
         cerrado=false;

@@ -12,10 +12,12 @@ package Figuras;
 public class LinkedList<T>{ //Lista para nodos genericos
     
     private Nodo<T> Inicio;
+    private Nodo<T> Ultimo;
     private int Tamanio;
     
     public LinkedList(){    
         Inicio=null;
+        Ultimo=null;
         Tamanio=0;
     }
     
@@ -41,6 +43,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
                           
             current.setSiguiente(nuevo);
         }
+        Ultimo=nuevo;
         Tamanio++;
     }
     public boolean buscar(T dato){
@@ -68,6 +71,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
                 aux=aux.getSiguiente();
             }
             aux.setSiguiente(aux.getSiguiente().getSiguiente());
+            Tamanio--;
         }
     }
 
@@ -75,6 +79,10 @@ public class LinkedList<T>{ //Lista para nodos genericos
         return Inicio;
     }
 
+    public Nodo<T> getUltimo() {
+        return Ultimo;
+    }
+    
     public void setInicio(Nodo<T> inicio) {
         this.Inicio = inicio;
     }
@@ -83,6 +91,10 @@ public class LinkedList<T>{ //Lista para nodos genericos
         return Tamanio;
     }
 
+    public void setUltimo(Nodo<T> Ultimo) {
+        this.Ultimo = Ultimo;
+    }
+    
     public void setTamanio(int tamanio) {
         this.Tamanio = tamanio;
     }
