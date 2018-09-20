@@ -23,42 +23,38 @@ public class Recorrido {
         boolean Cerrado=false;
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
-            if(Marcador.getElemento()==Camino.getInicio().getElemento()){
+            if(Marcador.getElemento()==Camino.getInicio().getElemento()){ //Cambiar por origen
                 System.out.println(Camino);
                 Cerrado=true;
                 Continuar=false;
             //Segunda condicion de finalizacion, no pudo cerrar
-            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){
+            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
                 System.out.println("No cerró");
                 Continuar=false;
             //Recorre los puntos según sus referencias    
             } else{
                 LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
-                while(Posibilidades.getTamanio()>0){
+                while(Posibilidades.getTamanio()>0){    //Revisar enciclamiento, perhaps unnecessary
                     while(Posibilidades.getTamanio()!=1){
                         Nodo<Punto> Marcador1 = new Nodo(null);
-                        Marcador1.setElemento(BuscarMenorD(Marcador1.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
+                        Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
                         if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
+                            Camino.anadirFinal(Marcador1.getElemento());
                             System.out.println(Camino);
                             Cerrado=true;
                             Continuar=false;                        
                         } else{
-                            Posibilidades.eliminar(Actual);
-                            Actual=BuscarMenorD(Origen, Posibilidades);
-                            if(BuscaCaminos(Origen, Marcador.getElemento(), Actual)){
-                                System.out.println("No cerró");
-                                Continuar=false;
+                            Posibilidades.eliminar(Marcador1.getElemento());
                             }
                         }
                     }
-                    while(Posibilidades.getTamanio()==1){
-                        Camino.anadirFinal(Marcador.getElemento());
-                        Marcador=Marcador.getElemento().getReferencias().getInicio();
+                    while(Posibilidades.getTamanio()==1){   //Revisar condicion finalizacion
+                        //Camino.anadirFinal(Marcador.getElemento());
+                        //Marcador=Marcador.getElemento().getReferencias().getInicio();
                     }
                     
                 }
             }
-        }
         return Cerrado;
     }
     //Funcion que recibe dos puntos del usuario
