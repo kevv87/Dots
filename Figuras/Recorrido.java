@@ -19,24 +19,35 @@ public class Recorrido {
         Camino.setInicio(Marcador);
         Camino.anadirFinal(Actual);
         Marcador.setElemento(Actual);
+
+        //reduce tamaño
+        Marcador.getElemento().getReferencias().eliminar(Origen);
+
         boolean Continuar=true;
         boolean Cerrado=false;
+
         while(Continuar){
+
             //Primera condicion de finalizacion, cerró la figura
-            if(Marcador.getElemento()==Camino.getInicio().getElemento()){ //Cambiar por origen
+            if(Marcador.getElemento() == Origen){ //***Cambiar por origen
                 System.out.println(Camino);
                 Cerrado=true;
                 Continuar=false;
+
             //Segunda condicion de finalizacion, no pudo cerrar
-            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
+            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //**Eliminar anterior
                 System.out.println("No cerró");
                 Continuar=false;
+
             //Recorre los puntos según sus referencias    
             } else{
                 LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino
-                while(Posibilidades.getTamanio()>0){    //Revisar enciclamiento, perhaps unnecessary
-                    while(Posibilidades.getTamanio()!=1){
-                        Nodo<Punto> Marcador1 = new Nodo(null);
+                while(Posibilidades.getTamanio()>0){
+
+                    Nodo<Punto> Marcador1 = new Nodo(null);//**Revisar enciclamiento, perhaps unnecessary
+
+                    if(Posibilidades.getTamanio()>1){ //cambiado por if
+
                         Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
                         if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
                             Camino.anadirFinal(Marcador1.getElemento());
@@ -47,11 +58,25 @@ public class Recorrido {
                             Posibilidades.eliminar(Marcador1.getElemento());
                             }
                         }
-                    }
-                    while(Posibilidades.getTamanio()==1){   //Revisar condicion finalizacion
+
+                    else if (Posibilidades.getTamanio()==1){
+
+                        Marcador1.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
+                        if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
+                            Camino.anadirFinal(Marcador1.getElemento());
+                            System.out.println(Camino);
+                            Continuar=false;
+                        } else{
+                            Cerrado=true;
+                            Posibilidades.eliminar(Marcador1.getElemento());
+                        }
+
+                        //Revisar condicion finalizacion
                         //Camino.anadirFinal(Marcador.getElemento());
                         //Marcador=Marcador.getElemento().getReferencias().getInicio();
                     }
+                    }
+
                     
                 }
             }

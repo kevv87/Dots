@@ -41,7 +41,7 @@
                   <Label fx:id="usernameLabel" prefHeight="17.0" prefWidth="128.0" text="Label" />
                </children>
             </HBox>
-            <Button fx:id="buttonBack" onAction="#changeToMainScreenButtonPushed" layoutX="226.0" layoutY="359.0" mnemonicParsing="false" text="Back" />
+            <Button fx:id="buttonBack" layoutX="226.0" layoutY="359.0" mnemonicParsing="false" onAction="#changeToMainScreenButtonPushed" text="Back" />
          </children>
       </Pane>
    </children>
