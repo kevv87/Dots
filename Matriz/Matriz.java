@@ -66,7 +66,7 @@ public class Matriz {
             int id = 0;
 
             agregarFilaAlFinal(id); //primeramente añade una fila, para poder tener acceso a la posicion de memoria del head
-            ListaPuntos tmpH = headMatriz;
+            ListaPuntos tmpH_Matriz = headMatriz;
 
             //headMatriz = new ListaPuntos(0);
             //ListaPuntos tmpH = headMatriz;
@@ -74,14 +74,14 @@ public class Matriz {
             for(int i = 1; i <= c_Filas; i++){ //por cada fila
 
                 for(int j=0; j<c_Columnas; j++){ //añade c_Columnas de puntos
-                    tmpH.agregarAlFinal(id++,i-1,j);
+                    tmpH_Matriz.agregarAlFinal(id++,i-1,j);
 
 
                 }
 
                 if (i <= (c_Filas-1)){ // cuando se tiene la cantidad de filas desedas, deje de agregar filas
                     agregarFilaAlFinal(i);
-                    tmpH = tmpH.getSiguiente();
+                    tmpH_Matriz = tmpH_Matriz.getSiguiente();
                 }
 
             }
@@ -109,9 +109,6 @@ public class Matriz {
 
             punto1.getListaRelaciones().agregarAlInicio(punto2.getId());
             punto2.getListaRelaciones().agregarAlInicio(punto1.getId());
-
-            punto1.getListaRelaciones().listar();
-            punto2.getListaRelaciones().listar();
         }
 
     }
@@ -204,14 +201,8 @@ public class Matriz {
 
         int distSegX = Math.abs(punto1.getN_columna() - punto2.getN_columna()); //distancia en eje X del segmento
         int distSegY = Math.abs(punto1.getN_fila() - punto2.getN_fila()); // distancia en eje Y del segmento
-
-        if (distSegX <= 1 && distSegY <= 1){
-            return true; //es un segmento aceptable;
-        }
-
-        else{
-            return false; //la distancia del segmento es mayor a la permitida
-        }
+        
+        return distSegX <= 1 && distSegY <= 1;
     }
 
 
@@ -229,16 +220,8 @@ public class Matriz {
         if (bool_longitud){
 
             boolean existeConexion = punto1.getListaRelaciones().buscar(punto2.getId());
-
-            if (!existeConexion){  //valida si el segmento ya existe .
-
-                // [AGREGAR] valida si se encuentra dentro de un area.
-                return true;
-
-            }
-            else{
-                return false;
-            }
+            return !existeConexion;
+            
         }
         return false;
     }

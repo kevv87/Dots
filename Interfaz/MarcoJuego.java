@@ -34,7 +34,7 @@ public class MarcoJuego extends JFrame{
         
         lamina = new LaminaJuego();
         add(lamina);
-        
+    
         EventosMouse evento = new EventosMouse();
         addMouseListener(evento);
         
