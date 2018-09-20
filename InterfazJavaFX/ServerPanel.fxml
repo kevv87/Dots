@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="serverPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="242.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InterfazJavaFX.ServerController">
+   <children>
+      <SplitPane dividerPositions="0.43457943925233644" layoutX="14.0" layoutY="15.0" orientation="VERTICAL" prefHeight="216.0" prefWidth="214.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="71.0" prefWidth="212.0">
+               <children>
+                  <TextField fx:id="usernameTextF" layoutX="-4.0" layoutY="34.0" prefHeight="27.0" prefWidth="221.0" promptText="username">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+                  <Button fx:id="okButton" layoutX="172.0" layoutY="3.0" mnemonicParsing="false" text="OK" onAction="#getInfo">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="114.0" prefWidth="212.0">
+               <children>
+                  <TextField fx:id="serverIDTextF" layoutX="-4.0" layoutY="32.0" prefHeight="27.0" prefWidth="221.0" promptText="ServerID">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                  </TextField>
+                  <ColorPicker fx:id="colorButton" layoutX="69.0" layoutY="76.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ColorPicker>
+                  <Button fx:id="backButton" layoutX="8.0" layoutY="76.0" mnemonicParsing="false" text="Back" onAction="#changeToMainScreenButtonPushed">
+                     <cursor>
+                        <Cursor fx:constant="OPEN_HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

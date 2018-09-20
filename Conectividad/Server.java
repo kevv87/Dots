@@ -44,6 +44,7 @@ public class Server{
         System.out.println("Jugador 2!");
       }
 
+      MensajeLinea mensajeLinea = new MensajeLinea();
       Mensaje mensaje = new Mensaje("CLRBLU");
       String msjJson ;
       
@@ -89,6 +90,7 @@ public class Server{
           msjJson = mapper.writeValueAsString(mensaje);
           send(current,msjJson);
           System.out.println(punto1+","+punto2);
+
 
           mensaje.setAccion("DWL");
           msjJson = mapper.writeValueAsString(mensaje);

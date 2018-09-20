@@ -18,8 +18,6 @@ public class MarcoJuego extends JFrame{
     private final int width;
     private final int height;
     private boolean activo;
-
-
     private static LaminaJuego lamina;
     
     /**
