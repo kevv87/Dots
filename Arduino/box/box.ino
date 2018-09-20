@@ -1,11 +1,11 @@
 const int dp = 13;
-const int A = 2;
-const int B = 5;
-const int C = 4;
-const int D = 6;
-const int E = 7;
-const int F = 9;
-const int G = 8;
+const int AA = 2;
+const int AB = 5;
+const int AC = 4;
+const int AD = 6;
+const int AE = 7;
+const int AF = 9;
+const int AG = 8;
 const int LED = 10;
 int Byte_entrada = 0;
 
@@ -13,117 +13,117 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(dp, OUTPUT);
-  pinMode(A, OUTPUT);
-  pinMode(B, OUTPUT);
-  pinMode(C, OUTPUT);
-  pinMode(D, OUTPUT);
-  pinMode(E, OUTPUT);
-  pinMode(F, OUTPUT);
-  pinMode(G, OUTPUT);
+  pinMode(AA, OUTPUT);
+  pinMode(AB, OUTPUT);
+  pinMode(AC, OUTPUT);
+  pinMode(AD, OUTPUT);
+  pinMode(AE, OUTPUT);
+  pinMode(AF, OUTPUT);
+  pinMode(AG, OUTPUT);
   pinMode(LED, OUTPUT);
-  numeros(0);
+  numeros('0');
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   if(Serial.available() > 0){  // Determina si el puerto serial esta disponible
     Byte_entrada = Serial.read();  // Lee serial
-    Serial.write(Byte_entrada);
-    numeros(Byte_entrada);
+    Serial.write(Byte_entrada+"/n");
+    Serial.write(Byte_entrada/10+"/n");
   }
 
 }
 
 void numeros(int num){   
   if (num == '0'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, LOW);
-    digitalWrite(F, LOW);
-    digitalWrite(G, HIGH);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, LOW);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, HIGH);
     digitalWrite(dp, HIGH);
   }else if (num == '1'){
-    digitalWrite(A, HIGH);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, HIGH);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, HIGH);
-    digitalWrite(G, HIGH);
+    digitalWrite(AA, HIGH);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, HIGH);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, HIGH);
+    digitalWrite(AG, HIGH);
     digitalWrite(dp, HIGH);
   }else if (num == '2'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, HIGH);
-    digitalWrite(D, LOW);
-    digitalWrite(E, LOW);
-    digitalWrite(F, HIGH);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, HIGH);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, LOW);
+    digitalWrite(AF, HIGH);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '3'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, HIGH);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, HIGH);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '4'){
-    digitalWrite(A, HIGH);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, HIGH);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, HIGH);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, HIGH);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '5'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, HIGH);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, HIGH);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '6'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, HIGH);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, LOW);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, HIGH);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, LOW);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '7'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, HIGH);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, HIGH);
-    digitalWrite(G, HIGH);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, HIGH);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, HIGH);
+    digitalWrite(AG, HIGH);
     digitalWrite(dp, HIGH);
   }else if (num == '8'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, LOW);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, LOW);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }else if (num == '9'){
-    digitalWrite(A, LOW);
-    digitalWrite(B, LOW);
-    digitalWrite(C, LOW);
-    digitalWrite(D, LOW);
-    digitalWrite(E, HIGH);
-    digitalWrite(F, LOW);
-    digitalWrite(G, LOW);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, HIGH);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
     digitalWrite(dp, HIGH);
   }
 }
