@@ -31,7 +31,8 @@ public class Client{
 
     private BufferedReader in; // entrada
     private static PrintWriter out; //salida
-    private MarcoJuego pantallaJuego;
+    private final MarcoJuego pantallaJuego;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -49,7 +50,7 @@ public class Client{
     /**
      * Inicializa la conexion con el arduino
      */
-    public void inicializarConexion(){
+    public void inicializarConexionArduino(){
         CommPortIdentifier puertoID =null;
         Enumeration puertoEnum = CommPortIdentifier.getPortIdentifiers();
         
@@ -91,10 +92,13 @@ public class Client{
     }
     /**
      * Constructor
+     * @param serverAddress Direccion IP del server
      * @throws java.lang.Exception
      */
-    public Client() throws Exception{
+    public Client(String serverAddress) throws Exception{
         pantallaJuego = new MarcoJuego();
+        init(serverAddress);
+        run_juego();
         /*
         try{
             inicializarConexion();
@@ -104,25 +108,32 @@ public class Client{
     }
     
     
+    /**
+     * Inicializa la conexion con el server
+     * @param serverAddress direccion IP del server
+     * @throws java.io.IOException
+     */
+    public void init(String serverAddress) throws IOException{
+        // Crea la conexion e inicializa los streams
+      Socket socket = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
+      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      out = new PrintWriter(socket.getOutputStream(), true);
+      System.out.println("Conectado");
+    }
+    
+    
     
     /**
      * Metodo que maneja toda la logica del cliente, desde crear la conexion hasta manejar el protocolo
      */
-    private void run() throws IOException, MismatchedInputException, Exception{
-      ObjectMapper mapper = new ObjectMapper();
+    private void run_juego() throws IOException, MismatchedInputException, Exception{
       String line;
 
-      // Crea la conexion e inicializa los streams
-      String serverAddress = "localhost";  //Ip del server
-      Socket socket = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      out = new PrintWriter(socket.getOutputStream(), true);
+      
 
       while(true){  // Debe procesar todos los mensajes del server
           line = in.readLine();  //Lee un mensaje entrante
           
-
-
           // Protocolo.
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
@@ -156,12 +167,6 @@ public class Client{
 
           }
       }
-    }
-
-
-    public static void main(String[] args) throws Exception{
-      Client client = new Client();
-      client.run();
     }
     
     /**

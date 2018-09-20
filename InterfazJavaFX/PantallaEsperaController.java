@@ -1,6 +1,9 @@
 package InterfazJavaFX;
 
+import Conectividad.Client;
 import Matriz.ListaSimple;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -30,6 +33,20 @@ public class PantallaEsperaController {
 
         window.setScene(menuScene);
         window.show();
+    }
+    
+    public void ready(ActionEvent event) throws Exception {
+        Thread juego = new Thread(){
+            public void run(){
+                try {
+                    new Client((String)userDataList.getValor(0));
+                } catch (Exception ex) {
+                    Logger.getLogger(PantallaEsperaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        juego.start();
+        System.out.println("Finaliza");
     }
 
 }

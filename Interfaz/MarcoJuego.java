@@ -27,7 +27,7 @@ public class MarcoJuego extends JFrame{
     public MarcoJuego() throws Exception{
         
         
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         
         xo = 300;

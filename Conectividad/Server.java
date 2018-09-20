@@ -35,7 +35,7 @@ public class Server{
   private static ColaJugadores cola = new ColaJugadores();
   
   public static void main(String[] args) throws Exception{
-    System.out.println("The chat server is running");
+    System.out.println("The server is running");
     listener = new ServerSocket(PORT);  //Escuchando el socket
     new Handler("juego").start();
     new Handler("cola").start();
@@ -117,6 +117,7 @@ public class Server{
     while(true){
         boolean found = false;
         // Esperando jugadores
+        System.out.println("Esperando jugadores");
         while(!found){
             if(cola.getTamanio()>=2){
                 found = true;
@@ -152,9 +153,17 @@ public class Server{
               
               msj = listen(current);
               
+              if(msj==null){
+                  break;
+              }
+              
               punto1 = mapper.readValue(msj, Punto.class);
               
               msj = listen(current);
+              
+              if(msj==null){
+                  break;
+              }
               
               punto2 = mapper.readValue(msj, Punto.class);
               
