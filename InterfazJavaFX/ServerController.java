@@ -26,7 +26,7 @@ public class ServerController {
     public TextField serverIDTextF;
     public boolean booli;
 
-    public ListaSimple getInfo() throws Exception{
+    public void getInfo(ActionEvent event) throws Exception{
 
         String username = usernameTextF.getText();
         String serverID = serverIDTextF.getText();
@@ -34,8 +34,24 @@ public class ServerController {
         lista.agregarAlInicio(username);
         lista.agregarAlInicio(serverID);
 
-        return lista;
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("PantallaEspera.fxml"));
+        Parent pantallaEsperaParent = loader.load();
+
+        Scene pantallaEsperaScene = new Scene(pantallaEsperaParent);
+
+        //access the controller and call a method
+        PantallaEsperaController controller = loader.getController();
+
+        controller.userDataList = lista;
+        //This line gets the Stage information
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(pantallaEsperaScene);
+        window.show();
     }
+
+
 
     public void changeToMainScreenButtonPushed(ActionEvent event) throws Exception {
 
