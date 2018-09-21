@@ -22,6 +22,8 @@ public class Main {
         Punto P3 = new Punto(2,2);
         Punto P4 = new Punto(2,1);
         Punto P5 = new Punto(1,3);
+        Punto P6 = new Punto(0,2);
+        Punto P7 = new Punto(0,3);
         
         //Punto P6 = new Punto(4,3);
         //Punto P7 = new Punto(5,2);
@@ -45,6 +47,10 @@ public class Main {
         P4.getReferencias().anadirFinal(P1);
         P4.getReferencias().anadirFinal(P3);
         P5.getReferencias().anadirFinal(P2);
+        P2.getReferencias().anadirFinal(P6);
+        P6.getReferencias().anadirFinal(P2);
+        P6.getReferencias().anadirFinal(P7);
+        P7.getReferencias().anadirFinal(P6);
         
        
         Buscador.BuscaCaminos(P1, P1, P2);
