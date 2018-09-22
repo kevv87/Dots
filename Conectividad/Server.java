@@ -8,8 +8,6 @@ package Conectividad;
 
 import Clases.ColaJugadores;
 import Clases.Player;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +15,6 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.awt.Color;
 
 
 /**
@@ -32,7 +29,7 @@ public class Server{
   private static Player player2 = null;
   private static ServerSocket listener;
   private static int current = 1;
-  private static ColaJugadores cola = new ColaJugadores();
+  private static final ColaJugadores cola = new ColaJugadores();
   
   public static void main(String[] args) throws Exception{
     System.out.println("The server is running");
@@ -48,7 +45,7 @@ public class Server{
    * @author kevv87
    */
   private static class Handler extends Thread{
-      private String tipo;
+      private final String tipo;
 
         public String getTipo() {
             return tipo;
@@ -62,13 +59,12 @@ public class Server{
       /**
        * Metodo encargado de la funcion de cada hilo distinto
        */
+      @Override
       public void run(){
           if (tipo.equals("juego")){
               try {
                   juego();
-              } catch (IOException ex) {
-                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-              } catch (InterruptedException ex) {
+              } catch (IOException | InterruptedException ex) {
                   Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
               }
           }else if(tipo.equals("cola")){
@@ -90,11 +86,12 @@ public class Server{
   public static void cola() throws IOException{
       try{ 
         while(true){
-            Player new_player = new Player(listener.accept());
+            Player new_player = new Player(listener.accept(), listener.accept());
             cola.enqueue(new_player);
             send(new_player,"ENC");  // Le dice al jugador que esta en cola.
             System.out.println("Nuevo jugador en cola!");
             System.out.println("Tamanno de la cola: "+cola.getTamanio());
+            
             
         }
       }finally{
@@ -131,9 +128,52 @@ public class Server{
         player2 = cola.dequeue();  
         broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
         Player current_player;
-
-
-
+        
+        Thread listenp1 = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    while(true){
+                        System.out.println("Waiting...");
+                        String line = player1.getComandos_in().readLine(); 
+                        if(line == null){
+                            break;
+                        }else if("END".equals(line)){
+                            
+                            player2.getComandos_out().println("END");
+                            break;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        
+        Thread listenp2 = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    while(true){
+                        System.out.println("Waiting");
+                        String line = player2.getComandos_in().readLine();
+                        System.out.println("Received");
+                        if(line == null){
+                            break;
+                        }else if("END".equals(line)){
+                            player1.getComandos_out().println("END");
+                            break;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        
+        listenp1.start();  //hilos que se encargan de estar verificando si algun jugador salio
+        listenp2.start();
+      
           //Gameloop
           while(true){
               
@@ -153,21 +193,22 @@ public class Server{
               
               msj = listen(current);
               
-              if(msj==null){
+              if(msj==null || msj.equals("END")){
                   break;
               }
               
               punto1 = mapper.readValue(msj, Punto.class);
               
+              System.out.println("Esperando msj");
               msj = listen(current);
               
-              if(msj==null){
+              if(msj==null || msj.equals("END")){
                   break;
               }
               
               punto2 = mapper.readValue(msj, Punto.class);
               
-              if(punto1 == null || punto2 == null){  //Alguno de los dos jugadores salio del juego, cierra el socket.
+              if(punto1 == null || punto2 == null || !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
                   stop_socket();
                   break;
               }
@@ -198,7 +239,7 @@ public class Server{
    */
   public static void send(Player player, String msg){
       
-      player.getOut().println(msg);
+      player.getGame_out().println(msg);
   }
   
   /**
@@ -207,16 +248,17 @@ public class Server{
    */
   public static void broadcast(String msg){
 
-      player1.getOut().println(msg);
-      player2.getOut().println(msg);
+      player1.getGame_out().println(msg);
+      player2.getGame_out().println(msg);
   }
   
   /**
    * Se detiene a escuchar un cierto socket hasta recibir una respuesta
    * @param player El jugador cuyo socket se desea escuchar.
    * @return El mensaje que le envia el cliente
+     * @throws java.io.IOException
    */
-  public static String listen(int player) throws IOException{
+  public synchronized static String listen(int player) throws IOException{
       Player emitter;
       
       if(player == 1){
@@ -225,7 +267,7 @@ public class Server{
           emitter = player2;
       }
       
-      return emitter.getIn().readLine();
+      return emitter.getGame_in().readLine();
   }
 
 }

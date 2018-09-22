@@ -20,6 +20,8 @@ import java.util.Enumeration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -28,11 +30,21 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
  * @version 0.2
  */
 public class Client{
-
-    private BufferedReader in; // entrada
-    private static PrintWriter out; //salida
-    private final MarcoJuego pantallaJuego;
+    
+    //Socket referido al juego
+    private static Socket socket_game;
+    private BufferedReader in_game; // entrada
+    private static PrintWriter out_game; //salida
+    
+    //Socket referido a comandos
+    private static Socket socket_comandos;
+    private BufferedReader in_comandos; // entrada
+    private static PrintWriter out_comandos; //salida
+    
+    
+    private static MarcoJuego pantallaJuego;
     private final ObjectMapper mapper = new ObjectMapper();
+    
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -98,7 +110,27 @@ public class Client{
     public Client(String serverAddress) throws Exception{
         pantallaJuego = new MarcoJuego();
         init(serverAddress);
-        run_juego();
+        Thread juego = new Thread(){
+            public void run(){
+                try {
+                    run_juego();
+                } catch (Exception ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        Thread comandos = new Thread(){
+            public void run(){
+                try {
+                    run_comando();
+                } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        
+        juego.start();
+        comandos.start();
         /*
         try{
             inicializarConexion();
@@ -115,25 +147,30 @@ public class Client{
      */
     public void init(String serverAddress) throws IOException{
         // Crea la conexion e inicializa los streams
-      Socket socket = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      out = new PrintWriter(socket.getOutputStream(), true);
+      socket_game = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
+      in_game = new BufferedReader(new InputStreamReader(socket_game.getInputStream()));
+      out_game = new PrintWriter(socket_game.getOutputStream(), true);
+      
+      socket_comandos = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
+      in_comandos = new BufferedReader(new InputStreamReader(socket_comandos.getInputStream()));
+      out_comandos = new PrintWriter(socket_comandos.getOutputStream(), true);
       System.out.println("Conectado");
     }
     
     
     
     /**
-     * Metodo que maneja toda la logica del cliente, desde crear la conexion hasta manejar el protocolo
+     * Maneja el protocolo del juego
      */
     private void run_juego() throws IOException, MismatchedInputException, Exception{
-      String line;
-
-      
+      String line = null;
 
       while(true){  // Debe procesar todos los mensajes del server
-          line = in.readLine();  //Lee un mensaje entrante
-          
+          try{
+            line = in_game.readLine();  //Lee un mensaje entrante
+          } catch(Exception e){
+              line = null;
+          }
           // Protocolo.
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
@@ -145,9 +182,9 @@ public class Client{
               pantallaJuego.setActivo(false);
           }else if(line.startsWith("DWL")){  //Dibuje una linea
               System.out.println(line);
-              Punto punto1 = mapper.readValue(in.readLine(), Punto.class);
-              Punto punto2 = mapper.readValue(in.readLine(), Punto.class);
-              String colorm = in.readLine();
+              Punto punto1 = mapper.readValue(in_game.readLine(), Punto.class);
+              Punto punto2 = mapper.readValue(in_game.readLine(), Punto.class);
+              String colorm = in_game.readLine();
               Color color;
               if("red".equals(colorm)){
                   color = Color.RED;
@@ -160,6 +197,8 @@ public class Client{
               System.out.println("Estoy en cola");
           }else if(line.startsWith("NEC")){
               System.out.println("Sali de cola!");
+          }else if(line.startsWith("END")){
+              Client.close();
           }else{
               System.out.println("mensaje no identificado");     
               System.out.println(line);
@@ -169,11 +208,55 @@ public class Client{
       }
     }
     
+    
     /**
-     * Envia un mensaje al servidor.
+     * Maneja el protocolo de comandos
+     * @throws java.io.IOException
+     */
+    public void run_comando() throws IOException{
+        String line = null;
+        while(true){
+            try{
+                line = in_comandos.readLine();  //Lee un mensaje entrante
+              } catch(IOException e){
+                  line = null;
+              }
+
+            if(line==null){
+                close();
+                break;
+            }else if("END".equals(line)){
+                close();
+            }
+        }
+    }
+    
+    /**
+     * Envia un mensaje al servidor mediante el protocolo de juego.
      * @param msg Mensaje a enviar al servidor
      */
-    public static void send(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
-        out.println(msg);
+    public static void send_game(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
+        out_game.println(msg);
+    }
+    
+    
+    /**
+     * Envia un mensaje al servidor mediante el protocolo de comandos.
+     * @param msg Mensaje a enviar al servidor
+     */
+    public static void send_comando(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
+        out_comandos.println(msg);
+    }
+    
+    /**
+     * Termina la conexion con el server
+     * @throws java.io.IOException
+     */
+    public static void close() throws IOException{
+        send_comando("END");
+        socket_game.close();
+        socket_comandos.close();
+        pantallaJuego.dispose();
+        System.out.println("Conexion terminada");
     }
 }

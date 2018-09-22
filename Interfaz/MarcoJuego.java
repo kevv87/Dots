@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,19 @@ public class MarcoJuego extends JFrame{
     public MarcoJuego() throws Exception{
         
         
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    Client.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //System.exit(0);
+            }
+        });
+        
+        
         this.setVisible(true);
         
         xo = 300;
@@ -66,7 +79,7 @@ public class MarcoJuego extends JFrame{
                 // si el punto contiene a la coordenada donde se clickeo
                 System.out.println(punto);
                 
-                Client.send(mapper.writeValueAsString(punto));
+                Client.send_game(mapper.writeValueAsString(punto));
                 } catch (JsonProcessingException ex) {
                     Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
                 }
