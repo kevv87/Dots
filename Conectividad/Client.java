@@ -6,6 +6,7 @@ import Interfaz.MarcoJuego;
 import gnu.io.CommPortIdentifier;
 
 import Interfaz.Punto;
+import InterfazJavaFX.Main_Stage;
 
 import java.awt.Color;
 import static java.awt.image.ImageObserver.ERROR;
@@ -44,6 +45,8 @@ public class Client{
     
     private static MarcoJuego pantallaJuego;
     private final ObjectMapper mapper = new ObjectMapper();
+    
+    private static boolean alive=true;
     
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -124,6 +127,8 @@ public class Client{
                 try {
                     run_comando();
                 } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -213,7 +218,7 @@ public class Client{
      * Maneja el protocolo de comandos
      * @throws java.io.IOException
      */
-    public void run_comando() throws IOException{
+    public void run_comando() throws IOException, Exception{
         String line = null;
         while(true){
             try{
@@ -230,6 +235,7 @@ public class Client{
             }
         }
     }
+    
     
     /**
      * Envia un mensaje al servidor mediante el protocolo de juego.
@@ -252,11 +258,21 @@ public class Client{
      * Termina la conexion con el server
      * @throws java.io.IOException
      */
-    public static void close() throws IOException{
+    public static void close() throws IOException, Exception{
         send_comando("END");
         socket_game.close();
         socket_comandos.close();
         pantallaJuego.dispose();
+        alive = false;
         System.out.println("Conexion terminada");
+        System.exit(0);
+    }
+    
+    /**
+     * Getter de alive
+     * @return Estado del cliente.
+     */
+    public static boolean isAlive(){
+        return alive;
     }
 }

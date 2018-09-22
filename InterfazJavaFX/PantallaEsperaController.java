@@ -13,8 +13,9 @@ import javafx.stage.Stage;
 
 public class PantallaEsperaController {
 
-    ListaSimple userDataList;
-    ListaSimple oponentDataList;
+    private ListaSimple userDataList;
+    private ListaSimple oponentDataList;
+    private Stage thiswindow;
 
 
     public void changeToMainScreenButtonPushed(ActionEvent event) throws Exception {
@@ -35,6 +36,7 @@ public class PantallaEsperaController {
         window.show();
     }
     
+    @SuppressWarnings("empty-statement")
     public void ready(ActionEvent event) throws Exception {
         Thread juego = new Thread(){
             public void run(){
@@ -46,7 +48,33 @@ public class PantallaEsperaController {
             }
         };
         juego.start();
-        System.out.println("Finaliza");
+        thiswindow.close();
     }
+
+    public void setUserDataList(ListaSimple userDataList) {
+        this.userDataList = userDataList;
+    }
+
+    public void setOponentDataList(ListaSimple oponentDataList) {
+        this.oponentDataList = oponentDataList;
+    }
+
+    public void setThiswindow(Stage thiswindow) {
+        this.thiswindow = thiswindow;
+    }
+
+    public ListaSimple getUserDataList() {
+        return userDataList;
+    }
+
+    public ListaSimple getOponentDataList() {
+        return oponentDataList;
+    }
+
+    public Stage getThiswindow() {
+        return thiswindow;
+    }
+    
+    
 
 }

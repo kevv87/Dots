@@ -43,9 +43,11 @@ public class ServerController {
         //access the controller and call a method
         PantallaEsperaController controller = loader.getController();
 
-        controller.userDataList = lista;
+        controller.setUserDataList(lista);
+        
         //This line gets the Stage information
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        controller.setThiswindow(window);
 
         window.setScene(pantallaEsperaScene);
         window.show();
