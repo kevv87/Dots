@@ -113,7 +113,7 @@ public class ListaSimple {
             // Consulta si la posicion es el inicio de la lista.
             if (posicion == 0) {
                 // Retorna el valor del inicio de la lista.
-                return inizcio.getValor();
+                return inicio.getValor();
             }else{
                 // Crea una copia de la lista.
                 Nodo aux = inicio;

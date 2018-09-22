@@ -65,15 +65,27 @@ public class LinkedList<T>{ //Lista para nodos genericos
     }
     
     public void eliminar(T dato){
-        if(Inicio!=null){
+        if(buscar(dato)){
             Nodo<T> aux = Inicio;
-            while(aux.getSiguiente().getElemento()!=dato){
-                aux=aux.getSiguiente();
+            if(aux.getElemento()==dato){
+                Inicio=Inicio.getSiguiente();
             }
-            aux.setSiguiente(aux.getSiguiente().getSiguiente());
-            Tamanio--;
+            else if(Ultimo.getElemento()==dato){
+                while(aux.getSiguiente()!=Ultimo){
+                    aux=aux.getSiguiente();
+                }
+                aux.setSiguiente(null);
+            }
+            else{
+                while(aux.getSiguiente().getElemento()!=dato){
+                    aux=aux.getSiguiente();
+                }
+                aux.setSiguiente(aux.getSiguiente().getSiguiente());
+            }
         }
+        Tamanio--;
     }
+    
 
     public Nodo<T> getInicio() {
         return Inicio;
