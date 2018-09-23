@@ -13,7 +13,8 @@ public class Nodo {
      * Constructor que inicializamos el valor de las variables.
      */
     Nodo(){
-        valor = 0;
+
+        this.valor = null;
         siguiente = null;
     }
 
@@ -23,7 +24,8 @@ public class Nodo {
      * @param dato: dato de cualquier tipo
      */
     //compila
-    Nodo(int dato){
+
+    Nodo(Object dato){
         valor = dato;
         siguiente = null;
     }

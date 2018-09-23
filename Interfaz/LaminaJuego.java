@@ -9,12 +9,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LaminaJuego extends JPanel{
-    
-    
+
    private Punto[] puntos = new Punto[64];
    private ListaLineas lineas = new ListaLineas();
    private ListaPoligonos poligonos = new ListaPoligonos();
    
+
    public LaminaJuego(){
        puntos = new Punto [64]; // Crea un array de circulos
         int xi = 80;
@@ -25,9 +25,14 @@ public class LaminaJuego extends JPanel{
         
         // Dibujando puntos
         for(int i = 0;i<8;i++){
+
+            System.out.println("fila: " + i );
             for(int j = 0;j<8;j++){
-                puntos[cont] = new Punto(xi,yi, cont);
+                puntos[cont] = new Punto(xi,yi,cont);
                 cont+=1;
+                System.out.println("\n columna: " + j);
+                System.out.println("\n pos X: " + xi+ ",  pos Y: " + yi);
+
                 xi+=radio+espacio;
             }
             xi = 80;
@@ -35,6 +40,8 @@ public class LaminaJuego extends JPanel{
         }
         
    }
+
+
    
     /**
      * Funcion encargada de dibujar sobre la lamina
@@ -42,7 +49,8 @@ public class LaminaJuego extends JPanel{
      */
     @Override
     public void paintComponent(Graphics g){
-        System.out.println("Hey");
+
+
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
@@ -103,9 +111,48 @@ public class LaminaJuego extends JPanel{
         int y1 = punto1.getY();
         int x2 = punto2.getX();
         int y2 = punto2.getY();
-        
+
+
+        double distancia = Math.pow((Math.pow(y2-y1,2) + Math.pow(x2-x1,2)),0.5); // hipotenusa entre puntos/distancia entre puntos
+        int limite = 80; //distancia máxima entre puntos
+
         if(!lineas.isIn(x1, y1, x2, y2)){
-            lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
+            if(distancia < limite){
+                lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
+            }
+
+            else{
+                System.out.println("no es posible conectar puntos que no sean vecinos");
+            }
+
+        }
+        repaint();
+    }
+    
+    /**
+     * Funcion encargada de dibujar lineas entre puntos
+     * @param punto1 Punto donde empezar a dibujar la linea
+     * @param punto2 Punto donde finaliza la linea
+     */
+    public void addLine(Punto punto1, Punto punto2, Color color) throws Exception{
+        int x1 = punto1.getX();
+        int y1 = punto1.getY();
+        int x2 = punto2.getX();
+        int y2 = punto2.getY();
+
+        double distancia = Math.pow((Math.pow(y2-y1,2) + Math.pow(x2-x1,2)),0.5); // hipotenusa entre puntos/distancia entre puntos
+        int limite = 80; //distancia máxima entre puntos
+
+        if(!lineas.isIn(x1, y1, x2, y2)){
+            if(distancia < limite){
+                lineas.agregarAlInicio(new Linea(x1,y1,x2,y2,color));
+            }
+
+            else{
+                System.out.println("no es posible conectar puntos que no sean vecinos");
+            }
+
+
         }
         repaint();
     }
@@ -136,4 +183,6 @@ public class LaminaJuego extends JPanel{
         poligonos.agregarAlInicio(poligono);
         repaint();
     }
+
 }
+
