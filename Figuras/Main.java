@@ -25,17 +25,6 @@ public class Main {
         Punto P6 = new Punto(0,2);
         Punto P7 = new Punto(0,3);
         
-        //Punto P6 = new Punto(4,3);
-        //Punto P7 = new Punto(5,2);
-        
-        
-        //Lista.anadirFinal(P1);
-        Lista.anadirFinal(P2);
-        //Lista.anadirFinal(P6);
-        //Lista.anadirFinal(P7);
-        Lista.anadirFinal(P5);
-                        
-
 
         P1.getReferencias().anadirFinal(P2);
         P1.getReferencias().anadirFinal(P4);
@@ -44,8 +33,8 @@ public class Main {
         P2.getReferencias().anadirFinal(P5);
         P3.getReferencias().anadirFinal(P2);
         P3.getReferencias().anadirFinal(P4);
-        P4.getReferencias().anadirFinal(P1);
         P4.getReferencias().anadirFinal(P3);
+        P4.getReferencias().anadirFinal(P1);
         P5.getReferencias().anadirFinal(P2);
         P2.getReferencias().anadirFinal(P6);
         P6.getReferencias().anadirFinal(P2);
@@ -53,7 +42,7 @@ public class Main {
         P7.getReferencias().anadirFinal(P6);
         
        
-        Buscador.BuscaCaminos(P1, P1, P2);
+        Buscador.ImpresionLista(Buscador.BuscaCaminos(P1, P1, P2));
 
         
     }

@@ -33,10 +33,10 @@ public class LinkedList<T>{ //Lista para nodos genericos
     }
     
     public void anadirFinal(T dato){
-        Nodo<T> nuevo = new Nodo<>(dato);
-        if(Inicio==null)
+        Nodo<T> nuevo = new Nodo<T>(dato);
+        if(Inicio==null){
             Inicio = nuevo;
-        else{
+        }else{
             Nodo<T> current = Inicio;
             while(current.getSiguiente()!=null)
                 current=current.getSiguiente();
@@ -84,6 +84,13 @@ public class LinkedList<T>{ //Lista para nodos genericos
             }
         }
         Tamanio--;
+    }
+    public void SumarListas(LinkedList Lista1, LinkedList Lista2){
+        Nodo<Punto> Aux = Lista2.getInicio();
+        while(Aux!=null){
+            Lista1.anadirFinal(Aux.getElemento());
+            Aux=Aux.getSiguiente();
+        }
     }
     
 

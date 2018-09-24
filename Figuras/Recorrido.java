@@ -11,10 +11,11 @@ package Figuras;
  */
 public class Recorrido {
     
-    public boolean BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
+    //Funcion que retorna la lista de puntos para cerrar el camino
+    public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
         Nodo<Punto> Marcador = new Nodo(Origen);
-        Camino.setInicio(Marcador);
+        Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
         boolean Cerrado=false;
@@ -23,13 +24,14 @@ public class Recorrido {
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
+                Camino.anadirFinal(Origen);
                 Cerrado=true;
                 Continuar=false;
             //Segunda condicion de finalizacion, no pudo cerrar
             } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
                 System.out.println("No cerró");
+                Camino=null;                
                 Continuar=false;
-                break;
             //Recorre los puntos según sus referencias    
             } else{
                 System.out.println(Posibilidades.getUltimo().getElemento().getPosX()*10 + Posibilidades.getUltimo().getElemento().getPosY());
@@ -44,29 +46,26 @@ public class Recorrido {
                 while(Posibilidades.getTamanio()>1){ //&& Marcador.getElemento()!=Origen){
                     Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Marcador.getElemento(), Posibilidades));
                     //Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
-                    if(BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento())){    //Aplica recursividad para recorrer los subcaminos
-                        System.out.println("1_Esta en"+ Marcador1.getElemento().getPosX() +Marcador1.getElemento().getPosY());                        
-                        Camino.anadirFinal(Marcador1.getElemento());    //Funcion sumar listas
+                    LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
+                    if(X!=null){    //Aplica recursividad para recorrer los subcaminos
+                        Camino.SumarListas(Camino, X);    //Funcion sumar listas
                         Cerrado=true;
                         Continuar=false;
-                        return true;
                     } else{
-                        System.out.println("2_Esta en"+ Marcador1.getElemento().getPosX() +Marcador1.getElemento().getPosY());
                         System.out.println("Posibilidad no cerró");
                         Posibilidades.eliminar(Marcador1.getElemento());
                     }
                 }    
             }    
         }
-        System.out.println("Cerrado" + "=" + Cerrado);        
-        return Cerrado;
+        return Camino;
     }
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){
         Punto PuntoA = new Punto(ID1%8, (int)ID1/8);
         Punto PuntoB = new Punto(ID2%8, (int)ID2/8);
         
-        if(BuscaCaminos(PuntoA, null, PuntoB)){
+        if(BuscaCaminos(PuntoA, null, PuntoB)!=null){
             System.out.println("Yuju!");
         } else{
             System.out.println("No se cerró");
@@ -92,6 +91,18 @@ public class Recorrido {
              
         }
         return Menor.getElemento();
+    }
+    
+    //Funcion para imprimir puntos, debe borrarse
+    public void ImpresionLista(LinkedList List){
+        if(List!=null){
+            Nodo<Punto> Aux = List.getInicio();
+            System.out.println("El camino es:");
+            while(Aux!=null){
+                System.out.println(Aux.getElemento().getPosX()*10 + Aux.getElemento().getPosY());
+                Aux=Aux.getSiguiente();
+            }
+        }
     }
   
 }
