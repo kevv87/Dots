@@ -15,12 +15,12 @@ public class Recorrido {
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
         Nodo<Punto> Marcador = new Nodo(Origen);
-        Camino.anadirFinal(Origen);
+        //Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
         boolean Cerrado=false;
         LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
-        Posibilidades.eliminar(Anterior);
+        Posibilidades.eliminar(Anterior);   //Elimina el punto del que viene en caso de usar recursividad
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
@@ -34,25 +34,24 @@ public class Recorrido {
                 Continuar=false;
             //Recorre los puntos según sus referencias    
             } else{
-                System.out.println(Posibilidades.getUltimo().getElemento().getPosX()*10 + Posibilidades.getUltimo().getElemento().getPosY());
                 while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){
                     Camino.anadirFinal(Marcador.getElemento());
                     Punto Eliminar = Marcador.getElemento();
                     Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
-                    System.out.println(Marcador.getElemento().getPosX()*10 +Marcador.getElemento().getPosY());
                     Posibilidades=Marcador.getElemento().getReferencias();
                     Posibilidades.eliminar(Eliminar);
                 }
                 while(Posibilidades.getTamanio()>1){ //&& Marcador.getElemento()!=Origen){
                     Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Marcador.getElemento(), Posibilidades));
+                    //Camino.anadirFinal(Actual);
                     //Marcador1.setElemento(BuscarMenorD(Marcador.getElemento(), Posibilidades));    //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
                     LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
                     if(X!=null){    //Aplica recursividad para recorrer los subcaminos
                         Camino.SumarListas(Camino, X);    //Funcion sumar listas
+                        Camino.anadirFinal(Marcador1.getElemento());
                         Cerrado=true;
                         Continuar=false;
                     } else{
-                        System.out.println("Posibilidad no cerró");
                         Posibilidades.eliminar(Marcador1.getElemento());
                     }
                 }    
