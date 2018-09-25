@@ -12,10 +12,12 @@ package figuras;
 public class LinkedList<T>{ //Lista para nodos genericos
     
     private Nodo<T> Inicio;
+    private Nodo<T> Ultimo;
     private int Tamanio;
     
     public LinkedList(){    
         Inicio=null;
+        Ultimo=null;
         Tamanio=0;
     }
     
@@ -31,16 +33,17 @@ public class LinkedList<T>{ //Lista para nodos genericos
     }
     
     public void anadirFinal(T dato){
-        Nodo<T> nuevo = new Nodo<>(dato);
-        if(Inicio==null)
+        Nodo<T> nuevo = new Nodo<T>(dato);
+        if(Inicio==null){
             Inicio = nuevo;
-        else{
+        }else{
             Nodo<T> current = Inicio;
             while(current.getSiguiente()!=null)
                 current=current.getSiguiente();
                           
             current.setSiguiente(nuevo);
         }
+        Ultimo=nuevo;
         Tamanio++;
     }
     public boolean buscar(T dato){
@@ -62,19 +65,43 @@ public class LinkedList<T>{ //Lista para nodos genericos
     }
     
     public void eliminar(T dato){
-        if(Inicio!=null){
+        if(buscar(dato)){
             Nodo<T> aux = Inicio;
-            while(aux.getSiguiente().getElemento()!=dato){
-                aux=aux.getSiguiente();
+            if(aux.getElemento()==dato){
+                Inicio=Inicio.getSiguiente();
             }
-            aux.setSiguiente(aux.getSiguiente().getSiguiente());
+            else if(Ultimo.getElemento()==dato){
+                while(aux.getSiguiente()!=Ultimo){
+                    aux=aux.getSiguiente();
+                }
+                aux.setSiguiente(null);
+            }
+            else{
+                while(aux.getSiguiente().getElemento()!=dato){
+                    aux=aux.getSiguiente();
+                }
+                aux.setSiguiente(aux.getSiguiente().getSiguiente());
+            }
+        }
+        Tamanio--;
+    }
+    public void SumarListas(LinkedList Lista1, LinkedList Lista2){
+        Nodo<Punto> Aux = Lista2.getInicio();
+        while(Aux!=null){
+            Lista1.anadirFinal(Aux.getElemento());
+            Aux=Aux.getSiguiente();
         }
     }
+    
 
     public Nodo<T> getInicio() {
         return Inicio;
     }
 
+    public Nodo<T> getUltimo() {
+        return Ultimo;
+    }
+    
     public void setInicio(Nodo<T> inicio) {
         this.Inicio = inicio;
     }
@@ -83,6 +110,10 @@ public class LinkedList<T>{ //Lista para nodos genericos
         return Tamanio;
     }
 
+    public void setUltimo(Nodo<T> Ultimo) {
+        this.Ultimo = Ultimo;
+    }
+    
     public void setTamanio(int tamanio) {
         this.Tamanio = tamanio;
     }

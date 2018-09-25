@@ -167,8 +167,16 @@ public class LaminaJuego extends JPanel{
     
     /**
      * Funcion encargada de .
+<<<<<<< HEAD
 
      * @param ids Array de ids de los puntos que forman el poligono
+=======
+<<<<<<< HEAD
+     * @param ids Array de ids de los puntos que forman el poligono
+=======
+     * @param ids Array con los ids de los puntos que componen el poligono en orden horario
+>>>>>>> 9a39745662148d5db2c46c272dfc12ea140d000f
+>>>>>>> 332ff6774db0ac06c741faf73dc411ce37bb3695
      * @param color Color que se desea que tenga el poligono
      */
     public void addPolygon(int [] ids, Color color){

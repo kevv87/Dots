@@ -5,6 +5,7 @@
  */
 package figuras;
 
+
 /**
  *
  * @author Sebastián
@@ -15,12 +16,16 @@ public class Identificador{
     private LinkedList<Punto> PuntosCreados;
     private LinkedList<Punto> PuntosCerrados;
     
+    Identificador(){
+        Perimetros=null;
+    }
+    
     //Funcion que recibe los dos puntos unidos por los jugadores
     public void entrada (int ID1, int ID2){ //La interfaz envía los dos puntos unidos por el usuario y entrada los recibe
         
         Punto Punto1 = new Punto(ID1%8, (int)ID1/8);
         Punto Punto2 = new Punto(ID2%8, (int)ID2/8);
-
+        
         if(PuntosCreados.buscar(Punto1)){
             //Busco algun perimetro donde el punto sea head o ultimo
             Nodo<Perimetro> PerimAux = Perimetros.getInicio();

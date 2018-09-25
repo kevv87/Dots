@@ -42,8 +42,9 @@ public class MarcoJuego extends JFrame{
         
         lamina = new LaminaJuego();
         add(lamina);
-        
-       EventosMouse evento = new EventosMouse();
+
+    
+        EventosMouse evento = new EventosMouse();
         addMouseListener(evento);
         
         
@@ -113,7 +114,6 @@ public class MarcoJuego extends JFrame{
     @Override
     public int getWidth() {
         return width;
-
     }
 
     @Override

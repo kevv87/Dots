@@ -20,8 +20,9 @@ public class PantallaJuego {
     /**
      * Constructor
      */
-    public PantallaJuego() throws Exception {
 
+
+    public PantallaJuego() throws Exception {
     
         MarcoJuego pantalla = new MarcoJuego();
         
