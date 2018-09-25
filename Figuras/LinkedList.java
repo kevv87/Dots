@@ -88,8 +88,13 @@ public class LinkedList<T>{ //Lista para nodos genericos
     public void SumarListas(LinkedList Lista1, LinkedList Lista2){
         Nodo<Punto> Aux = Lista2.getInicio();
         while(Aux!=null){
-            Lista1.anadirFinal(Aux.getElemento());
-            Aux=Aux.getSiguiente();
+            if(Lista1.buscar(Aux.getElemento())==false){
+                Lista1.anadirFinal(Aux.getElemento());
+                Aux=Aux.getSiguiente();
+            }
+            else{
+                Aux=Aux.getSiguiente();
+            }
         }
     }
     

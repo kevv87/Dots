@@ -17,6 +17,8 @@ public class Main {
         
         LinkedList<Punto> Lista = new LinkedList();
         
+        
+        
         Punto P1 = new Punto(1,1);
         Punto P2 = new Punto(1,2);
         Punto P3 = new Punto(2,2);

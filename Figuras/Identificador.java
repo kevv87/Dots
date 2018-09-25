@@ -9,6 +9,7 @@ package Figuras;
  *
  * @author Sebastián
  */
+/*
 public class Identificador{
     
     private LinkedList<Perimetro> Perimetros;
@@ -184,4 +185,4 @@ public class Identificador{
     
     
 }    
-    
+*/    

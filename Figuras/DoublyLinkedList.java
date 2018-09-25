@@ -9,6 +9,7 @@ package Figuras;
  *
  * @author Sebastián
  */
+/*
 public class DoublyLinkedList {
     
     private NodoDoble Inicio;
@@ -119,3 +120,4 @@ public class DoublyLinkedList {
     
    
 }
+*/
