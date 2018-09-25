@@ -20,8 +20,8 @@ public class LaminaJuego extends JPanel{
     */
    public LaminaJuego(){
        puntos = new Punto [64]; // Crea un array de circulos
-        int xi = 80;
-        int yi = 60;
+        int xi = 5;
+        int yi = 5;
         int radio = 5;
         int espacio = 50;
         int cont = 0;
@@ -32,11 +32,9 @@ public class LaminaJuego extends JPanel{
             for(int j = 0;j<8;j++){
                 puntos[cont] = new Punto(xi,yi,cont);
                 cont+=1;
-                System.out.println("\n columna: " + j);
-                System.out.println("\n pos X: " + xi+ ",  pos Y: " + yi);
                 xi+=radio+espacio;
             }
-            xi = 80;
+            xi = 5;
             yi += radio+espacio;
         }
         

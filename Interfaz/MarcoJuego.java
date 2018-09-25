@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.awt.BorderLayout;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,8 +20,6 @@ public class MarcoJuego extends JFrame{
     private final int width;
     private final int height;
     private boolean activo;
-
-
     private static LaminaJuego lamina;
     
     /**
@@ -29,7 +29,21 @@ public class MarcoJuego extends JFrame{
     public MarcoJuego() throws Exception{
         
         
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    Client.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //System.exit(0);
+            }
+        });
+        
+        
         this.setVisible(true);
         
         xo = 300;
@@ -41,10 +55,12 @@ public class MarcoJuego extends JFrame{
         setBounds(xo,yo,width,height);
         
         lamina = new LaminaJuego();
+
         add(lamina);
 
     
         EventosMouse evento = new EventosMouse();
+
         addMouseListener(evento);
         
         
@@ -62,14 +78,14 @@ public class MarcoJuego extends JFrame{
         int x = e.getX();  // Consigue la coordenada en x de donde se origina el evento
         int y = e.getY();
         
-        Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
+        LaminaJuego lamina = MarcoJuego.getLamina();
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  try {
                 // si el punto contiene a la coordenada donde se clickeo
                 System.out.println(punto);
                 
-                Client.send(mapper.writeValueAsString(punto));
+                Client.send_game(mapper.writeValueAsString(punto));
                 } catch (JsonProcessingException ex) {
                     Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -97,10 +113,7 @@ public class MarcoJuego extends JFrame{
     public void mouseExited(MouseEvent e) {
     
     }
-    
-    
-    
-}
+    }
 
     public int getXo() {
         return xo;
@@ -127,6 +140,10 @@ public class MarcoJuego extends JFrame{
     
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+    
+    public static void main(String args[]) throws Exception{
+        new MarcoJuego();
     }
     
     
