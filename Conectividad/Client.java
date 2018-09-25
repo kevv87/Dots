@@ -7,6 +7,7 @@ import gnu.io.CommPortIdentifier;
 
 import Interfaz.Punto;
 import InterfazJavaFX.Main_Stage;
+import Matriz.ListaSimple;
 
 import java.awt.Color;
 import static java.awt.image.ImageObserver.ERROR;
@@ -47,6 +48,7 @@ public class Client{
     private final ObjectMapper mapper = new ObjectMapper();
     
     private static boolean alive=true;
+    private static ListaSimple puntos_a_enviar = new ListaSimple();
     
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -187,8 +189,12 @@ public class Client{
               pantallaJuego.setActivo(false);
           }else if(line.startsWith("DWL")){  //Dibuje una linea
               System.out.println(line);
-              Punto punto1 = mapper.readValue(in_game.readLine(), Punto.class);
-              Punto punto2 = mapper.readValue(in_game.readLine(), Punto.class);
+              int id1 = Integer.parseInt(in_game.readLine());
+              int id2 = Integer.parseInt(in_game.readLine());
+              Punto punto1 = MarcoJuego.getLamina().getPuntos()[id1];
+              Punto punto2 = MarcoJuego.getLamina().getPuntos()[id2];
+              
+              
               String colorm = in_game.readLine();
               Color color;
               if("red".equals(colorm)){
@@ -274,5 +280,9 @@ public class Client{
      */
     public static boolean isAlive(){
         return alive;
+    }
+
+    public static ListaSimple getPuntos_a_enviar() {
+        return puntos_a_enviar;
     }
 }

@@ -8,6 +8,7 @@ package Conectividad;
 
 import Clases.ColaJugadores;
 import Clases.Player;
+import Interfaz.MarcoJuego;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,26 +198,26 @@ public class Server{
                   break;
               }
               
-              punto1 = mapper.readValue(msj, Punto.class);
+              String id1 = msj.substring(0,2);
+              String id2 = msj.substring(3);
               
-              System.out.println("Esperando msj");
-              msj = listen(current);
-              
-              if(msj==null || msj.equals("END")){
-                  break;
-              }
-              
-              punto2 = mapper.readValue(msj, Punto.class);
-              
-              if(punto1 == null || punto2 == null || !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
+              if( !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
                   stop_socket();
                   break;
               }
+              
+              
 
               send(current_player,"NYT");
               broadcast("DWL");
-              broadcast(mapper.writeValueAsString(punto1));
-              broadcast(mapper.writeValueAsString(punto2));
+              
+              //Some dumb chino logic
+              
+              String id_tosend1 = Integer.toString(Integer.parseInt(id1,8));
+              String id_tosend2 = Integer.toString(Integer.parseInt(id2,8));
+              
+              broadcast(id_tosend1);
+              broadcast(id_tosend2);
               broadcast(color);
 
               current *= -1;  // Cambio de turno
