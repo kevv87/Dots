@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,8 @@ public class MarcoJuego extends JFrame{
                     Client.close();
                 } catch (IOException ex) {
                     Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 //System.exit(0);
             }
@@ -52,7 +55,9 @@ public class MarcoJuego extends JFrame{
         setBounds(xo,yo,width,height);
         
         lamina = new LaminaJuego();
-        add(lamina);
+        
+        //lamina.add(new LaminaPeripherals());
+        add(lamina, BorderLayout.CENTER);
         
        EventosMouse evento = new EventosMouse();
         addMouseListener(evento);
@@ -72,7 +77,7 @@ public class MarcoJuego extends JFrame{
         int x = e.getX();  // Consigue la coordenada en x de donde se origina el evento
         int y = e.getY();
         
-        Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
+        LaminaJuego lamina = MarcoJuego.getLamina();
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  try {
@@ -107,10 +112,7 @@ public class MarcoJuego extends JFrame{
     public void mouseExited(MouseEvent e) {
     
     }
-    
-    
-    
-}
+    }
 
     public int getXo() {
         return xo;
@@ -138,6 +140,10 @@ public class MarcoJuego extends JFrame{
     
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+    
+    public static void main(String args[]) throws Exception{
+        new MarcoJuego();
     }
     
     
