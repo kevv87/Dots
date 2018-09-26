@@ -26,7 +26,6 @@ public class Recorrido {
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
-                Camino.anadirFinal(Origen);
                 //Perimetro nuevo = new Perimetro(Camino);
                 //PerimetrosCerrados.anadirFinal(nuevo);
                 Continuar=false;
@@ -52,7 +51,6 @@ public class Recorrido {
                     LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
                     if(X!=null){    //Aplica recursividad para recorrer los subcaminos
                         Camino.SumarListas(Camino, X);    //Funcion sumar listas
-                        Camino.anadirFinal(Origen);
                         Continuar=false;
                     } else{
                         Posibilidades.eliminar(Marcador1.getElemento());
@@ -83,9 +81,9 @@ public class Recorrido {
     //Funcion que determina de una lista, cual de los puntos se acerca más al que busco.x 
     public Punto BuscarMenorD(Punto Origen, LinkedList<Punto> Lista){
          Nodo<Punto> Menor = Lista.getInicio();
-         Nodo<Punto> Aux = Lista.getInicio();
+         Nodo<Punto> Aux = Lista.getInicio().getSiguiente();
          while(Aux.getSiguiente()!=null){
-            if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Aux.getSiguiente().getElemento())){
+            if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Aux.getElemento())){
                 Menor=Aux;
                 Aux=Aux.getSiguiente();
             } else{
