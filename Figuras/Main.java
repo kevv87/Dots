@@ -26,26 +26,32 @@ public class Main {
         Punto P5 = new Punto(1,3);
         Punto P6 = new Punto(0,2);
         Punto P7 = new Punto(0,3);
+        Punto P8 = new Punto(0,0);
         
+        Lista.anadirFinal(P5);
+        Lista.anadirFinal(P4);
+        Lista.anadirFinal(P7);
+        Lista.anadirFinal(P6);
+        
+        System.out.println(Buscador.BuscarMenorD(P8, Lista).getPosX()*10 + Buscador.BuscarMenorD(P8, Lista).getPosY());
 
+        
         P1.getReferencias().anadirFinal(P2);
         P1.getReferencias().anadirFinal(P4);
         P2.getReferencias().anadirFinal(P1);
-        P2.getReferencias().anadirFinal(P3);
+        P2.getReferencias().anadirFinal(P6);
         P2.getReferencias().anadirFinal(P5);
         P3.getReferencias().anadirFinal(P2);
         P3.getReferencias().anadirFinal(P4);
         P4.getReferencias().anadirFinal(P3);
         P4.getReferencias().anadirFinal(P1);
         P5.getReferencias().anadirFinal(P2);
-        P2.getReferencias().anadirFinal(P6);
+        P2.getReferencias().anadirFinal(P3);
         P6.getReferencias().anadirFinal(P2);
         P6.getReferencias().anadirFinal(P7);
         P7.getReferencias().anadirFinal(P6);
         
        
-        Buscador.ImpresionLista(Buscador.BuscaCaminos(P1, P1, P2));
-
-        
+        //Buscador.ImpresionLista(Buscador.BuscaCaminos(P1, P1, P2));
     }
 }

@@ -11,7 +11,7 @@ package Figuras;
  */
 public class Recorrido {
     
-    //private LinkedList<Perimetro> PerimetrosCerrados = new LinkedList(); 
+    private LinkedList<Perimetro> PerimetrosCerrados = new LinkedList(); 
     //private LinkedList<Segmento> SegmentosHechos = new LinkedList();
     
     //Funcion que retorna la lista de puntos para cerrar el camino
@@ -26,8 +26,9 @@ public class Recorrido {
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
-                //Perimetro nuevo = new Perimetro(Camino);
-                //PerimetrosCerrados.anadirFinal(nuevo);
+                Perimetro nuevo = new Perimetro(Camino);
+                nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
+                PerimetrosCerrados.anadirFinal(nuevo);
                 Continuar=false;
             //Segunda condicion de finalizacion, no pudo cerrar
             } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
@@ -82,7 +83,7 @@ public class Recorrido {
     public Punto BuscarMenorD(Punto Origen, LinkedList<Punto> Lista){
          Nodo<Punto> Menor = Lista.getInicio();
          Nodo<Punto> Aux = Lista.getInicio().getSiguiente();
-         while(Aux.getSiguiente()!=null){
+         while(Aux!=null){
             if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Aux.getElemento())){
                 Menor=Aux;
                 Aux=Aux.getSiguiente();
