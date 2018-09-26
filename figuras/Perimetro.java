@@ -5,92 +5,17 @@
  */
 package figuras;
 
-
 /**
  *
  * @author Sebastián
  */
 public class Perimetro {
     
-    private Punto head;
-    private Punto ultimo;
-    private boolean cerrado;
-    private LinkedList segmentos;
-    private DoublyLinkedList puntos;
-    private int Puntaje;
-    
-    public Perimetro(Punto A, Punto B){
-        if (A.getPosY()==B.getPosY()){  //Se guarda como primer elemento el punto que esté más a la izquierda en caso de estar en misma fila
-            if(A.getPosX()<B.getPosX()){
-                head=A;
-                ultimo=B;
-            } else{
-                ultimo=A;
-                head=A;
-            }
-        } else{
-            if(A.getPosY()<B.getPosY()){    //Se guarda como primer elemento el punto que esté más arriba.
-                head=A;
-                ultimo=B;
-            } else{
-                ultimo=A;
-                head=B;
-            }
-        }
-        head.setSiguiente(ultimo);
-        puntos.anadirFinal(head);
-        puntos.anadirFinal(ultimo);
-        Segmento nuevo = new Segmento (head, ultimo);
-        segmentos.anadirInicio(nuevo);
-        cerrado=false;
-    }
+    LinkedList<Punto> Puntos;
 
-    public Punto getHead() {
-        return head;
-    }
-
-    public void setHead(Punto head) {
-        this.head = head;
-    }
-
-    public Punto getUltimo() {
-        return ultimo;
-    }
-
-    public void setUltimo(Punto ultimo) {
-        this.ultimo = ultimo;
-    }
-
-    public boolean isCerrado() {
-        return cerrado;
-    }
-
-    public void setCerrado(boolean cerrado) {
-        this.cerrado = cerrado;
-    }
-
-    public LinkedList getSegmentos() {
-        return segmentos;
-    }
-
-    public void setSegmentos(LinkedList segmentos) {
-        this.segmentos = segmentos;
-    }
-
-    public DoublyLinkedList getPuntos() {
-        return puntos;
-    }
-
-    public void setPuntos(DoublyLinkedList puntos) {
-        this.puntos = puntos;
-    }
-
-    public int getPuntaje() {
-        return Puntaje;
-    }
-
-    public void setPuntaje(int Puntaje) {
-        this.Puntaje = Puntaje;
+    Perimetro(LinkedList<Punto> Lista){
+        LinkedList<Punto> Puntos=Lista;
     }
     
 }
+

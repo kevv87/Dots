@@ -16,6 +16,7 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import figuras.Recorrido;
 
 
 /**
@@ -201,6 +202,7 @@ public class Server{
               String id1 = msj.substring(0,2);
               String id2 = msj.substring(3);
               
+              
               if( !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
                   stop_socket();
                   break;
@@ -212,6 +214,9 @@ public class Server{
               broadcast("DWL");
               
               //Some dumb chino logic
+              //Recorrido recorrido = new Recorrido();
+              //recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
+              
               
               String id_tosend1 = Integer.toString(Integer.parseInt(id1,8));
               String id_tosend2 = Integer.toString(Integer.parseInt(id2,8));

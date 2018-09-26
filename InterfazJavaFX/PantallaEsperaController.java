@@ -1,14 +1,18 @@
 package InterfazJavaFX;
 
 import Conectividad.Client;
+import Interfaz.JuegoController;
+import Interfaz.Punto;
 import Matriz.ListaSimple;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class PantallaEsperaController {
@@ -16,6 +20,9 @@ public class PantallaEsperaController {
     private ListaSimple userDataList;
     private ListaSimple oponentDataList;
     private Stage thiswindow;
+    private static Punto[] puntos = new Punto[64];
+    private boolean activo = false;
+    private JuegoController controlador;
 
 
     public void changeToMainScreenButtonPushed(ActionEvent event) throws Exception {
@@ -38,6 +45,18 @@ public class PantallaEsperaController {
     
     @SuppressWarnings("empty-statement")
     public void ready(ActionEvent event) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Interfaz/Juego.fxml"));
+        Parent tableViewParent = loader.load();
+
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        //This line gets the Stage information
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.setTitle("DOTS - Playing");
+        window.show();
+        
         Thread juego = new Thread(){
             public void run(){
                 try {
@@ -48,7 +67,15 @@ public class PantallaEsperaController {
             }
         };
         juego.start();
-        thiswindow.close();
+        
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            try {
+                closeRequest(window);
+            } catch (Exception ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 
     public void setUserDataList(ListaSimple userDataList) {
@@ -73,6 +100,17 @@ public class PantallaEsperaController {
 
     public Stage getThiswindow() {
         return thiswindow;
+    }
+    
+    public void closeRequest(Stage window) throws Exception{
+
+        boolean booli = AlertWindow.display();
+        if (booli == true){
+            window.close();
+            Client.close();
+            
+        }
+
     }
     
     

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="472.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interfaz.JuegoController">
+    <stylesheets>
+        <URL value="@juego.css" />
+    </stylesheets>
+   <children>
+      <Pane id="gamePane" fx:id="gamePane" layoutX="14.0" layoutY="14.0" onMouseClicked="#Handle" prefHeight="440.0" prefWidth="440.0" style="-fx-background-color: GRAY;" styleClass="panel" />
+      <Label layoutX="493.0" layoutY="18.0" text="Jugador 1" />
+      <Label layoutX="507.0" layoutY="32.0" text="99">
+         <font>
+            <Font name="Abyssinica SIL" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="505.0" layoutY="391.0" text="99">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="490.0" layoutY="430.0" text="Jugador 2" />
+      <ImageView fitHeight="132.0" fitWidth="99.0" layoutX="472.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="132.0" fitWidth="99.0" layoutX="473.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="473.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/characters/4137355593_32f777544b_o.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="471.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/characters/4138121446_10e676393a_o.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

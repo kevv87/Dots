@@ -1,5 +1,6 @@
 package Conectividad;
 
+import Interfaz.JuegoController;
 import Interfaz.LaminaJuego;
 import Interfaz.MarcoJuego;
 
@@ -9,7 +10,7 @@ import Interfaz.Punto;
 import InterfazJavaFX.Main_Stage;
 import Matriz.ListaSimple;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import static java.awt.image.ImageObserver.ERROR;
 
 import java.io.BufferedReader;
@@ -42,9 +43,7 @@ public class Client{
     private static Socket socket_comandos;
     private BufferedReader in_comandos; // entrada
     private static PrintWriter out_comandos; //salida
-    
-    
-    private static MarcoJuego pantallaJuego;
+   
     private final ObjectMapper mapper = new ObjectMapper();
     
     private static boolean alive=true;
@@ -113,7 +112,6 @@ public class Client{
      * @throws java.lang.Exception
      */
     public Client(String serverAddress) throws Exception{
-        pantallaJuego = new MarcoJuego();
         init(serverAddress);
         Thread juego = new Thread(){
             public void run(){
@@ -182,19 +180,15 @@ public class Client{
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
-            pantallaJuego.setActivo(true);
+            JuegoController.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
-              pantallaJuego.setActivo(false);
+              JuegoController.setActivo(false);
           }else if(line.startsWith("NYT")){  //No es su turno
-              pantallaJuego.setActivo(false);
+              JuegoController.setActivo(false);
           }else if(line.startsWith("DWL")){  //Dibuje una linea
               System.out.println(line);
               int id1 = Integer.parseInt(in_game.readLine());
               int id2 = Integer.parseInt(in_game.readLine());
-              Punto punto1 = MarcoJuego.getLamina().getPuntos()[id1];
-              Punto punto2 = MarcoJuego.getLamina().getPuntos()[id2];
-              
-              
               String colorm = in_game.readLine();
               Color color;
               if("red".equals(colorm)){
@@ -202,8 +196,7 @@ public class Client{
               }else{
                   color = Color.BLUE;
               }
-              LaminaJuego lamina = pantallaJuego.getLamina();
-              lamina.addLine(punto1, punto2, color);
+              JuegoController.addLine(id1, id2, color);
           }else if(line.startsWith("ENC")){
               System.out.println("Estoy en cola");
           }else if(line.startsWith("NEC")){
@@ -268,7 +261,6 @@ public class Client{
         send_comando("END");
         socket_game.close();
         socket_comandos.close();
-        pantallaJuego.dispose();
         alive = false;
         System.out.println("Conexion terminada");
         System.exit(0);

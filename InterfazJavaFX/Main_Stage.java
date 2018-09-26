@@ -13,18 +13,10 @@ import javafx.scene.Parent;
 
 public class Main_Stage extends Application implements EventHandler<ActionEvent>{
 
-    public static void iniciar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     Stage window;
 
     public static void main(String[] args){
         launch(args);
-    }
-    
-    public void Main_Stage(){
-        launch();
     }
 
     public void start(Stage primaryStage) throws Exception {
@@ -36,7 +28,6 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
             e.consume();
             closeRequest();
         });
-
         window.setScene(new Scene(root, 500,400));
         window.show();
     }
