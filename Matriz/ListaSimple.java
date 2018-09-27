@@ -1,7 +1,7 @@
 package Matriz;
 
 public class ListaSimple {
-    private Nodo inicio;
+    protected Nodo inicio;
     protected int tamanio;
 
     /**
@@ -11,6 +11,7 @@ public class ListaSimple {
         inicio = null;
         tamanio = 0;
     }
+    
     /**
      * Consulta si la lista esta vacia.
      * @return true si el primer nodo (inicio), no apunta a otro nodo.
@@ -18,6 +19,7 @@ public class ListaSimple {
     public boolean esVacia(){
         return inicio == null;
     }
+    
     /**
      * Consulta cuantos elementos (nodos) tiene la lista.
      * @return numero entero entre [0,n] donde n es el numero de elementos
@@ -56,7 +58,7 @@ public class ListaSimple {
      * @param posicion en la cual se va a insertar el nuevo nodo.
      * @param valor valor del nuevo nodo de la lista.
      */
-    public void insrtarPorPosicion(int posicion, int valor){
+    public void insertarPorPosicion(int posicion, Object valor){
         // Verifica si la posicion ingresada se encuentre en el rango
         // >= 0 y <= que el numero de elementos del la lista.
         if(posicion>=0 && posicion<=tamanio){
@@ -99,6 +101,10 @@ public class ListaSimple {
             // Incrementa el contador de tamano de la lista.
             tamanio++;
         }
+    }
+    
+    public void insertarPorPosicion(int pos, Nodo valor){
+        insertarPorPosicion(pos, valor.getValor());
     }
     /**
      * Obtiene el valor de un nodo en una determinada posicion.
@@ -249,6 +255,7 @@ public class ListaSimple {
             tamanio--;
         }
     }
+    
     /**
      * Elimina la lista
      */

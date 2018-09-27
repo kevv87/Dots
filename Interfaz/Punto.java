@@ -29,7 +29,15 @@ public class Punto{
         
     }
     
-
+    /**
+     * Dummy constuctor
+    */
+    public Punto(){
+        this.x = 0;
+        this.y = 0;
+        this.id = -1;
+    }
+    
 
     /**
      * Retorna true si las coordenadas dadas estan dentro del circulo
@@ -39,7 +47,7 @@ public class Punto{
      */
     public boolean contiene(int x, int y){
         double distancia = Math.sqrt(Math.abs(Math.pow(this.x-x, 2)+Math.pow(this.y-y,2)));
-        return distancia <= radio;
+        return distancia <= radio+3;
     }
 
     public int getRadio() {
@@ -58,5 +66,7 @@ public class Punto{
     public int getY() {
         return y;
     }
+    
+    
     
 }
