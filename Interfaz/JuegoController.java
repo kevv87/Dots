@@ -37,6 +37,7 @@ public class JuegoController {
     private Pane gamePane;
     
     private static Group lineGroup = new Group();
+    private static Group circles = new Group();
     private static Punto[] puntos = new Punto[64];
     private static boolean activo = false;
     private final ListaSimple puntos_a_enviar = new ListaSimple();
@@ -59,29 +60,157 @@ public class JuegoController {
         
         for(Punto punto:puntos){  // Para cada punto en los puntos de la lamina...
             if(punto.contiene(x,y)){  try {
-                // si el punto contiene a la coordenada donde se clickeo
-                System.out.println("Tocado");
+                // si el punto contiene a la coordenada donde se clickea
+                //((Circle)circles.getChildren().get(punto.getId())).setStroke(Color.WHITE);
+                
                 
                 if(puntos_a_enviar.getTamanio() == 1){
+                    boolean valido = false;
                     int diferencia = Math.abs(((Punto)puntos_a_enviar.getValor(0)).getId() - punto.getId());
                     if(diferencia == 1 || (diferencia>=7 && diferencia <= 9)){
-                        puntos_a_enviar.agregarAlInicio(punto);
+                        
+                        // Casos especiales al borde de la pantalla
+                        if(((Punto)puntos_a_enviar.getValor(0)).getId()%8==0){
+                            switch(((Punto)puntos_a_enviar.getValor(0)).getId()-punto.getId()){
+                                        case(1):
+                                            valido = false;
+                                            break;
+                                        case(-7):
+                                            valido = false;
+                                            break;
+                                        case(9):
+                                            valido = false;
+                                            break;
+                                        default:
+                                            valido = true;
+                                            break;
+                            }
+                        }else if((((Punto)puntos_a_enviar.getValor(0)).getId()+1)%8==0){
+                            switch(((Punto)puntos_a_enviar.getValor(0)).getId()-punto.getId()){
+                                        case(-1):
+                                            valido = false;
+                                            break;
+                                        case(7):
+                                            valido = false;
+                                            break;
+                                        case(-9):
+                                            valido = false;
+                                            break;
+                                        default:
+                                            valido = true;
+                                            break;
+                            }
+                        }else{
+                            valido = true;
+                        }
                     }else{
+                        valido = false;
+                    }
+                    if(valido){
+                            puntos_a_enviar.agregarAlInicio(punto);
+                        
+                            // Ahora convierte y lo envia
+                            String id1 = toOct(((Punto)puntos_a_enviar.getValor(0)).getId());
+                            String id2 = toOct(((Punto)puntos_a_enviar.getValor(1)).getId());
+                            String msj;
+                            msj = id1+","+id2;
+                            Client.send_game(msj);
+                            //Limpia
+                            puntos_a_enviar.eliminar();
+                            for(Punto punto2:puntos){  // Quita los halos de los puntos
+                                ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                            }
+                    }else{
+                        for(Punto punto2:puntos){
+                            if(Math.abs(punto2.getId()-punto.getId())==1 || (Math.abs(punto2.getId()-punto.getId())<=9 && Math.abs(punto2.getId()-punto.getId())>=7)){
+                                if(punto.getId()%8==0){
+                                    switch(punto.getId()-punto2.getId()){
+                                        case(1):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(-7):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(9):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        default:
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                            break;
+                                    }
+                                } else if((punto.getId()+1)%8==0){
+                                    switch(punto.getId()-punto2.getId()){
+                                        case(-1):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(7):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(-9):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        default:
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                            break;
+                                    }
+                                }else{
+                                    ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                }
+                                
+                            }else{
+                                ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                            }
+                        }
                         puntos_a_enviar.eliminar();
                         puntos_a_enviar.agregarAlInicio(punto);
-                    }
-                    // Ahora convierte y lo envia
-                    String id1 = toOct(((Punto)puntos_a_enviar.getValor(0)).getId());
-                    String id2 = toOct(((Punto)puntos_a_enviar.getValor(1)).getId());
-                    String msj;
-                    msj = id1+","+id2;
-                    System.out.println(msj);
-                    Client.send_game(msj);
-                    //Limpia
-                    puntos_a_enviar.eliminar();
+                        }
+                    
+                    
+                    
                 }else{
+                    for(Punto punto2:puntos){
+                            if(Math.abs(punto2.getId()-punto.getId())==1 || (Math.abs(punto2.getId()-punto.getId())<=9 && Math.abs(punto2.getId()-punto.getId())>=7)){
+                                if(punto.getId()%8==0){
+                                    switch(punto.getId()-punto2.getId()){
+                                        case(1):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(-7):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(9):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        default:
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                            break;
+                                    }
+                                } else if((punto.getId()+1)%8==0){
+                                    switch(punto.getId()-punto2.getId()){
+                                        case(-1):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(7):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        case(-9):
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            break;
+                                        default:
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                            break;
+                                    }
+                                }else{
+                                    ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                }
+                                
+                            }else{
+                                ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                            }
+                        }
                     puntos_a_enviar.agregarAlInicio(punto);
                 }
+                    
                 } catch (JsonProcessingException ex) {
                     Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
@@ -118,7 +247,6 @@ public class JuegoController {
         int radio = 5;
         int espacio = 50;
         int cont = 0;
-        Group points = new Group();
         for(int i=0;i<8;i++){
             for(int j=0;j<8;j++){
                 Circle circle = new Circle();
@@ -128,7 +256,7 @@ public class JuegoController {
                 puntos[cont] = new Punto(x,y,cont);
                 
                 x = x+radio+espacio;
-                points.getChildren().add(circle);
+                circles.getChildren().add(circle);
                 
                 
                 cont++;
@@ -136,8 +264,7 @@ public class JuegoController {
             x = 20;
             y = y + radio + espacio;
         }
-        System.out.println(puntos[0].getX()+","+puntos[1].getY());
-        addtoPane(points);
+        addtoPane(circles);
         addtoPane(lineGroup);
         
     }

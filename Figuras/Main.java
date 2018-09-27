@@ -13,6 +13,7 @@ import Matriz.*;
  */
 public class Main {
     public static void main(String[] args){
+        /*
         Recorrido Buscador = new Recorrido();
         
         LinkedList<Punto> Lista = new LinkedList();
@@ -46,6 +47,6 @@ public class Main {
        
         Buscador.ImpresionLista(Buscador.BuscaCaminos(P1, P1, P2));
 
-        
+        */
     }
 }

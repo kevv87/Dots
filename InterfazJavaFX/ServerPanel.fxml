@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="serverPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="242.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InterfazJavaFX.ServerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="383.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InterfazJavaFX.ServerController">
    <children>
       <SplitPane dividerPositions="0.43457943925233644" layoutX="14.0" layoutY="15.0" orientation="VERTICAL" prefHeight="216.0" prefWidth="214.0">
         <items>
@@ -17,7 +22,7 @@
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <Button fx:id="okButton" layoutX="172.0" layoutY="3.0" mnemonicParsing="false" text="OK" onAction="#getInfo">
+                  <Button fx:id="okButton" layoutX="172.0" layoutY="3.0" mnemonicParsing="false" onAction="#getInfo" text="OK">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -27,26 +32,41 @@
                   <Insets />
                </opaqueInsets>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="114.0" prefWidth="212.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="246.0">
                <children>
                   <TextField fx:id="serverIDTextF" layoutX="-4.0" layoutY="32.0" prefHeight="27.0" prefWidth="221.0" promptText="ServerID">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <ColorPicker fx:id="colorButton" layoutX="69.0" layoutY="76.0">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </ColorPicker>
-                  <Button fx:id="backButton" layoutX="8.0" layoutY="76.0" mnemonicParsing="false" text="Back" onAction="#changeToMainScreenButtonPushed">
+                  <Button fx:id="backButton" layoutX="8.0" layoutY="76.0" mnemonicParsing="false" onAction="#changeToMainScreenButtonPushed" text="Back">
                      <cursor>
                         <Cursor fx:constant="OPEN_HAND" />
                      </cursor>
                   </Button>
+                  <MenuButton fx:id="menuButton" layoutX="82.0" layoutY="76.0" mnemonicParsing="false" text="MenuButton">
+                    <items>
+                        <MenuItem fx:id="Default" mnemonicParsing="false" text="Default" />
+                        <MenuItem fx:id="redSamurai" mnemonicParsing="false" text="Red Samurai" />
+                      <MenuItem fx:id="stereoHead" mnemonicParsing="false" text="Stereo Head" />
+                      <MenuItem fx:id="samus" mnemonicParsing="false" text="Samus" />
+                        <MenuItem fx:id="powerPig" mnemonicParsing="false" text="Power Pig" />
+                        <MenuItem fx:id="pinkGum" mnemonicParsing="false" text="Pink Gum" />
+                        <MenuItem fx:id="obama" mnemonicParsing="false" text="Obama" />
+                        <MenuItem fx:id="dTickle" mnemonicParsing="false" text="Doctor Tickles" />
+                        <MenuItem fx:id="potato" mnemonicParsing="false" text="Potato" />
+                        <MenuItem fx:id="beero" mnemonicParsing="false" text="Beer-o-saurus" />
+                        <MenuItem fx:id="me" mnemonicParsing="false" text="me.jpg" />
+                    </items>
+                  </MenuButton>
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
+      <ImageView fx:id="image" fitHeight="150.0" fitWidth="100.0" layoutX="248.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/characters/Default.jpg" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

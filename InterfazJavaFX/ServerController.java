@@ -1,22 +1,20 @@
 package InterfazJavaFX;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
 import Matriz.ListaSimple;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class ServerController {
 
@@ -25,9 +23,90 @@ public class ServerController {
     public TextField usernameTextF;
     public TextField serverIDTextF;
     public boolean booli;
-
+    
+    @FXML
+    private MenuButton menuButton;
+    @FXML
+    private ImageView image;
+    @FXML
+    private MenuItem Default;
+    @FXML
+    private MenuItem redSamurai;
+    @FXML
+    private MenuItem stereoHead;
+    @FXML
+    private MenuItem samus;
+    @FXML
+    private MenuItem powerPig;
+    @FXML
+    private MenuItem pinkGum;
+    @FXML
+    private MenuItem obama;
+    @FXML
+    private MenuItem dTickle;
+    @FXML
+    private MenuItem potato;
+    @FXML
+    private MenuItem beero;
+    @FXML
+    private MenuItem me;
+    
+    public void initialize(){
+        EventHandler<ActionEvent> select_image = (ActionEvent e) -> {
+            String seleccion = ((MenuItem)e.getSource()).getText();
+            menuButton.setText(seleccion); 
+            switch(seleccion){
+                case("Default"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/default.jpg").toExternalForm()));
+                    break;
+                case("Power Pig"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/powerPig.jpg").toExternalForm()));
+                    break;
+                case("Obama"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/obama.jpg").toExternalForm()));
+                    break;
+                case("Doctor Tickles"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/doctorTickles.jpg").toExternalForm()));
+                    break;
+                case("Stereo Head"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/stereoHead.jpg").toExternalForm()));
+                    break;
+                case("Pink Gum"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/pinkgum.jpg").toExternalForm()));
+                    break;
+                case("Samus"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/samus.jpg").toExternalForm()));
+                    break;
+                case("Potato"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/potato.jpg").toExternalForm()));
+                    break;
+                case("me.jpg"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/me.jpg").toExternalForm()));
+                    break;
+                case("Beer-o-saurus"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/beerosaurus.jpg").toExternalForm()));
+                    break;
+                case("Red Samurai"):
+                    image.setImage(new Image(getClass().getResource("../img/characters/redSamurai.jpg").toExternalForm()));
+                    break; 
+            }
+        };
+        Default.setOnAction(select_image);
+        redSamurai.setOnAction(select_image);
+        stereoHead.setOnAction(select_image);
+        samus.setOnAction(select_image);
+        obama.setOnAction(select_image);
+        dTickle.setOnAction(select_image);
+        potato.setOnAction(select_image);
+        beero.setOnAction(select_image);
+        me.setOnAction(select_image);
+        powerPig.setOnAction(select_image);
+        pinkGum.setOnAction(select_image);
+        
+    }
+    
     public void getInfo(ActionEvent event) throws Exception{
-
+        
         String username = usernameTextF.getText();
         String serverID = serverIDTextF.getText();
 
@@ -72,4 +151,7 @@ public class ServerController {
         window.setScene(menuScene);
         window.show();
     }
+    
+    
+
 }
