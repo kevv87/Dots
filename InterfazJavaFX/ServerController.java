@@ -27,7 +27,7 @@ public class ServerController {
     @FXML
     private MenuButton menuButton;
     @FXML
-    private ImageView image;
+    private ImageView image_label;
     @FXML
     private MenuItem Default;
     @FXML
@@ -51,43 +51,56 @@ public class ServerController {
     @FXML
     private MenuItem me;
     
+    private Image image;
+    
     public void initialize(){
         EventHandler<ActionEvent> select_image = (ActionEvent e) -> {
             String seleccion = ((MenuItem)e.getSource()).getText();
             menuButton.setText(seleccion); 
             switch(seleccion){
                 case("Default"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/default.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/default.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Power Pig"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/powerPig.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/powerPig.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Obama"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/obama.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/obama.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Doctor Tickles"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/doctorTickles.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/doctorTickles.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Stereo Head"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/stereoHead.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/stereoHead.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Pink Gum"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/pinkgum.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/pinkgum.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Samus"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/samus.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/samus.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Potato"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/potato.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/potato.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("me.jpg"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/me.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/me.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Beer-o-saurus"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/beerosaurus.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/beerosaurus.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break;
                 case("Red Samurai"):
-                    image.setImage(new Image(getClass().getResource("../img/characters/redSamurai.jpg").toExternalForm()));
+                    image = new Image(getClass().getResource("../img/characters/redSamurai.jpg").toExternalForm());
+                    image_label.setImage(image);
                     break; 
             }
         };
@@ -112,6 +125,8 @@ public class ServerController {
 
         lista.agregarAlInicio(username);
         lista.agregarAlInicio(serverID);
+        lista.insertarPorPosicion(2, image);
+        System.out.println(((Image)lista.getValor(2)).getWidth());
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("PantallaEspera.fxml"));

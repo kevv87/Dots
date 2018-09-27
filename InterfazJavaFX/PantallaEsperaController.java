@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 public class PantallaEsperaController {
 
     private ListaSimple userDataList;
-    private ListaSimple oponentDataList;
     private Stage thiswindow;
     private static Punto[] puntos = new Punto[64];
     private boolean activo = false;
@@ -52,10 +51,20 @@ public class PantallaEsperaController {
 
         //This line gets the Stage information
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        
+        ((JuegoController)loader.getController()).setUserDataList(userDataList);
+        ((JuegoController)loader.getController()).createMyImage();
+        ((JuegoController)loader.getController()).setMyName((String)userDataList.getValor(1));
+        ((JuegoController)loader.getController()).setMyPoints("0");
+        ((JuegoController)loader.getController()).setFoePoints("0");
+        ((JuegoController)loader.getController()).setFoeName("Esperando\n Jugador");
+                
 
         window.setScene(tableViewScene);
         window.setTitle("DOTS - Playing");
         window.show();
+        
+        
         
         Thread juego = new Thread(){
             public void run(){
@@ -82,10 +91,6 @@ public class PantallaEsperaController {
         this.userDataList = userDataList;
     }
 
-    public void setOponentDataList(ListaSimple oponentDataList) {
-        this.oponentDataList = oponentDataList;
-    }
-
     public void setThiswindow(Stage thiswindow) {
         this.thiswindow = thiswindow;
     }
@@ -94,9 +99,6 @@ public class PantallaEsperaController {
         return userDataList;
     }
 
-    public ListaSimple getOponentDataList() {
-        return oponentDataList;
-    }
 
     public Stage getThiswindow() {
         return thiswindow;

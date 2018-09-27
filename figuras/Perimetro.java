@@ -10,12 +10,12 @@ package Figuras;
  * @author Sebastián
  */
 public class Perimetro {
-    
+    /*
     LinkedList<Punto> Puntos;
 
     Perimetro(LinkedList<Punto> Lista){
         LinkedList<Punto> Puntos=Lista;
-    }
+    }*?
     
 }
 

@@ -19,6 +19,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -35,12 +38,23 @@ public class JuegoController {
 
     @FXML
     private Pane gamePane;
+    @FXML
+    private ImageView my_image;
+    @FXML
+    private Label my_name;
+    @FXML
+    private Label my_points;
+    @FXML
+    private Label foePoints;
+    @FXML
+    private Label foeName;
     
     private static Group lineGroup = new Group();
     private static Group circles = new Group();
     private static Punto[] puntos = new Punto[64];
     private static boolean activo = false;
     private final ListaSimple puntos_a_enviar = new ListaSimple();
+    private ListaSimple userDataList;
     
     private Stage window;
 
@@ -240,7 +254,7 @@ public class JuegoController {
         return octal;
     }
     
-    public void initialize(){
+    public void initialize() throws Exception{
          //Dibujando circulos
         int x = 20;
         int y = 20;
@@ -293,6 +307,31 @@ public class JuegoController {
     
     public void setWindow(Stage window){
         this.window = window;
+    }
+    
+    public void setUserDataList(ListaSimple userDataList){
+        this.userDataList = userDataList;
+    }
+    
+    public void createMyImage() throws Exception{
+        System.out.println(userDataList.getTamanio());
+        my_image.setImage((Image)userDataList.getValor(2));
+    }
+    
+    public void setMyName(String text){
+        my_name.setText(text);
+    }
+    
+    public void setMyPoints(String points){
+        my_points.setText(points);
+    }
+    
+    public void setFoePoints(String points){
+        foePoints.setText(points);
+    }
+    
+    public void setFoeName(String name){
+        foeName.setText(name);
     }
     
     
