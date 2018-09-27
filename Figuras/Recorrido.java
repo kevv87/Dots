@@ -11,8 +11,9 @@ package Figuras;
  */
 public class Recorrido {
     
+    private final LinkedList<Punto> Matriz = genMatriz();
     private LinkedList<Perimetro> PerimetrosCerrados = new LinkedList(); 
-    //private LinkedList<Segmento> SegmentosHechos = new LinkedList();
+    private LinkedList<Segmento> SegmentosHechos = new LinkedList();
     
     //Funcion que retorna la lista de puntos para cerrar el camino
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
@@ -45,7 +46,7 @@ public class Recorrido {
                     Posibilidades.eliminar(Eliminar);
                 }
                 while(Posibilidades.getTamanio()>1){ //&& Marcador.getElemento()!=Origen){
-                    if(Camino.buscar(Marcador.getElemento())==false){
+                    if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
                     Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Marcador.getElemento(), Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto donde se cierra
@@ -64,8 +65,8 @@ public class Recorrido {
     
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){
-        Punto PuntoA = new Punto(ID1%8, (int)ID1/8);
-        Punto PuntoB = new Punto(ID2%8, (int)ID2/8);
+        Punto PuntoA = buscarPto(ID1%8, (int)ID1/8);
+        Punto PuntoB = buscarPto(ID2%8, (int)ID2/8);
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
             System.out.println("Yuju!");
         } else{
@@ -104,6 +105,27 @@ public class Recorrido {
                 Aux=Aux.getSiguiente();
             }
         }
+    }
+    
+    //Funcion para generar matriz de puntos
+    public LinkedList<Punto> genMatriz(){
+        LinkedList<Punto> Matriz = new LinkedList();
+        for(int Filas=0; Filas<8; Filas++){
+            for(int Columnas=0; Columnas<8; Columnas++){
+                Punto punto = new Punto(Filas, Columnas);
+                Matriz.anadirFinal(punto);
+            }
+        }
+        return Matriz;
+    }
+    
+    //Funcion que busca un punto en la matriz
+    public Punto buscarPto(int X, int Y){
+        Nodo<Punto> Aux = Matriz.getInicio();
+        while(Aux.getElemento().getPosX()!=X && Aux.getElemento().getPosY()!=Y){
+            Aux=Aux.getSiguiente();
+        }
+        return Aux.getElemento();
     }
   
 }

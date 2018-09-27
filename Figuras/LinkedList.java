@@ -46,7 +46,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
         Ultimo=nuevo;
         Tamanio++;
     }
-    public boolean buscar(T dato){
+    public boolean isIn(T dato){
         boolean dentro=false;
         if(Inicio==null){
             return dentro;
@@ -63,9 +63,10 @@ public class LinkedList<T>{ //Lista para nodos genericos
             return dentro;
         }
     }
+
     
     public void eliminar(T dato){
-        if(buscar(dato)){
+        if(isIn(dato)){
             Nodo<T> aux = Inicio;
             if(aux.getElemento()==dato){
                 Inicio=Inicio.getSiguiente();
@@ -88,7 +89,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
     public void SumarListas(LinkedList Lista1, LinkedList Lista2){
         Nodo<Punto> Aux = Lista2.getInicio();
         while(Aux!=null){
-            if(Lista1.buscar(Aux.getElemento())==false){
+            if(Lista1.isIn(Aux.getElemento())==false){
                 Lista1.anadirFinal(Aux.getElemento());
                 Aux=Aux.getSiguiente();
             }

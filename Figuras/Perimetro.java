@@ -22,7 +22,7 @@ public class Perimetro {
         Nodo<Punto> Punto = Per.getPuntos().getInicio();
         while(PerAux.getElemento()!=null){
             while(Punto.getElemento()!=null){
-                if(PerAux.getElemento().getPuntos().buscar(Punto.getElemento())){
+                if(PerAux.getElemento().getPuntos().isIn(Punto.getElemento())){
                     Per.getPuntos().SumarListas(Per.getPuntos(), PerAux.getElemento().getPuntos());
                     Perimetros.eliminar(PerAux.getElemento());
                     PerAux=PerAux.getSiguiente();
