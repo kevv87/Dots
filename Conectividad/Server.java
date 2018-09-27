@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import figuras.Recorrido;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 
 /**
@@ -89,6 +91,8 @@ public class Server{
       try{ 
         while(true){
             Player new_player = new Player(listener.accept(), listener.accept());
+            new_player.setName(new_player.getComandos_in().readLine());
+            new_player.setImage(new_player.getComandos_in().readLine());
             cola.enqueue(new_player);
             send(new_player,"ENC");  // Le dice al jugador que esta en cola.
             System.out.println("Nuevo jugador en cola!");
@@ -127,8 +131,12 @@ public class Server{
 
 
         player1 = cola.dequeue();
-        player2 = cola.dequeue();  
+        player2 = cola.dequeue();
         broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
+        String json_tosend = mapper.writeValueAsString(player2);
+        player1.getGame_out().println(json_tosend);
+        json_tosend = mapper.writeValueAsString(player1);
+        player2.getGame_out().println(json_tosend);
         Player current_player;
         
         Thread listenp1 = new Thread(){
@@ -253,7 +261,6 @@ public class Server{
    * @param msg Mensaje a emitir.
    */
   public static void broadcast(String msg){
-
       player1.getGame_out().println(msg);
       player2.getGame_out().println(msg);
   }
