@@ -48,8 +48,10 @@ public class JuegoController {
     private Label foePoints;
     @FXML
     private Label foeName;
+    @FXML
+    private ImageView foeImage;
     
-    private static Group lineGroup = new Group();
+    private Group lineGroup = new Group();
     private static Group circles = new Group();
     private static Punto[] puntos = new Punto[64];
     private static boolean activo = false;
@@ -285,7 +287,7 @@ public class JuegoController {
     
     	
     
-    public static void addLine(int id1, int id2, Color color){
+    public void addLine(int id1, int id2, Color color){
         Platform.runLater(() -> {
             Punto punto1 = puntos[id1];
             Punto punto2 = puntos[id2];
@@ -323,16 +325,36 @@ public class JuegoController {
     }
     
     public void setMyPoints(String points){
-        my_points.setText(points);
+        Platform.runLater(() -> {
+            my_points.setText(points);
+        });
+        
     }
     
     public void setFoePoints(String points){
-        foePoints.setText(points);
+        Platform.runLater(() -> {
+            my_points.setText(points);
+        });
+        
     }
     
     public void setFoeName(String name){
-        foeName.setText(name);
+        Platform.runLater(() -> {
+            foeName.setText(name);
+        });
+        
     }
+    
+    public void setFoeImage(String url){
+        Platform.runLater(() -> {
+            foeImage.setImage(new Image((getClass().getResource(url)).toExternalForm()));
+        });
+    }
+
+    public ListaSimple getUserDataList() {
+        return userDataList;
+    }
+    
     
     
     

@@ -1,5 +1,6 @@
 package Conectividad;
 
+import Clases.Player;
 import Interfaz.JuegoController;
 import Interfaz.LaminaJuego;
 import Interfaz.MarcoJuego;
@@ -25,6 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 
 
 /**
@@ -51,6 +54,8 @@ public class Client{
     
 
     private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private Player myPlayer;
+    private Player oponente;
 
     
     // Variables necesarias para arduino
@@ -62,6 +67,7 @@ public class Client{
     private static final  int TIMEOUT=2000; //Milisegundos
     
     private static final int DATA_RATE = 9600;
+    private final JuegoController interfaz;
     
     /**
      * Inicializa la conexion con el arduino
@@ -109,10 +115,15 @@ public class Client{
     /**
      * Constructor
      * @param serverAddress Direccion IP del server
+     * @param interfaz Controlador de la interfaz
      * @throws java.lang.Exception
      */
-    public Client(String serverAddress) throws Exception{
-        init(serverAddress);
+    public Client(String serverAddress, JuegoController interfaz) throws Exception{
+        this.interfaz = interfaz;
+        myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3));
+        init(serverAddress);  // Inicializa la conexion
+        
+        
         Thread juego = new Thread(){
             public void run(){
                 try {
@@ -159,7 +170,10 @@ public class Client{
       socket_comandos = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_comandos = new BufferedReader(new InputStreamReader(socket_comandos.getInputStream()));
       out_comandos = new PrintWriter(socket_comandos.getOutputStream(), true);
-      System.out.println("Conectado");
+      System.out.println("Conectado, enviando datos del jugador");
+      
+      send_comando(myPlayer.getName());
+      send_comando(myPlayer.getImage_url());
     }
     
     
@@ -180,29 +194,22 @@ public class Client{
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
-            JuegoController.setActivo(true);
+            interfaz.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
-              JuegoController.setActivo(false);
-          }else if(line.startsWith("NYT")){  //No es su turno
-              JuegoController.setActivo(false);
-          }else if(line.startsWith("DWL")){  //Dibuje una linea
-              System.out.println(line);
-              int id1 = Integer.parseInt(in_game.readLine());
-              int id2 = Integer.parseInt(in_game.readLine());
-              String colorm = in_game.readLine();
-              Color color;
-              if("red".equals(colorm)){
-                  color = Color.RED;
-              }else{
-                  color = Color.BLUE;
-              }
-              JuegoController.addLine(id1, id2, color);
+              interfaz.setActivo(false);
           }else if(line.startsWith("ENC")){
               System.out.println("Estoy en cola");
           }else if(line.startsWith("NEC")){
+              oponente = mapper.readValue(in_game.readLine(), Player.class);
+              interfaz.setFoeName(oponente.getName());
+              interfaz.setFoeImage(oponente.getImage_url());
               System.out.println("Sali de cola!");
           }else if(line.startsWith("END")){
               Client.close();
+          }else if(line.startsWith("YW")){
+              System.out.println("I win");
+          }else if(line.startsWith("YL")){
+              System.out.println("I lose");
           }else{
               System.out.println("mensaje no identificado");     
               System.out.println(line);
@@ -217,9 +224,12 @@ public class Client{
      * Maneja el protocolo de comandos
      * @throws java.io.IOException
      */
+    @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
         String line = null;
+        long n_segundos = 10;
         while(true){
+            out_comandos.println("GST");
             try{
                 line = in_comandos.readLine();  //Lee un mensaje entrante
               } catch(IOException e){
@@ -231,7 +241,24 @@ public class Client{
                 break;
             }else if("END".equals(line)){
                 close();
+            }else if("DWL".equals(line)){
+                System.out.println(line);
+                MensajeLinea linea= mapper.readValue(in_comandos.readLine(), MensajeLinea.class);
+                
+                int id1 = linea.getId1();
+                int id2 = linea.getId2();
+                String colorm = linea.getColor();
+                Color color;
+                if("red".equals(colorm)){
+                    color = Color.RED;
+                }else{
+                    color = Color.BLUE;
+                }
+                interfaz.addLine(id1, id2, color);
+            }else if("0".equals(line)){
+                ;
             }
+            Thread.sleep(n_segundos);
         }
     }
     
