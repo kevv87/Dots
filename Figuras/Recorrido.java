@@ -16,7 +16,7 @@ public class Recorrido {
     private LinkedList<Segmento> SegmentosHechos;
     private boolean inFigCerrada;
     
-    Recorrido(){
+    public Recorrido(){
         PerimetrosCerrados = new LinkedList();
         SegmentosHechos = new LinkedList();
         inFigCerrada=false;

@@ -16,7 +16,7 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import figuras.Recorrido;
+import Figuras.Recorrido;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
@@ -243,8 +243,9 @@ public class Server{
               
               
               //Some dumb chino logic
-              //Recorrido recorrido = new Recorrido();
-              //recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
+              Recorrido recorrido = new Recorrido();
+              recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
+              System.out.println(Integer.parseInt(id1));
               
               
               int id_tosend1 = (Integer.parseInt(id1,8));
