@@ -28,8 +28,10 @@ public class Recorrido {
         Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
-        LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
-        Posibilidades.eliminar(Anterior);   //Elimina el punto del que viene en caso de usar recursividad
+        LinkedList<Punto> Omitir = new LinkedList();
+        Omitir.anadirFinal(Anterior);
+        LinkedList<Punto> Posibilidades = new LinkedList();    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
+        Posibilidades=Posibilidades.Ignorar(Marcador.getElemento().getReferencias(), Omitir);
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
@@ -47,11 +49,12 @@ public class Recorrido {
                 while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){     //1- Si solo hay una posibilidad, siga avanzando
                     Camino.anadirFinal(Marcador.getElemento());
                     Punto Eliminar = Marcador.getElemento();
+                    LinkedList<Punto> Excluir = new LinkedList();
+                    Excluir.anadirFinal(Eliminar);
                     Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
-                    Posibilidades=Marcador.getElemento().getReferencias();
-                    Posibilidades.eliminar(Eliminar);
+                    Posibilidades=Posibilidades.Ignorar(Marcador.getElemento().getReferencias(), Excluir);
                 }
-                while(Posibilidades.getTamanio()>1){ //&& Marcador.getElemento()!=Origen){      //Si hay más de una posibilidad, evalúe
+                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){      //Si hay más de una posibilidad, evalúe
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
@@ -111,10 +114,12 @@ public class Recorrido {
     
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
-        Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);  // Busca el punto con el id1 en la matriz
-        Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);  // Busca el punto con el id1 en la matriz
-        PuntoA.getReferencias().anadirFinal(PuntoB);  // Agrega el punto B a las referencias del punto A
-        PuntoB.getReferencias().anadirFinal(PuntoA);  // viceversa
+        Punto PuntoA = buscarPto((int)ID1/10, ID1%10);
+        Punto PuntoB = buscarPto((int)ID2/10, ID2%10);
+        PuntoA.getReferencias().anadirFinal(PuntoB);
+        PuntoB.getReferencias().anadirFinal(PuntoA);
+        System.out.println(PuntoA.getReferencias().getTamanio());
+        ImpresionLista(PuntoA.getReferencias());
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
             System.out.println("YUJU!");
             ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
