@@ -13,7 +13,7 @@ public class Perimetro {
     
     LinkedList<Punto> Puntos;
 
-    Perimetro(LinkedList<Punto> Lista){
+    public Perimetro(LinkedList<Punto> Lista){
         Puntos=Lista;
     }
     
@@ -44,6 +44,10 @@ public class Perimetro {
 
     public void setPuntos(LinkedList<Punto> Puntos) {
         this.Puntos = Puntos;
+    }
+    
+    public static void main(String args[]){
+        ;
     }
     
     

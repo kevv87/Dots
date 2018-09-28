@@ -291,8 +291,6 @@ public class Server{
               }
               
               //Some dumb chino logic
-              System.out.println("Punto 1:"+id1);
-              System.out.println("Punto 2:"+id2);
               Recorrido recorrido = new Recorrido();
               recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
 

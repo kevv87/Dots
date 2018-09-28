@@ -111,10 +111,10 @@ public class Recorrido {
     
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
-        Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);
-        Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);
-        PuntoA.getReferencias().anadirFinal(PuntoB);
-        PuntoB.getReferencias().anadirFinal(PuntoA);
+        Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);  // Busca el punto con el id1 en la matriz
+        Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);  // Busca el punto con el id1 en la matriz
+        PuntoA.getReferencias().anadirFinal(PuntoB);  // Agrega el punto B a las referencias del punto A
+        PuntoB.getReferencias().anadirFinal(PuntoA);  // viceversa
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
             System.out.println("YUJU!");
             ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));

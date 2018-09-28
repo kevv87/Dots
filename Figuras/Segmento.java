@@ -16,9 +16,10 @@ public class Segmento {
     private int Direccion;  //0,1,2,3 vertical, horizontal, diagonal izq superior a derecha inferior, diagonal izq inferior a derecha superior, respectivamente
     /**
      * Constructor
-     * @param Punto_A y Punto_B como puntos del segmento.
+     * @param A Punto del segmento
+     * @param B Punto del segmento
      */
-    Segmento(Punto A, Punto B){
+    public Segmento(Punto A, Punto B){
         Punto_A=A;
         Punto_B=B;
         if (A.getPosY()==B.getPosY()){  //Se guarda como primer elemento el punto que esté más a la izquierda en caso de estar en misma fila
