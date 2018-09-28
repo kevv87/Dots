@@ -89,7 +89,6 @@ public class Player{
         this.game_out = game_out;
     }
 
-
     public void setComandos_in(BufferedReader comandos_in) {
         this.comandos_in = comandos_in;
     }
@@ -109,7 +108,6 @@ public class Player{
     public String getImage_url() {
         return image_url;
     }
-
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;

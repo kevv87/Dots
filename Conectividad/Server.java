@@ -42,9 +42,7 @@ public class Server{
     listener = new ServerSocket(PORT);  //Escuchando el socket
     new Handler("juego").start();
     new Handler("cola").start();
-    
   }
-  
   
   /**
    * Clase encargada de manejar los hilos
@@ -53,7 +51,7 @@ public class Server{
   private static class Handler extends Thread{
       private final String tipo;
 
-        public String getTipo() {
+      public String getTipo() {
             return tipo;
         }
       
@@ -73,10 +71,16 @@ public class Server{
               } catch (IOException | InterruptedException ex) {
                   Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
               }
+                catch (Exception ex) {
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);}
+
           }else if(tipo.equals("cola")){
               try {
                   cola();
               } catch (IOException ex) {
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              }
+                catch (Exception ex) {
                   Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
               }
           }
@@ -89,18 +93,17 @@ public class Server{
    * Hilo encargado de la cola
      * @throws java.io.IOException
    */
-  public static void cola() throws IOException{
+  public static void cola() throws IOException, Exception{
       try{ 
         while(true){
             Player new_player = new Player(listener.accept(), listener.accept());
             new_player.setName(new_player.getComandos_in().readLine());
             new_player.setImage(new_player.getComandos_in().readLine());
             cola.enqueue(new_player);
-            send(new_player,"ENC");  // Le dice al jugador que esta en cola.
+            send(new_player,"ENC");  // Le dice al jugador que esta en cola. !!!!!!!!!!!!!!!!
             System.out.println("Nuevo jugador en cola!");
             System.out.println("Tamanno de la cola: "+cola.getTamanio());
-            
-            
+
         }
       }finally{
           stop_socket();
@@ -134,19 +137,26 @@ public class Server{
 
         player1 = cola.dequeue();
         player2 = cola.dequeue();
-        broadcast("NEC");  //Les dice a ambos jugadores que acaban de salir de la cola.
+
+        broadcast("NEC");  //!!!!!!!!!!! Les dice a ambos jugadores que acaban de salir de la cola.
+
         String json_tosend = mapper.writeValueAsString(player2);
         player1.getGame_out().println(json_tosend);
         json_tosend = mapper.writeValueAsString(player1);
         player2.getGame_out().println(json_tosend);
+
         Player current_player;
         
         Thread listenp1 = new Thread(){
             @Override
-            public void run(){
+            public void run() {
                 try {
                     while(true){
-                        String line = player1.getComandos_in().readLine(); 
+
+                        String jsonMessage = player1.getComandos_in().readLine();
+                        Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+                        String line = jsonToClass.getAccion();
+
                         if(line == null){
                             break;
                         }else if("END".equals(line)){
@@ -154,15 +164,23 @@ public class Server{
                             break;
                         }else if("GST".equals(line)){
                             if(cola_mensajes_p1.getTamanio() == 0){
-                                player1.getComandos_out().println("0");
+                                jsonToClass.setAccion("0");
+                                jsonMessage = mapper.writeValueAsString(jsonToClass);
+                                player1.getComandos_out().println(jsonMessage);
                             }else{
-                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+
+                                String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
+                                player1.getComandos_out().println(mensajeToJson);
                                 System.out.println(cola_mensajes_p1.peek());
-                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
+                                player1.getComandos_out().println(mensajeToJson);
                             }
                         }
                     }
                 } catch (IOException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (Exception ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -173,23 +191,31 @@ public class Server{
             public void run(){
                 try {
                     while(true){
-                        String line = player2.getComandos_in().readLine();
+
+                        String jsonMessage = player2.getComandos_in().readLine();
+                        Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+                        String line = jsonToClass.getAccion();
+
                         if(line == null){
                             break;
                         }else if("GST".equals(line)){  // Get State
                             if(cola_mensajes_p2.getTamanio() == 0){
-                                player2.getComandos_out().println("0");
+
+                                jsonToClass.setAccion("0");
+                                jsonMessage = mapper.writeValueAsString(jsonToClass);
+                                player2.getComandos_out().println(jsonMessage);
+
                             }else{
-                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
-                                System.out.println(cola_mensajes_p2.peek().getAccion());
-                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+
+                                String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
+                                player2.getComandos_out().println(mensajeToJson);
+                                System.out.println(cola_mensajes_p2.peek());
+                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
+                                player2.getComandos_out().println(mensajeToJson);
                             }
                         }else if("END".equals(line)){
                             cola_mensajes_p1.enqueue(new Mensaje("END"));
                             break;
-                        }else if(cola_mensajes_p2.getTamanio() != 0){
-                             player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
-                             
                         }
                     }
                 } catch (IOException ex) {
@@ -216,7 +242,12 @@ public class Server{
               }else{
                   current_player = player2;
               }
-              send(current_player,"YT");  // Establece turno
+              try {
+                  send(current_player, "YT");  // Establece turno
+              }
+              catch (Exception ex){
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              }
               
               msj = listen(current);
               
@@ -226,8 +257,14 @@ public class Server{
                 }else{
                   current_player = player2;
                 }
-                  send(current_player, "YW");
-                  break;
+                try{
+                    send(current_player, "YW");
+                    break;
+                }
+                catch (Exception ex){
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
               }
               
               String id1 = msj.substring(0,2);
@@ -239,7 +276,13 @@ public class Server{
                   break;
               }
 
-              send(current_player,"NYT");
+              try{
+                  send(current_player,"NYT");
+              }
+              catch (Exception ex){
+                  Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+              }
+
               
               
               //Some dumb chino logic
@@ -275,9 +318,11 @@ public class Server{
    * @param player El numero del jugador al cual se le quiere entregar el mensaje
    * @param msg El mensaje a enviar.
    */
-  public static void send(Player player, String msg){
-      
-      player.getGame_out().println(msg);
+  public static void send(Player player, String msg) throws Exception{
+      ObjectMapper mapper = new ObjectMapper();
+      Mensaje mensaje = new Mensaje(msg);
+      String msjToJson = mapper.writeValueAsString(mensaje);
+      player.getGame_out().println(msjToJson);
   }
   
   /**
@@ -285,8 +330,13 @@ public class Server{
    * @param msg Mensaje a emitir.
    */
   public static void broadcast(String msg){
-      player1.getGame_out().println(msg);
-      player2.getGame_out().println(msg);
+      try{
+          send(player1,msg);
+          send(player2,msg);//
+      }
+      catch (Exception ex){
+          Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
   
   /**
