@@ -28,7 +28,6 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
             e.consume();
             closeRequest();
         });
-
         window.setScene(new Scene(root, 500,400));
         window.show();
     }

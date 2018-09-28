@@ -1,9 +1,18 @@
 package Interfaz;
 
 import Conectividad.Client;
+import Matriz.ListaSimple;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JFrame;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MarcoJuego extends JFrame{
     
@@ -21,7 +30,21 @@ public class MarcoJuego extends JFrame{
     public MarcoJuego() throws Exception{
         
         
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    Client.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //System.exit(0);
+            }
+        });
+        
+        
         this.setVisible(true);
         
         xo = 300;
@@ -33,9 +56,12 @@ public class MarcoJuego extends JFrame{
         setBounds(xo,yo,width,height);
         
         lamina = new LaminaJuego();
+
         add(lamina);
+
     
         EventosMouse evento = new EventosMouse();
+
         addMouseListener(evento);
         
         
@@ -45,24 +71,46 @@ public class MarcoJuego extends JFrame{
     
     @Override
     public void mouseClicked(MouseEvent e) {
+        ObjectMapper mapper = new ObjectMapper();
+        
         if(!activo){
             return;
         }
         int x = e.getX();  // Consigue la coordenada en x de donde se origina el evento
         int y = e.getY();
         
-        Interfaz.LaminaJuego lamina = MarcoJuego.getLamina();
+        LaminaJuego lamina = MarcoJuego.getLamina();
         
         for(Punto punto:lamina.getPuntos()){  // Para cada punto en los puntos de la lamina...
-            if(punto.contiene(x,y)){  // si el punto contiene a la coordenada donde se clickeo
-                Punto punto_click = punto;
-                int id = punto_click.getId();
-                String msg = ""+id;
-                if(id<10){
-                    msg = "0"+id;
+            if(punto.contiene(x,y)){  try {
+                // si el punto contiene a la coordenada donde se clickeo
+                
+                ListaSimple puntos_a_enviar = Client.getPuntos_a_enviar();
+                
+                if(puntos_a_enviar.getTamanio() == 1){
+                    int diferencia = Math.abs(((Punto)puntos_a_enviar.getValor(0)).getId() - punto.getId());
+                    if(diferencia == 1 || (diferencia>=7 && diferencia <= 9)){
+                        puntos_a_enviar.agregarAlInicio(punto);
+                    }else{
+                        puntos_a_enviar.eliminar();
+                        puntos_a_enviar.agregarAlInicio(punto);
+                    }
+                    // Ahora convierte y lo envia
+                    String id1 = toOct(((Punto)puntos_a_enviar.getValor(0)).getId());
+                    String id2 = toOct(((Punto)puntos_a_enviar.getValor(1)).getId());
+                    String msj;
+                    msj = id1+","+id2;
+                    Client.send_game(msj);
+                    //Limpia
+                    puntos_a_enviar.eliminar();
+                }else{
+                    puntos_a_enviar.agregarAlInicio(punto);
                 }
-                System.out.println(msg);
-                Client.send(punto_click.getId()+"");
+                } catch (JsonProcessingException ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
  
@@ -87,13 +135,11 @@ public class MarcoJuego extends JFrame{
     public void mouseExited(MouseEvent e) {
     
     }
-    
-    
-    
-}
+    }
 
     public int getXo() {
         return xo;
+
     }
 
     public int getYo() {
@@ -118,5 +164,28 @@ public class MarcoJuego extends JFrame{
         this.activo = activo;
     }
     
+    public static void main(String args[]) throws Exception{
+        new MarcoJuego();
+    }
     
-}
+    private String toOct(int num){
+        int rem; //declaring variable to store remainder  
+    String octal=""; //declareing variable to store octal  
+    //declaring array of octal numbers  
+    char octalchars[]={'0','1','2','3','4','5','6','7'};  
+    //writing logic of decimal to octal conversion   
+    while(num>0)  
+    {  
+       rem=num%8;   
+       octal=octalchars[rem]+octal;   
+       num=num/8;  
+    }
+    if(octal.length()==1){
+        octal = "0"+octal;
+    }else if(octal.length() == 0){
+        octal = "00";
+    }
+    return octal;
+    }
+    
+    }

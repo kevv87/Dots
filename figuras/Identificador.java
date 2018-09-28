@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Figuras;
+package figuras;
+
 
 /**
  *
  * @author Sebastián
  */
+/*
 public class Identificador{
     
     private LinkedList<Perimetro> Perimetros;
@@ -184,4 +186,4 @@ public class Identificador{
     
     
 }    
-    
+*/    
