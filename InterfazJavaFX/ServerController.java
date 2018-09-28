@@ -55,6 +55,8 @@ public class ServerController {
     private Image image;
     
     public void initialize(){
+        menuButton.setText("Default");
+        image_url = "../img/characters/default.jpg";
         EventHandler<ActionEvent> select_image = (ActionEvent e) -> {
             String seleccion = ((MenuItem)e.getSource()).getText();
             menuButton.setText(seleccion); 

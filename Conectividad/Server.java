@@ -245,7 +245,6 @@ public class Server{
               //Some dumb chino logic
               Recorrido recorrido = new Recorrido();
               recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
-              System.out.println(Integer.parseInt(id1));
               
               
               int id_tosend1 = (Integer.parseInt(id1,8));
@@ -295,7 +294,6 @@ public class Server{
    */
   public static void broadcast_queue(String msg){
       cola_mensajes_p1.enqueue(new Mensaje(msg));
-      System.out.println(cola_mensajes_p1.peek().getAccion());
       cola_mensajes_p2.enqueue(new Mensaje(msg));
       
   }

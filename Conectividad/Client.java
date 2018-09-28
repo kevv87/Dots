@@ -242,7 +242,6 @@ public class Client{
             }else if("END".equals(line)){
                 close();
             }else if("DWL".equals(line)){
-                System.out.println(line);
                 MensajeLinea linea= mapper.readValue(in_comandos.readLine(), MensajeLinea.class);
                 
                 int id1 = linea.getId1();
