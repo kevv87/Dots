@@ -126,6 +126,7 @@ public class JuegoController {
                             String id1 = toOct(((Punto)puntos_a_enviar.getValor(0)).getId());
                             String id2 = toOct(((Punto)puntos_a_enviar.getValor(1)).getId());
                             String msj = id1+","+id2;
+                            Client.send_game(msj);
                             //Limpia
                             puntos_a_enviar.eliminar();
                             for(Punto punto2:puntos){  // Quita los halos de los puntos

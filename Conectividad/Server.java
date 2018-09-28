@@ -154,9 +154,9 @@ public class Server{
                 try {
                     while(true){
 
-                        String jsonMessage = player1.getComandos_in().readLine();
-                        Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
-                        String line = jsonToClass.getAccion();
+                        String jsonMessage;
+                        Mensaje jsonToClass = new Mensaje();
+                        String line = player1.getComandos_in().readLine();
 
                         if(line == null){
                             break;
@@ -169,13 +169,9 @@ public class Server{
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
                                 player1.getComandos_out().println(jsonMessage);
                             }else{
-
-
-                                String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
-                                player1.getComandos_out().println(mensajeToJson);
-                                System.out.println(cola_mensajes_p1.peek());
-                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
-                                player1.getComandos_out().println(mensajeToJson);
+                                while(cola_mensajes_p1.getTamanio()!=0){
+                                    player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                                }
                             }
                         }
                     }
@@ -194,9 +190,9 @@ public class Server{
                 try {
                     while(true){
 
-                        String jsonMessage = player2.getComandos_in().readLine();
-                        Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
-                        String line = jsonToClass.getAccion();
+                        String jsonMessage;
+                        Mensaje jsonToClass = new Mensaje();
+                        String line = player2.getComandos_in().readLine();
 
                         if(line == null){
                             break;
@@ -208,7 +204,6 @@ public class Server{
                                 player2.getComandos_out().println(jsonMessage);
 
                             }else{
-
                                 while(cola_mensajes_p2.getTamanio()!=0){
                                     player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
                                 }
@@ -322,10 +317,10 @@ public class Server{
    * @param msg El mensaje a enviar.
    */
   public static void send(Player player, String msg) throws Exception{
-      ObjectMapper mapper = new ObjectMapper();
+      /*ObjectMapper mapper = new ObjectMapper();
       Mensaje mensaje = new Mensaje(msg);
-      String msjToJson = mapper.writeValueAsString(mensaje);
-      player.getGame_out().println(msjToJson);
+      String msjToJson = mapper.writeValueAsString(mensaje);*/
+      player.getGame_out().println(msg);
   }
   
   /**
