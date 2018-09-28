@@ -24,9 +24,11 @@ public class ColaJugadores {
     }
     
     public void enqueue(Player jugador){
-        Player tmp = first;
-        first = jugador;
-        first.setSiguiente(tmp);
+        if(first == null){
+            first = jugador;
+        }else{
+            first.setSiguiente(jugador);
+        }
         tamanio++;
     }
     

@@ -1,24 +1,24 @@
 package Conectividad;
 
 public class MensajeLinea {
-    private  String accion;
     private int id1;
     private int id2;
+    private String color;
 
     public MensajeLinea(){
-        accion = null;
+        color = null;
     }
 
-    public MensajeLinea(String acc, int id1, int id2){
-        accion = acc;
+    public MensajeLinea(String color, int id1, int id2){
+        this.color = color;
         this.id1 = id1;
         this.id2 = id2;
     }
 
     //Getter & Setter
 
-    public String getAccion() {
-        return accion;
+    public String getColor() {
+        return color;
     }
 
     public int getId1(){
@@ -29,8 +29,8 @@ public class MensajeLinea {
         return id2;
     }
 
-    public void setAccion(String accion) {
-        this.accion = accion;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public void setIds(int id1,int id2) {

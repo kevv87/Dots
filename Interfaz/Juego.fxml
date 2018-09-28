@@ -33,7 +33,7 @@
             <Image url="@../img/characters/4137355593_32f777544b_o.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="471.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="foeImage" fitHeight="150.0" fitWidth="100.0" layoutX="471.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/characters/4138121446_10e676393a_o.jpg" />
          </image>

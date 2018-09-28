@@ -69,7 +69,7 @@ public class PantallaEsperaController {
         Thread juego = new Thread(){
             public void run(){
                 try {
-                    new Client((String)userDataList.getValor(0));
+                    new Client((String)userDataList.getValor(0), loader.getController());
                 } catch (Exception ex) {
                     Logger.getLogger(PantallaEsperaController.class.getName()).log(Level.SEVERE, null, ex);
                 }
