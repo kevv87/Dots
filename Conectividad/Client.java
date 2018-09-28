@@ -48,7 +48,7 @@ public class Client{
     private static PrintWriter out_comandos; //salida
    
     private final ObjectMapper mapper = new ObjectMapper();
-    
+    private static ObjectMapper mapper2 = new ObjectMapper(); //para métodos estáticos
     private static boolean alive=true;
     private static ListaSimple puntos_a_enviar = new ListaSimple();
     
@@ -123,7 +123,6 @@ public class Client{
         myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3));
         init(serverAddress);  // Inicializa la conexion
         
-        
         Thread juego = new Thread(){
             public void run(){
                 try {
@@ -161,7 +160,7 @@ public class Client{
      * @param serverAddress direccion IP del server
      * @throws java.io.IOException
      */
-    public void init(String serverAddress) throws IOException{
+    public void init(String serverAddress) throws IOException, Exception{
         // Crea la conexion e inicializa los streams
       socket_game = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_game = new BufferedReader(new InputStreamReader(socket_game.getInputStream()));
@@ -183,14 +182,19 @@ public class Client{
      */
     private void run_juego() throws IOException, MismatchedInputException, Exception{
       String line = null;
+      String jsonMessage = null;
+      Mensaje jsonToClass = new Mensaje();
 
       while(true){  // Debe procesar todos los mensajes del server
           try{
-            line = in_game.readLine();  //Lee un mensaje entrante
+              jsonMessage = in_game.readLine();//Lee un mensaje entrante
+              jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+              line = jsonToClass.getAccion();
+
           } catch(Exception e){
               line = null;
           }
-          // Protocolo.
+          // Protocolo
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
@@ -228,10 +232,17 @@ public class Client{
     public void run_comando() throws IOException, Exception{
         String line = null;
         long n_segundos = 10;
+        String jsonMessage = null;
+        Mensaje jsonToClass = new Mensaje();
+
         while(true){
-            out_comandos.println("GST");
+            jsonToClass.setAccion("GST");
+            jsonMessage = mapper.writeValueAsString(jsonToClass);
+            out_comandos.println(jsonMessage);
             try{
-                line = in_comandos.readLine();  //Lee un mensaje entrante
+                jsonMessage = in_comandos.readLine();
+                jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+                line = jsonToClass.getAccion();  //Lee un mensaje entrante
               } catch(IOException e){
                   line = null;
               }
@@ -242,12 +253,14 @@ public class Client{
             }else if("END".equals(line)){
                 close();
             }else if("DWL".equals(line)){
-                System.out.println(line);
-                MensajeLinea linea= mapper.readValue(in_comandos.readLine(), MensajeLinea.class);
-                
-                int id1 = linea.getId1();
-                int id2 = linea.getId2();
-                String colorm = linea.getColor();
+
+                line = in_comandos.readLine();
+                System.out.println("mensaje linea: "+line);
+                Mensaje linea= mapper.readValue(line, Mensaje.class);
+
+                int id1 = linea.getSegmento().getId1();
+                int id2 = linea.getSegmento().getId2();
+                String colorm = linea.getSegmento().getColor();
                 Color color;
                 if("red".equals(colorm)){
                     color = Color.RED;
@@ -268,7 +281,7 @@ public class Client{
      * @param msg Mensaje a enviar al servidor
      */
     public static void send_game(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
-        out_game.println(msg);
+        out_game.println(msg); //NO USAR (HASTA PASAR A FORMATO JSON)
     }
     
     
@@ -276,15 +289,19 @@ public class Client{
      * Envia un mensaje al servidor mediante el protocolo de comandos.
      * @param msg Mensaje a enviar al servidor
      */
-    public static void send_comando(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
-        out_comandos.println(msg);
+    public static void send_comando(String msg) throws Exception{  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
+
+        Mensaje jsonToClass = new Mensaje(msg);
+        String jsonMessage = mapper2.writeValueAsString(jsonToClass);
+        out_comandos.println(jsonMessage);
     }
     
     /**
      * Termina la conexion con el server
      * @throws java.io.IOException
      */
-    public static void close() throws IOException, Exception{
+    public static void close() throws Exception{
+
         send_comando("END");
         socket_game.close();
         socket_comandos.close();

@@ -16,12 +16,10 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
-=======
 import Figuras.Recorrido;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
->>>>>>> afb0169c1264dae20966fa17161fce2172e605b3
+
 
 
 /**
@@ -98,12 +96,26 @@ public class Server{
      * @throws java.io.IOException
    */
   public static void cola() throws IOException, Exception{
-      try{ 
+      try{
+          String jsonMessage = null;
+          Mensaje jsonToClass = new Mensaje();
+          String line = null;
+          ObjectMapper mapper = new ObjectMapper();
+
         while(true){
             Player new_player = new Player(listener.accept(), listener.accept());
-            new_player.setName(new_player.getComandos_in().readLine());
-            new_player.setImage(new_player.getComandos_in().readLine());
+
+            jsonMessage = new_player.getComandos_in().readLine();
+            jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+
+            new_player.setName(jsonToClass.getAccion());
+
+            jsonMessage = new_player.getComandos_in().readLine();
+            jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+
+            new_player.setImage(jsonToClass.getAccion());
             cola.enqueue(new_player);
+
             send(new_player,"ENC");  // Le dice al jugador que esta en cola. !!!!!!!!!!!!!!!!
             System.out.println("Nuevo jugador en cola!");
             System.out.println("Tamanno de la cola: "+cola.getTamanio());
@@ -119,7 +131,7 @@ public class Server{
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
    */
-  public static void juego() throws IOException, InterruptedException{
+  public static void juego() throws IOException, InterruptedException, Exception{
     String msj;
     Punto punto1;
     Punto punto2;
@@ -138,13 +150,14 @@ public class Server{
             }
         }
 
-
         player1 = cola.dequeue();
         player2 = cola.dequeue();
 
-        broadcast("NEC");  //!!!!!!!!!!! Les dice a ambos jugadores que acaban de salir de la cola.
+
+        broadcast("NEC");
 
         String json_tosend = mapper.writeValueAsString(player2);
+        System.out.println(json_tosend);
         player1.getGame_out().println(json_tosend);
         json_tosend = mapper.writeValueAsString(player1);
         player2.getGame_out().println(json_tosend);
@@ -172,7 +185,6 @@ public class Server{
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
                                 player1.getComandos_out().println(jsonMessage);
                             }else{
-
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
                                 player1.getComandos_out().println(mensajeToJson);
                                 System.out.println(cola_mensajes_p1.peek());
@@ -222,7 +234,7 @@ public class Server{
                             break;
                         }
                     }
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -286,8 +298,6 @@ public class Server{
               catch (Exception ex){
                   Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
               }
-
-              
               
               //Some dumb chino logic
               Recorrido recorrido = new Recorrido();
@@ -298,11 +308,11 @@ public class Server{
               int id_tosend1 = (Integer.parseInt(id1,8));
               int id_tosend2 = (Integer.parseInt(id2,8));
               
-              MensajeLinea lineToSend = new MensajeLinea(color, id_tosend1, id_tosend2);
-              String jsonToSend = mapper.writeValueAsString(lineToSend);
+              MensajeLinea mensaje_linea = new MensajeLinea(color, id_tosend1, id_tosend2);
+
               
               broadcast_queue("DWL");
-              broadcast_queue(jsonToSend);
+              broadcast_queue("",mensaje_linea);
 
               current *= -1;  // Cambio de turno
         }      
@@ -325,7 +335,8 @@ public class Server{
    */
   public static void send(Player player, String msg) throws Exception{
       ObjectMapper mapper = new ObjectMapper();
-      Mensaje mensaje = new Mensaje(msg);
+      Mensaje mensaje = new Mensaje();
+      mensaje.setAccion(msg);
       String msjToJson = mapper.writeValueAsString(mensaje);
       player.getGame_out().println(msjToJson);
   }
@@ -336,8 +347,8 @@ public class Server{
    */
   public static void broadcast(String msg){
       try{
-          send(player1,msg);
-          send(player2,msg);//
+          send(player2,msg);
+          send(player1,msg);//
       }
       catch (Exception ex){
           Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -350,10 +361,22 @@ public class Server{
    */
   public static void broadcast_queue(String msg){
       cola_mensajes_p1.enqueue(new Mensaje(msg));
-      System.out.println(cola_mensajes_p1.peek().getAccion());
       cola_mensajes_p2.enqueue(new Mensaje(msg));
       
   }
+
+    /**
+     * Agrega un mensaje linea a la cola de mensajes de cada jugador
+     * @param msg A ingresar en cola
+     */
+    public static void broadcast_queue(String msg, MensajeLinea linea) throws Exception{
+        ObjectMapper mapper = new ObjectMapper();
+        Mensaje lineToSend = new Mensaje(msg, linea);
+
+        cola_mensajes_p1.enqueue(lineToSend);
+        cola_mensajes_p2.enqueue(lineToSend);
+
+    }
   
   /**
    * Se detiene a escuchar un cierto socket hasta recibir una respuesta

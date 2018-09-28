@@ -44,6 +44,7 @@ public class PantallaEsperaController {
     
     @SuppressWarnings("empty-statement")
     public void ready(ActionEvent event) throws Exception {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Interfaz/Juego.fxml"));
         Parent tableViewParent = loader.load();
 
@@ -51,14 +52,15 @@ public class PantallaEsperaController {
 
         //This line gets the Stage information
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        
+
         ((JuegoController)loader.getController()).setUserDataList(userDataList);
         ((JuegoController)loader.getController()).createMyImage();
         ((JuegoController)loader.getController()).setMyName((String)userDataList.getValor(1));
         ((JuegoController)loader.getController()).setMyPoints("0");
+        System.out.println("entreeee");
         ((JuegoController)loader.getController()).setFoePoints("0");
         ((JuegoController)loader.getController()).setFoeName("Esperando\n Jugador");
-                
+
 
         window.setScene(tableViewScene);
         window.setTitle("DOTS - Playing");

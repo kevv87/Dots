@@ -6,6 +6,7 @@
 package Interfaz;
 
 import Conectividad.Client;
+import Conectividad.Mensaje;
 import InterfazJavaFX.AlertWindow;
 import Matriz.ListaSimple;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -63,8 +64,7 @@ public class JuegoController {
     public void addtoPane(Group group){
         gamePane.getChildren().add(group);
     }
-    
-    
+
     @FXML public void Handle(MouseEvent event) {
         if(!activo){
             return;
@@ -338,7 +338,8 @@ public class JuegoController {
         
     }
     
-    public void setFoeName(String name){
+    public void setFoeName(String name) {
+
         Platform.runLater(() -> {
             foeName.setText(name);
         });
@@ -346,6 +347,7 @@ public class JuegoController {
     }
     
     public void setFoeImage(String url){
+        System.out.println(url);
         Platform.runLater(() -> {
             foeImage.setImage(new Image((getClass().getResource(url)).toExternalForm()));
         });
