@@ -12,17 +12,25 @@ package Clases;
 public class ColaJugadores {
     
     private Player first;
+    private int tamanio;
 
     public int getTamanio() {
         return tamanio;
     }
-    private int tamanio;
     
+    /**
+     * Constructor
+     */
     public ColaJugadores(){
         first = null;
         tamanio = 0;
     }
     
+    
+    /**
+     * Encolar.
+     * @param jugador Instancia de la clase jugador a agregar a la cola
+     */
     public void enqueue(Player jugador){
         if(first == null){
             first = jugador;
@@ -32,6 +40,10 @@ public class ColaJugadores {
         tamanio++;
     }
     
+    /**
+     * Desencolar.
+     * @return Jugador en la cabeza de la cola
+     */
     public Player dequeue(){
         Player result = first;
         first = first.getSiguiente();
@@ -40,6 +52,9 @@ public class ColaJugadores {
         
     }
     
+    /**
+     * Revisa el primer elemento de la cola, pero no lo remueve
+     */
     public Player peek(){
         return first;
     }

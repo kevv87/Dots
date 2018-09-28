@@ -1,4 +1,4 @@
-package InterfazJavaFX;
+package Interfaz;
 
 import Matriz.ListaSimple;
 import javafx.application.Application;

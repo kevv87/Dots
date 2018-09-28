@@ -38,9 +38,9 @@ public class LinkedList<T>{ //Lista para nodos genericos
             Inicio = nuevo;
         }else{
             Nodo<T> current = Inicio;
-            while(current.getSiguiente()!=null)
+            while(current.getSiguiente()!=null){
                 current=current.getSiguiente();
-                          
+            }
             current.setSiguiente(nuevo);
         }
         Ultimo=nuevo;

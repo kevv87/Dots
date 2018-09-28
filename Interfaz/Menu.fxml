@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="500.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="InterfazJavaFX.MenuController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="500.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Interfaz.MenuController">
     <stylesheets>
         <URL value="@menu.css" />
     </stylesheets>

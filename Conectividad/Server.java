@@ -4,23 +4,15 @@
  * and open the template in the editor.
  */
 package Conectividad;
-
-
 import Clases.ColaJugadores;
 import Clases.Player;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Figuras.Recorrido;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
-
 
 /**
  * Clase encargada de correr el servidor y llevar a cabo toda la logica del juego
@@ -187,7 +179,6 @@ public class Server{
                             }else{
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
                                 player1.getComandos_out().println(mensajeToJson);
-                                System.out.println(cola_mensajes_p1.peek());
                                 mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
                                 player1.getComandos_out().println(mensajeToJson);
                             }
@@ -216,7 +207,6 @@ public class Server{
                             break;
                         }else if("GST".equals(line)){  // Get State
                             if(cola_mensajes_p2.getTamanio() == 0){
-
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
                                 player2.getComandos_out().println(jsonMessage);
@@ -225,9 +215,10 @@ public class Server{
 
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
                                 player2.getComandos_out().println(mensajeToJson);
-                                System.out.println(cola_mensajes_p2.peek());
                                 mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
                                 player2.getComandos_out().println(mensajeToJson);
+
+
                             }
                         }else if("END".equals(line)){
                             cola_mensajes_p1.enqueue(new Mensaje("END"));
@@ -300,14 +291,15 @@ public class Server{
               }
               
               //Some dumb chino logic
+              System.out.println("Punto 1:"+id1);
+              System.out.println("Punto 2:"+id2);
               Recorrido recorrido = new Recorrido();
               recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
-              System.out.println(Integer.parseInt(id1));
-              
-              
+
               int id_tosend1 = (Integer.parseInt(id1,8));
               int id_tosend2 = (Integer.parseInt(id2,8));
-              
+
+              System.out.println("id1: " + id_tosend1 + "id2: " + id_tosend2);
               MensajeLinea mensaje_linea = new MensajeLinea(color, id_tosend1, id_tosend2);
 
               
@@ -334,11 +326,13 @@ public class Server{
    * @param msg El mensaje a enviar.
    */
   public static void send(Player player, String msg) throws Exception{
+
       ObjectMapper mapper = new ObjectMapper();
       Mensaje mensaje = new Mensaje();
       mensaje.setAccion(msg);
       String msjToJson = mapper.writeValueAsString(mensaje);
       player.getGame_out().println(msjToJson);
+
   }
   
   /**

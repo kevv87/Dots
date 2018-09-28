@@ -2,13 +2,8 @@ package Conectividad;
 
 import Clases.Player;
 import Interfaz.JuegoController;
-import Interfaz.LaminaJuego;
-import Interfaz.MarcoJuego;
 
 import gnu.io.CommPortIdentifier;
-
-import Interfaz.Punto;
-import InterfazJavaFX.Main_Stage;
 import Matriz.ListaSimple;
 
 import javafx.scene.paint.Color;
@@ -24,10 +19,10 @@ import java.util.Enumeration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import gnu.io.PortInUseException;
+import gnu.io.UnsupportedCommOperationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.image.Image;
 
 
 /**
@@ -46,28 +41,29 @@ public class Client{
     private static Socket socket_comandos;
     private BufferedReader in_comandos; // entrada
     private static PrintWriter out_comandos; //salida
-   
+
     private final ObjectMapper mapper = new ObjectMapper();
     private static ObjectMapper mapper2 = new ObjectMapper(); //para métodos estáticos
     private static boolean alive=true;
     private static ListaSimple puntos_a_enviar = new ListaSimple();
+
     
 
-    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private Player myPlayer;
+    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    
+    //Jugadores
+    private final Player myPlayer;
     private Player oponente;
 
     
-    // Variables necesarias para arduino
-    //Variables de conexion
+    // Variables necesarias para la conexion con arduino
     private OutputStream output=null;
     private gnu.io.SerialPort serialPort;
     private final String PUERTO= "/dev/ttyUSB0";
-    
     private static final  int TIMEOUT=2000; //Milisegundos
-    
     private static final int DATA_RATE = 9600;
-    private final JuegoController interfaz;
+    
+    private final JuegoController interfaz;  // referencia a la interfaz
     
     /**
      * Inicializa la conexion con el arduino
@@ -95,11 +91,10 @@ public class Client{
             
             serialPort.setSerialPortParams(DATA_RATE, gnu.io.SerialPort.DATABITS_8, gnu.io.SerialPort.STOPBITS_1, gnu.io.SerialPort.PARITY_NONE);
             output = serialPort.getOutputStream();
-        }catch(Exception e){
+        }catch(PortInUseException | UnsupportedCommOperationException | IOException e){
             System.exit(ERROR);
         }
     }
-    
     
     /**
      * Envia datos al serial al que escucha el arduino
@@ -108,10 +103,11 @@ public class Client{
     private void enviarDatosArduino(String datos){
         try{
             output.write(datos.getBytes());
-        }catch( Exception e){
+        }catch( IOException e){
             System.out.println("Hubo un problema con el arduino");
         }
     }
+    
     /**
      * Constructor
      * @param serverAddress Direccion IP del server
@@ -120,10 +116,13 @@ public class Client{
      */
     public Client(String serverAddress, JuegoController interfaz) throws Exception{
         this.interfaz = interfaz;
-        myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3));
-        init(serverAddress);  // Inicializa la conexion
+
+        myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3)); // Crea un nuevo jugador
+        init(serverAddress);  // Inicializa la conexion al server
         
-        Thread juego = new Thread(){
+        Thread juego = new Thread(){ // Creando el hilo discreto
+
+            @Override
             public void run(){
                 try {
                     run_juego();
@@ -132,20 +131,12 @@ public class Client{
                 }
             }
         };
-        Thread comandos = new Thread(){
-            public void run(){
-                try {
-                    run_comando();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
+
         
+        // Corre los hilos
         juego.start();
-        comandos.start();
+        
+        // Arduino
         /*
         try{
             inicializarConexion();
@@ -169,8 +160,8 @@ public class Client{
       socket_comandos = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_comandos = new BufferedReader(new InputStreamReader(socket_comandos.getInputStream()));
       out_comandos = new PrintWriter(socket_comandos.getOutputStream(), true);
-      System.out.println("Conectado, enviando datos del jugador");
       
+      System.out.println("Conectado, enviando datos del jugador");
       send_comando(myPlayer.getName());
       send_comando(myPlayer.getImage_url());
     }
@@ -201,61 +192,80 @@ public class Client{
             interfaz.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
               interfaz.setActivo(false);
-          }else if(line.startsWith("ENC")){
+          }else if(line.startsWith("ENC")){  // En cola
               System.out.println("Estoy en cola");
-          }else if(line.startsWith("NEC")){
-              oponente = mapper.readValue(in_game.readLine(), Player.class);
+          }else if(line.startsWith("NEC")){  //Salida de cola
+              oponente = mapper.readValue(in_game.readLine(), Player.class);  // Defino mi oponente
+              
+              // Pone el nombre y la imagen del oponente en la interfaz
               interfaz.setFoeName(oponente.getName());
               interfaz.setFoeImage(oponente.getImage_url());
-              System.out.println("Sali de cola!");
-          }else if(line.startsWith("END")){
+              System.out.println("Inicia juego");
+              Thread comandos = new Thread(){  // Creando el hilo continuo
+                  @Override
+                  public void run(){
+                      try {
+                          run_comando();
+                      } catch (IOException ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      } catch (Exception ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                  }
+              };
+              comandos.start();
+          }else if(line.startsWith("END")){  // Fin del juego
               Client.close();
-          }else if(line.startsWith("YW")){
+          }else if(line.startsWith("YW")){  //Yo gano
               System.out.println("I win");
-          }else if(line.startsWith("YL")){
+          }else if(line.startsWith("YL")){  // Yo pierdo
               System.out.println("I lose");
           }else{
               System.out.println("mensaje no identificado");     
               System.out.println(line);
-              
-
           }
       }
     }
-    
-    
+
     /**
      * Maneja el protocolo de comandos
      * @throws java.io.IOException
      */
     @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
+        System.out.println("hgfdsdg");
         String line = null;
-        long n_segundos = 10;
+
+        long n_segundos = 10; // Intervalo entre cada refresh
         String jsonMessage = null;
         Mensaje jsonToClass = new Mensaje();
 
+        // Loop principal del socket continuo
         while(true){
-            jsonToClass.setAccion("GST");
+            jsonToClass.setAccion("GST"); // Get estado al server
             jsonMessage = mapper.writeValueAsString(jsonToClass);
             out_comandos.println(jsonMessage);
             try{
-                jsonMessage = in_comandos.readLine();
+                System.out.println("before");
+                jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
+                System.out.println("After");
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                 line = jsonToClass.getAccion();  //Lee un mensaje entrante
+
               } catch(IOException e){
                   line = null;
               }
-
-            if(line==null){
+            System.out.println("line: " + line);
+            if(line==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
                 close();
                 break;
-            }else if("END".equals(line)){
+            }else if("END".equals(line)){  // Si la respuesta es END, termina el juego y cierra sockets
                 close();
-            }else if("DWL".equals(line)){
 
+            }else if("DWL".equals(line)){
+                System.out.println("linea!!!: "+line);
                 line = in_comandos.readLine();
-                System.out.println("mensaje linea: "+line);
+
                 Mensaje linea= mapper.readValue(line, Mensaje.class);
 
                 int id1 = linea.getSegmento().getId1();
@@ -268,10 +278,11 @@ public class Client{
                     color = Color.BLUE;
                 }
                 interfaz.addLine(id1, id2, color);
-            }else if("0".equals(line)){
+            }else if("0".equals(line)){  // Si la respuesta es 0, es el estado normal, no dibuja nada.
                 ;
             }
-            Thread.sleep(n_segundos);
+            
+            Thread.sleep(n_segundos);  // Espera n_segundos antes de volver a intentar refrescar
         }
     }
     
@@ -317,7 +328,11 @@ public class Client{
     public static boolean isAlive(){
         return alive;
     }
-
+    
+    /**
+     * Getter de los puntos a enviar
+     * @return Puntos a enviar
+     */
     public static ListaSimple getPuntos_a_enviar() {
         return puntos_a_enviar;
     }
