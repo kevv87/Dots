@@ -41,7 +41,7 @@ public class Recorrido {
             //Segunda condicion de finalizacion, no pudo cerrar
             } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
                 System.out.println("No cerró");
-                Camino=null;
+                Camino=null;                
                 Continuar=false;
             //Recorre los puntos según sus referencias    
             } else{
@@ -84,6 +84,7 @@ public class Recorrido {
                                     Posibilidades.eliminar(Pos);
                                 }
                                 else{
+                                    
                                 }
                                 if(X!=null){
                                     Seguir=false;
@@ -93,7 +94,14 @@ public class Recorrido {
                                 }
                             }
                         } else{
-
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
                         LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
                         }

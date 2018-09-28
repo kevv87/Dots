@@ -16,7 +16,7 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import figuras.Recorrido;
+import Figuras.Recorrido;
 
 
 /**
