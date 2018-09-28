@@ -8,7 +8,7 @@ package Conectividad;
 
 import Clases.ColaJugadores;
 import Clases.Player;
-import Interfaz.MarcoJuego;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,9 +16,12 @@ import Interfaz.Punto;
 import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
+<<<<<<< HEAD
+=======
 import Figuras.Recorrido;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+>>>>>>> afb0169c1264dae20966fa17161fce2172e605b3
 
 
 /**
@@ -85,6 +88,7 @@ public class Server{
               }
           }
       }
+
       
   }
   
@@ -303,8 +307,9 @@ public class Server{
               current *= -1;  // Cambio de turno
         }      
     }
+
   }
-  
+
   /**
    * Detiene los sockets y libera los puertos.
      * @throws java.io.IOException
@@ -356,7 +361,9 @@ public class Server{
    * @return El mensaje que le envia el cliente
      * @throws java.io.IOException
    */
+
   public synchronized static String listen(int player) throws IOException{
+
       Player emitter;
       
       if(player == 1){
@@ -364,8 +371,8 @@ public class Server{
       }else{
           emitter = player2;
       }
+
       
       return emitter.getGame_in().readLine();
   }
-
 }

@@ -46,6 +46,7 @@
                </children>
             </HBox>
             <Button fx:id="buttonBack" layoutX="226.0" layoutY="359.0" mnemonicParsing="false" onAction="#changeToMainScreenButtonPushed" text="Back" />
+
             <Button layoutX="220.0" layoutY="323.0" mnemonicParsing="false" onAction="#ready" text="Ready" />
          </children>
       </Pane>
