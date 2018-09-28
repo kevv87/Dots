@@ -77,39 +77,30 @@ public class Recorrido {
                             while(Posibilidades.getTamanio()>0 && Seguir==true){
                                 Nodo<Punto> Pos = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen                            
                                 LinkedList<Punto> Conexiones = Pos.getElemento().getReferencias();
-                                Conexiones.RestarListas(Conexiones, Posibilidades);
+                                Conexiones.RestarListas(Conexiones, Posibilidades);     //Para continuar, se deben eliminar las conexiones dentro del perímetro hecho
                                 Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Conexiones));
                                 LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
                                 if(Conexiones.getTamanio()==0){
-                                    Posibilidades.eliminar(Pos);
+                                    Posibilidades.eliminar(Pos.getElemento());
                                 }
                                 else{
-                                    
-                                }
-                                if(X!=null){
+                                    if(X!=null){
                                     Seguir=false;
                                     Camino.SumarListas(Camino, X);
-                                } else{
-                                    Conexiones.eliminar(Marcador1.getElemento());
+                                    } else{
+                                        Conexiones.eliminar(Marcador1.getElemento());
+                                    }
                                 }
                             }
                         } else{
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
-                        LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
-                        }
-                        if(X!=null){    //Aplica recursividad para recorrer los subcaminos
-                            Camino.SumarListas(Camino, X);    //Funcion sumar listas
-                            Continuar=false;
-                        } else{
-                            Posibilidades.eliminar(Marcador1.getElemento());
+                            Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
+                            LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
+                            if(X!=null){    //Aplica recursividad para recorrer los subcaminos
+                                Camino.SumarListas(Camino, X);    //Funcion sumar listas
+                                Continuar=false;
+                            } else{
+                                Posibilidades.eliminar(Marcador1.getElemento());
+                            }
                         }
                     }    
                 }    
