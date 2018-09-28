@@ -209,12 +209,10 @@ public class Server{
 
                             }else{
 
+                                while(cola_mensajes_p2.getTamanio()!=0){
+                                    player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                                }
 
-                                String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
-                                player2.getComandos_out().println(mensajeToJson);
-                                System.out.println(cola_mensajes_p2.peek());
-                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
-                                player2.getComandos_out().println(mensajeToJson);
                             }
                         }else if("END".equals(line)){
                             cola_mensajes_p1.enqueue(new Mensaje("END"));
