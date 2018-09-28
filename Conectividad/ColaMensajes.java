@@ -1,25 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Conectividad;
 
 /**
- *
+ * Implementacion de una cola de mensajes
  * @author kevv87
  */
 public class ColaMensajes {
     
-    private Mensaje first;
-    private int tamanio;
+    private Mensaje first;  //
+    private int tamanio;  // Tamanio de la cola
     
+    /**
+     * Constructor
+     */
     public ColaMensajes(){
         first = null;
         tamanio = 0;
     }
     
-    public void enqueue(Mensaje mensaje){
+    /**
+     * Encolar.
+     * @param mensaje Mensaje a encolar
+     */
+    public void enqueue(Mensaje mensaje){ 
         if(first == null){
             first = mensaje;
         }else{
@@ -28,7 +30,11 @@ public class ColaMensajes {
         tamanio++;
     }
     
-    public Mensaje dequeue(){
+    /**
+     * Desencolar
+     * @return Mensaje desencolado.
+     */
+    public Mensaje dequeue(){ 
         Mensaje result = first;
         if(first != null){
             first = first.getSiguiente();
@@ -37,20 +43,16 @@ public class ColaMensajes {
         return result;
     }
     
-    public Mensaje peek(){
+    /**
+     * Retorna lo que esta en la cabeza de la cola sin eliminarlo
+     * @return Mensaje en la cabeza de la cola
+     */
+    public Mensaje peek(){  
         return first;
     }
 
     public int getTamanio() {
         return tamanio;
-    }
-    
-    public static void main(String args[]){
-        ColaMensajes colita = new ColaMensajes();
-        colita.enqueue(new Mensaje("Ala"));
-        colita.enqueue(new Mensaje("Alas"));
-        System.out.println(colita.dequeue().getAccion());
-        System.out.println(colita.dequeue().getAccion());
     }
     
     

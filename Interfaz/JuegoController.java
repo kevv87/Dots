@@ -29,7 +29,7 @@ import javafx.stage.Stage;
  * @author kevv87
  */
 public class JuegoController {
-
+    // Elementos del FXML necesario
     @FXML
     private Pane gamePane;
     @FXML
@@ -45,42 +45,45 @@ public class JuegoController {
     @FXML
     private ImageView foeImage;
     
-    private Group lineGroup = new Group();
-    private static Group circles = new Group();
-    private static Punto[] puntos = new Punto[64];
-    private static boolean activo = false;
+    
+    private Group lineGroup = new Group();  //Grupo de lineas para representar 
+    private static Group circles = new Group(); //Grupo de circulos para representar
+    private static Punto[] puntos = new Punto[64];  //Grupo de puntos para logica
+    private static boolean activo = false; 
     private final ListaSimple puntos_a_enviar = new ListaSimple();
     private ListaSimple userDataList;
     
-    private Stage window;
-
+    /**
+     * Agregar un nuevo grupo al Pane del juego
+     * @param group Grupo a agregar
+     */
     public void addtoPane(Group group){
         gamePane.getChildren().add(group);
     }
     
-    
+    /**
+     * Manejador de los eventos del click
+     * @param event Evento de click
+     */
     @FXML public void Handle(MouseEvent event) {
         if(!activo){
             return;
         }
         
         int x = (int) event.getX();  // Consigue la coordenada en x de donde se origina el evento
-        int y = (int) event.getY();
+        int y = (int) event.getY();  // Consigue la coordenada en y de donde se origina el evento
         
         
-        for(Punto punto:puntos){  // Para cada punto en los puntos de la lamina...
+        for(Punto punto:puntos){  // Para cada punto en los puntos de la pantalla
             if(punto.contiene(x,y)){  try {
+                Boolean valido = false;  // Guarda si el nuevo punto es valido de conectar con el actual
                 // si el punto contiene a la coordenada donde se clickea
-                //((Circle)circles.getChildren().get(punto.getId())).setStroke(Color.WHITE);
-                
-                
-                if(puntos_a_enviar.getTamanio() == 1){
-                    boolean valido = false;
-                    int diferencia = Math.abs(((Punto)puntos_a_enviar.getValor(0)).getId() - punto.getId());
-                    if(diferencia == 1 || (diferencia>=7 && diferencia <= 9)){
+                if(puntos_a_enviar.getTamanio() == 1){  // Si ya se tiene un punto preparado para enviar, entonces...
+                    int diferencia = Math.abs(((Punto)puntos_a_enviar.getValor(0)).getId() - punto.getId());  // Valor absoluto de la diferencia de los ids de los puntos
+                    if(diferencia == 1 || (diferencia>=7 && diferencia <= 9)){  // Si la diferencia entre los puntos es uno o esta entre 7 y 9
                         
                         // Casos especiales al borde de la pantalla
-                        if(((Punto)puntos_a_enviar.getValor(0)).getId()%8==0){
+                        if(((Punto)puntos_a_enviar.getValor(0)).getId()%8==0){  // Borde izquierdo
                             switch(((Punto)puntos_a_enviar.getValor(0)).getId()-punto.getId()){
                                         case(1):
                                             valido = false;
@@ -95,7 +98,7 @@ public class JuegoController {
                                             valido = true;
                                             break;
                             }
-                        }else if((((Punto)puntos_a_enviar.getValor(0)).getId()+1)%8==0){
+                        }else if((((Punto)puntos_a_enviar.getValor(0)).getId()+1)%8==0){  // Borde derecho
                             switch(((Punto)puntos_a_enviar.getValor(0)).getId()-punto.getId()){
                                         case(-1):
                                             valido = false;
@@ -116,27 +119,25 @@ public class JuegoController {
                     }else{
                         valido = false;
                     }
-                    if(valido){
+                    if(valido){  // Si es valido dibujar una recta, entonces...
                             puntos_a_enviar.agregarAlInicio(punto);
                         
                             // Ahora convierte y lo envia
                             String id1 = toOct(((Punto)puntos_a_enviar.getValor(0)).getId());
                             String id2 = toOct(((Punto)puntos_a_enviar.getValor(1)).getId());
-                            String msj;
-                            msj = id1+","+id2;
-                            Client.send_game(msj);
+                            String msj = id1+","+id2;
                             //Limpia
                             puntos_a_enviar.eliminar();
                             for(Punto punto2:puntos){  // Quita los halos de los puntos
                                 ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
                             }
-                    }else{
+                    }else{ // Si no es valido
                         for(Punto punto2:puntos){
                             if(Math.abs(punto2.getId()-punto.getId())==1 || (Math.abs(punto2.getId()-punto.getId())<=9 && Math.abs(punto2.getId()-punto.getId())>=7)){
-                                if(punto.getId()%8==0){
+                                if(punto.getId()%8==0){  // Casos borde de la pantalla
                                     switch(punto.getId()-punto2.getId()){
                                         case(1):
-                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);  // Quita halo
                                             break;
                                         case(-7):
                                             ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
@@ -145,7 +146,7 @@ public class JuegoController {
                                             ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.BLACK);
                                             break;
                                         default:
-                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
+                                            ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);  // Agrega halo
                                             break;
                                     }
                                 } else if((punto.getId()+1)%8==0){
@@ -163,7 +164,7 @@ public class JuegoController {
                                             ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
                                             break;
                                     }
-                                }else{
+                                }else{  // Caso normal
                                     ((Circle)circles.getChildren().get(punto2.getId())).setStroke(Color.WHITE);
                                 }
                                 
@@ -177,7 +178,7 @@ public class JuegoController {
                     
                     
                     
-                }else{
+                }else{  // En caso de no tener un punto preparado para enviar
                     for(Punto punto2:puntos){
                             if(Math.abs(punto2.getId()-punto.getId())==1 || (Math.abs(punto2.getId()-punto.getId())<=9 && Math.abs(punto2.getId()-punto.getId())>=7)){
                                 if(punto.getId()%8==0){
@@ -222,14 +223,17 @@ public class JuegoController {
                 }
                     
                 } catch (JsonProcessingException ex) {
-                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
-                    Logger.getLogger(MarcoJuego.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
     
+    /**
+     * Convierte un decimal a octario para poder enviarlo al server sin complicaciones
+     */
     private String toOct(int num){
             int rem; //declaring variable to store remainder  
         String octal=""; //declareing variable to store octal  
@@ -250,6 +254,10 @@ public class JuegoController {
         return octal;
     }
     
+    /**
+     *  Metodo que se ejecuta al crear la ventana
+     * @throws java.lang.Exception
+     */
     public void initialize() throws Exception{
          //Dibujando circulos
         int x = 20;
@@ -257,6 +265,8 @@ public class JuegoController {
         int radio = 5;
         int espacio = 50;
         int cont = 0;
+        
+        //Dibuja circulos y los agrega al array
         for(int i=0;i<8;i++){
             for(int j=0;j<8;j++){
                 Circle circle = new Circle();
@@ -280,8 +290,13 @@ public class JuegoController {
         
     }
     
-    	
-    
+    /**
+     * Metodo que agrega una linea a la interfaz
+     * 
+     * @param id1 Id del primer punto
+     * @param id2 Id del segundo punto
+     * @param color Color de la linea
+     */
     public void addLine(int id1, int id2, Color color){
         Platform.runLater(() -> {
             Punto punto1 = puntos[id1];
@@ -298,21 +313,23 @@ public class JuegoController {
         
     }
     
+    /**
+     * Crear la imagen del jugador en la interfaz
+     * @throws java.lang.Exception
+     */
+    public void createMyImage() throws Exception{
+        System.out.println(userDataList.getTamanio());
+        my_image.setImage((Image)userDataList.getValor(2));
+    }
+    
+    
+    // Setters & Getters
     public static void setActivo(boolean valor){
         activo = valor;
     }
     
-    public void setWindow(Stage window){
-        this.window = window;
-    }
-    
     public void setUserDataList(ListaSimple userDataList){
         this.userDataList = userDataList;
-    }
-    
-    public void createMyImage() throws Exception{
-        System.out.println(userDataList.getTamanio());
-        my_image.setImage((Image)userDataList.getValor(2));
     }
     
     public void setMyName(String text){

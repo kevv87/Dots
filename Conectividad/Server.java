@@ -8,7 +8,6 @@ package Conectividad;
 
 import Clases.ColaJugadores;
 import Clases.Player;
-import Interfaz.MarcoJuego;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,8 +16,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Figuras.Recorrido;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 
 /**

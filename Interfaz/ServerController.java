@@ -1,4 +1,4 @@
-package InterfazJavaFX;
+package Interfaz;
 
 import Conectividad.Client;
 import Interfaz.JuegoController;
