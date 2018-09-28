@@ -14,19 +14,20 @@ public class Perimetro {
     LinkedList<Punto> Puntos;
 
     Perimetro(LinkedList<Punto> Lista){
-        LinkedList<Punto> Puntos=Lista;
+        Puntos=Lista;
     }
     
     public void UnirPerimetros(LinkedList<Perimetro> Perimetros, Perimetro Per){
-        if(Perimetros.getTamanio()!=0){
+        if(Perimetros.getInicio()!=null){
             Nodo<Perimetro> PerAux = Perimetros.getInicio();
             Nodo<Punto> Punto = Per.getPuntos().getInicio();
-            while(PerAux.getElemento()!=null){
-                while(Punto.getElemento()!=null){
+            boolean CambioPto = false;
+            while(PerAux!=null){
+                while(Punto!=null && CambioPto==false){
                     if(PerAux.getElemento().getPuntos().isIn(Punto.getElemento())){
                         Per.getPuntos().SumarListas(Per.getPuntos(), PerAux.getElemento().getPuntos());
                         Perimetros.eliminar(PerAux.getElemento());
-                        PerAux=PerAux.getSiguiente();
+                        CambioPto=true;
                     } else{
                         Punto=Punto.getSiguiente();
                     }

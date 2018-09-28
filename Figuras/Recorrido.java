@@ -33,14 +33,13 @@ public class Recorrido {
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
-                System.out.println("KKK");
                 Perimetro nuevo = new Perimetro(Camino);
+                nuevo.getPuntos().setInicio(Camino.getInicio());
                 nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                 PerimetrosCerrados.anadirFinal(nuevo);
                 Continuar=false;
             //Segunda condicion de finalizacion, no pudo cerrar
-            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
-                System.out.println("No cerró");
+            } else if(Posibilidades.getTamanio()==0){ //Eliminar anterior
                 Camino=null;                
                 Continuar=false;
             //Recorre los puntos según sus referencias    
@@ -56,7 +55,6 @@ public class Recorrido {
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
-                    System.out.println(Marcador.getElemento().getPosX()*10 + Marcador.getElemento().getPosY());
                     if(pertenecePer(Marcador.getElemento())!=null){     //Validacion de si se topa con una figura cerrada
                         if(pertenecePer(Origen)!=null){     //Si contiene al origen, se cerró
                             Camino.anadirFinal(Marcador.getElemento());
@@ -67,6 +65,7 @@ public class Recorrido {
                             Continuar=false;
                         }
                         else{       //Si no contiene al origen, se parte de los vértices de la figura
+                            System.out.println("No contiene origen, pero lo valida");
                             Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
                             Posibilidades=Per_Aux.getPuntos();
                             inFigCerrada=true;
@@ -112,12 +111,13 @@ public class Recorrido {
     
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
-        Punto PuntoA = buscarPto(ID1%8, (int)ID1/8);
-        Punto PuntoB = buscarPto(ID2%8, (int)ID2/8);
+        Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);
+        Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);
         PuntoA.getReferencias().anadirFinal(PuntoB);
         PuntoB.getReferencias().anadirFinal(PuntoA);
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
-            System.out.println("Yuju!");
+            System.out.println("YUJU!");
+            ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
         } else{
             System.out.println("No se cerró");
         }
@@ -171,7 +171,7 @@ public class Recorrido {
     //Funcion que busca un punto en la matriz
     public Punto buscarPto(int X, int Y){
         Nodo<Punto> Aux = Matriz.getInicio();
-        while(Aux.getElemento().getPosX()!=X && Aux.getElemento().getPosY()!=Y){
+        while(Aux.getElemento().getPosX()!=X || Aux.getElemento().getPosY()!=Y){
             Aux=Aux.getSiguiente();
         }
         return Aux.getElemento();
@@ -185,7 +185,6 @@ public class Recorrido {
             Nodo<Perimetro> Marcador = PerimetrosCerrados.getInicio();
             boolean Encontrado = false;
             Perimetro Resultado = null;
-            System.out.println(Marcador.getElemento().getPuntos());
             while(Marcador!=null && Marcador.getElemento()!=null && Encontrado==false){
                 if(Marcador.getElemento().getPuntos()!= null && Marcador.getElemento().getPuntos().isIn(pto)){
                     Resultado=Marcador.getElemento();
@@ -197,5 +196,30 @@ public class Recorrido {
             }
             return Resultado;
         }
-    }    
+    }
+
+    public LinkedList<Perimetro> getPerimetrosCerrados() {
+        return PerimetrosCerrados;
+    }
+
+    public void setPerimetrosCerrados(LinkedList<Perimetro> PerimetrosCerrados) {
+        this.PerimetrosCerrados = PerimetrosCerrados;
+    }
+
+    public LinkedList<Segmento> getSegmentosHechos() {
+        return SegmentosHechos;
+    }
+
+    public void setSegmentosHechos(LinkedList<Segmento> SegmentosHechos) {
+        this.SegmentosHechos = SegmentosHechos;
+    }
+
+    public boolean isInFigCerrada() {
+        return inFigCerrada;
+    }
+
+    public void setInFigCerrada(boolean inFigCerrada) {
+        this.inFigCerrada = inFigCerrada;
+    }
+    
 }
