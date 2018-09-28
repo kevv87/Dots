@@ -15,7 +15,7 @@ public class Perimetro {
 
     Perimetro(LinkedList<Punto> Lista){
         LinkedList<Punto> Puntos=Lista;
-    }*?
+    }*
     
 }
 
