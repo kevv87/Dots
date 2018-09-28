@@ -14,10 +14,12 @@ public class Recorrido {
     private final LinkedList<Punto> Matriz = genMatriz();
     private LinkedList<Perimetro> PerimetrosCerrados;
     private LinkedList<Segmento> SegmentosHechos;
+    private boolean inFigCerrada;
     
     Recorrido(){
         PerimetrosCerrados = new LinkedList();
         SegmentosHechos = new LinkedList();
+        inFigCerrada=false;
     }
     //Funcion que retorna la lista de puntos para cerrar el camino
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
@@ -67,10 +69,42 @@ public class Recorrido {
                         else{       //Si no contiene al origen, se parte de los vértices de la figura
                             Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
                             Posibilidades=Per_Aux.getPuntos();
+                            inFigCerrada=true;
                         }
                     } else{
+                        if(inFigCerrada){
+                            boolean Seguir = true;
+                            while(Posibilidades.getTamanio()>0 && Seguir==true){
+                                Nodo<Punto> Pos = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen                            
+                                LinkedList<Punto> Conexiones = Pos.getElemento().getReferencias();
+                                Conexiones.RestarListas(Conexiones, Posibilidades);
+                                Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Conexiones));
+                                LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
+                                if(Conexiones.getTamanio()==0){
+                                    Posibilidades.eliminar(Pos);
+                                }
+                                else{
+                                    
+                                }
+                                if(X!=null){
+                                    Seguir=false;
+                                    Camino.SumarListas(Camino, X);
+                                } else{
+                                    Conexiones.eliminar(Marcador1.getElemento());
+                                }
+                            }
+                        } else{
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
                         LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
+                        }
                         if(X!=null){    //Aplica recursividad para recorrer los subcaminos
                             Camino.SumarListas(Camino, X);    //Funcion sumar listas
                             Continuar=false;
@@ -81,6 +115,7 @@ public class Recorrido {
                 }    
             }    
         }
+        inFigCerrada=false;
         return Camino;
     }
     

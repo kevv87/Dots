@@ -99,6 +99,14 @@ public class LinkedList<T>{ //Lista para nodos genericos
         }
     }
     
+    public void RestarListas(LinkedList Lista1, LinkedList Lista2){
+        Nodo<Punto> Aux = Lista2.getInicio();
+        while(Aux!=null){
+            Lista1.eliminar(Aux.getElemento());
+            Aux=Aux.getSiguiente();
+        }
+    }
+    
 
     public Nodo<T> getInicio() {
         return Inicio;
