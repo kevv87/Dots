@@ -37,9 +37,10 @@ public class Recorrido {
                 nuevo.getPuntos().setInicio(Camino.getInicio());
                 nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                 PerimetrosCerrados.anadirFinal(nuevo);
+                System.out.println("Yey");
                 Continuar=false;
             //Segunda condicion de finalizacion, no pudo cerrar
-            } else if(Posibilidades.getTamanio()==0){ //Eliminar anterior
+            } else if(Marcador.getElemento().getReferencias().getTamanio()==0){ //Eliminar anterior
                 Camino=null;                
                 Continuar=false;
             //Recorre los puntos según sus referencias    
@@ -113,6 +114,8 @@ public class Recorrido {
     public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
         Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);
         Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);
+        buscarPto(ID1%10, (int)ID1/10).getReferencias().anadirFinal(PuntoB);
+        buscarPto(ID2%10, (int)ID2/10).getReferencias().anadirFinal(PuntoA);
         PuntoA.getReferencias().anadirFinal(PuntoB);
         PuntoB.getReferencias().anadirFinal(PuntoA);
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){

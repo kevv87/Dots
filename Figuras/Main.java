@@ -17,7 +17,18 @@ public class Main {
         
         Buscador.genMatriz();
 
-        Buscador.Entrada(22, 21);       //Problema con Y
-
+        Punto A =new Punto(0,0);
+        Punto B = new Punto(0,1);
+        Punto C = new Punto(1,0);
+        
+        A.getReferencias().anadirFinal(B);
+        A.getReferencias().anadirFinal(C);
+        B.getReferencias().anadirFinal(A);
+        B.getReferencias().anadirFinal(C);
+        C.getReferencias().anadirFinal(A);
+        C.getReferencias().anadirFinal(B);
+        
+        Buscador.BuscaCaminos(A, A, B);
+        
     }
 }
