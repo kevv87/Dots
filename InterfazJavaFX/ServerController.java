@@ -1,6 +1,10 @@
 package InterfazJavaFX;
 
+import Conectividad.Client;
+import Interfaz.JuegoController;
 import Matriz.ListaSimple;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -134,6 +138,15 @@ public class ServerController {
     
     public void getInfo(ActionEvent event) throws Exception{
         
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Interfaz/Juego.fxml"));
+        Parent tableViewParent = loader.load();
+        JuegoController controller = loader.getController();
+
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        //This line gets the Stage information
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        
         String username = usernameTextF.getText();
         String serverID = serverIDTextF.getText();
 
@@ -142,23 +155,40 @@ public class ServerController {
         lista.insertarPorPosicion(2, image);
         lista.insertarPorPosicion(3, image_url);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("PantallaEspera.fxml"));
-        Parent pantallaEsperaParent = loader.load();
-
-        Scene pantallaEsperaScene = new Scene(pantallaEsperaParent);
-
-        //access the controller and call a method
-        PantallaEsperaController controller = loader.getController();
-
         controller.setUserDataList(lista);
         
-        //This line gets the Stage information
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        controller.setThiswindow(window);
-
-        window.setScene(pantallaEsperaScene);
+        ((JuegoController)loader.getController()).setUserDataList(lista);
+        ((JuegoController)loader.getController()).createMyImage();
+        ((JuegoController)loader.getController()).setMyName((String)lista.getValor(1));
+        ((JuegoController)loader.getController()).setMyPoints("0");
+        ((JuegoController)loader.getController()).setFoePoints("0");
+        ((JuegoController)loader.getController()).setFoeName("Esperando\n Jugador");
+      
+        Thread juego = new Thread(){
+            public void run(){
+                try {
+                    new Client((String)lista.getValor(0), loader.getController());
+                } catch (Exception ex) {
+                    Logger.getLogger(ServerController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        };
+        juego.start();
+        
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            try {
+                closeRequest(window);
+            } catch (Exception ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        window.setScene(tableViewScene);
+        window.setTitle("DOTS - Playing");
         window.show();
+        
     }
 
 
@@ -179,6 +209,17 @@ public class ServerController {
 
         window.setScene(menuScene);
         window.show();
+    }
+    
+    public void closeRequest(Stage window) throws Exception{
+
+        boolean bool = AlertWindow.display();
+        if (bool == true){
+            window.close();
+            Client.close();
+            
+        }
+
     }
     
     
