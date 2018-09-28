@@ -34,6 +34,8 @@ public class Server{
   private static ServerSocket listener;
   private static int current = 1;
   private static final ColaJugadores cola = new ColaJugadores();
+  private static final ColaMensajes cola_mensajes_p1 = new ColaMensajes();
+  private static final ColaMensajes cola_mensajes_p2 = new ColaMensajes();
   
   public static void main(String[] args) throws Exception{
     System.out.println("The server is running");
@@ -144,14 +146,20 @@ public class Server{
             public void run(){
                 try {
                     while(true){
-                        System.out.println("Waiting...");
                         String line = player1.getComandos_in().readLine(); 
                         if(line == null){
                             break;
                         }else if("END".equals(line)){
-                            
-                            player2.getComandos_out().println("END");
+                            cola_mensajes_p2.enqueue(new Mensaje("END"));
                             break;
+                        }else if("GST".equals(line)){
+                            if(cola_mensajes_p1.getTamanio() == 0){
+                                player1.getComandos_out().println("0");
+                            }else{
+                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                                System.out.println(cola_mensajes_p1.peek());
+                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                            }
                         }
                     }
                 } catch (IOException ex) {
@@ -165,14 +173,23 @@ public class Server{
             public void run(){
                 try {
                     while(true){
-                        System.out.println("Waiting");
                         String line = player2.getComandos_in().readLine();
-                        System.out.println("Received");
                         if(line == null){
                             break;
+                        }else if("GST".equals(line)){  // Get State
+                            if(cola_mensajes_p2.getTamanio() == 0){
+                                player2.getComandos_out().println("0");
+                            }else{
+                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                                System.out.println(cola_mensajes_p2.peek().getAccion());
+                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                            }
                         }else if("END".equals(line)){
-                            player1.getComandos_out().println("END");
+                            cola_mensajes_p1.enqueue(new Mensaje("END"));
                             break;
+                        }else if(cola_mensajes_p2.getTamanio() != 0){
+                             player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                             
                         }
                     }
                 } catch (IOException ex) {
@@ -204,6 +221,12 @@ public class Server{
               msj = listen(current);
               
               if(msj==null || msj.equals("END")){
+                  if(current*-1 == 1){
+                  current_player = player1;
+                }else{
+                  current_player = player2;
+                }
+                  send(current_player, "YW");
                   break;
               }
               
@@ -215,23 +238,23 @@ public class Server{
                   stop_socket();
                   break;
               }
-              
-              
 
               send(current_player,"NYT");
-              broadcast("DWL");
+              
               
               //Some dumb chino logic
               //Recorrido recorrido = new Recorrido();
               //recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
               
               
-              String id_tosend1 = Integer.toString(Integer.parseInt(id1,8));
-              String id_tosend2 = Integer.toString(Integer.parseInt(id2,8));
+              int id_tosend1 = (Integer.parseInt(id1,8));
+              int id_tosend2 = (Integer.parseInt(id2,8));
               
-              broadcast(id_tosend1);
-              broadcast(id_tosend2);
-              broadcast(color);
+              MensajeLinea lineToSend = new MensajeLinea(color, id_tosend1, id_tosend2);
+              String jsonToSend = mapper.writeValueAsString(lineToSend);
+              
+              broadcast_queue("DWL");
+              broadcast_queue(jsonToSend);
 
               current *= -1;  // Cambio de turno
         }      
@@ -263,6 +286,17 @@ public class Server{
   public static void broadcast(String msg){
       player1.getGame_out().println(msg);
       player2.getGame_out().println(msg);
+  }
+  
+  /**
+   * Agrega un mensaje a la cola de mensajes de cada jugador
+     * @param msg A ingresar en cola
+   */
+  public static void broadcast_queue(String msg){
+      cola_mensajes_p1.enqueue(new Mensaje(msg));
+      System.out.println(cola_mensajes_p1.peek().getAccion());
+      cola_mensajes_p2.enqueue(new Mensaje(msg));
+      
   }
   
   /**

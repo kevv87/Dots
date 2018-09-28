@@ -6,10 +6,12 @@ public class Mensaje {
     private String accion;
     private int id1;
     private int id2;
+    private Mensaje siguiente;
 
 
     public Mensaje(){
-        accion = null;
+        accion = "";
+        siguiente = null;
         
     }
 
@@ -42,6 +44,16 @@ public class Mensaje {
     public void setId2(int id2) {
         this.id2 = id2;
     }
+
+    public Mensaje getSiguiente() {
+        return siguiente;
+    }
+
+    public void setSiguiente(Mensaje siguiente) {
+        this.siguiente = siguiente;
+    }
+    
+    
     
     
 }

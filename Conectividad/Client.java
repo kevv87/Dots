@@ -197,20 +197,6 @@ public class Client{
             interfaz.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
               interfaz.setActivo(false);
-          }else if(line.startsWith("NYT")){  //No es su turno
-              interfaz.setActivo(false);
-          }else if(line.startsWith("DWL")){  //Dibuje una linea
-              System.out.println(line);
-              int id1 = Integer.parseInt(in_game.readLine());
-              int id2 = Integer.parseInt(in_game.readLine());
-              String colorm = in_game.readLine();
-              Color color;
-              if("red".equals(colorm)){
-                  color = Color.RED;
-              }else{
-                  color = Color.BLUE;
-              }
-              interfaz.addLine(id1, id2, color);
           }else if(line.startsWith("ENC")){
               System.out.println("Estoy en cola");
           }else if(line.startsWith("NEC")){
@@ -220,6 +206,10 @@ public class Client{
               System.out.println("Sali de cola!");
           }else if(line.startsWith("END")){
               Client.close();
+          }else if(line.startsWith("YW")){
+              System.out.println("I win");
+          }else if(line.startsWith("YL")){
+              System.out.println("I lose");
           }else{
               System.out.println("mensaje no identificado");     
               System.out.println(line);
@@ -234,9 +224,12 @@ public class Client{
      * Maneja el protocolo de comandos
      * @throws java.io.IOException
      */
+    @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
         String line = null;
+        long n_segundos = 10;
         while(true){
+            out_comandos.println("GST");
             try{
                 line = in_comandos.readLine();  //Lee un mensaje entrante
               } catch(IOException e){
@@ -248,7 +241,24 @@ public class Client{
                 break;
             }else if("END".equals(line)){
                 close();
+            }else if("DWL".equals(line)){
+                System.out.println(line);
+                MensajeLinea linea= mapper.readValue(in_comandos.readLine(), MensajeLinea.class);
+                
+                int id1 = linea.getId1();
+                int id2 = linea.getId2();
+                String colorm = linea.getColor();
+                Color color;
+                if("red".equals(colorm)){
+                    color = Color.RED;
+                }else{
+                    color = Color.BLUE;
+                }
+                interfaz.addLine(id1, id2, color);
+            }else if("0".equals(line)){
+                ;
             }
+            Thread.sleep(n_segundos);
         }
     }
     
