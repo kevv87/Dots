@@ -5,30 +5,35 @@
  */
 package Figuras;
 
-import Matriz.*;
 
 /**
  *
  * @author Sebastián
  */
-public class Main {
+public class Main {     //NOTA: MODULO ES PARA X, DIVICION Y
     public static void main(String[] args){
         Recorrido Buscador = new Recorrido();
         
         Buscador.genMatriz();
 
-        Punto A =new Punto(0,0);
+        Punto A_ =new Punto(0,0);
         Punto B = new Punto(0,1);
         Punto C = new Punto(1,0);
         
-        A.getReferencias().anadirFinal(B);
-        A.getReferencias().anadirFinal(C);
-        B.getReferencias().anadirFinal(A);
+        B.getReferencias().anadirFinal(A_);
         B.getReferencias().anadirFinal(C);
-        C.getReferencias().anadirFinal(A);
-        C.getReferencias().anadirFinal(B);
-        
-        Buscador.BuscaCaminos(A, A, B);
-        
+        /*
+        Buscador.Entrada(00, 10);
+        Buscador.Entrada(10, 11);
+        Buscador.Entrada(01, 11);
+        Buscador.Entrada(00, 11);
+        */
+        LinkedList Aux = B.getReferencias();
+        System.out.println("El tamanio es" + B.getReferencias().getTamanio());
+        Aux.eliminar(A_);
+        Aux.eliminar(C);
+        System.out.println("El tamanio es" + B.getReferencias().getTamanio());
+
+
     }
 }
