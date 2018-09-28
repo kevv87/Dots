@@ -18,21 +18,23 @@ public class Perimetro {
     }
     
     public void UnirPerimetros(LinkedList<Perimetro> Perimetros, Perimetro Per){
-        Nodo<Perimetro> PerAux = Perimetros.getInicio();
-        Nodo<Punto> Punto = Per.getPuntos().getInicio();
-        while(PerAux.getElemento()!=null){
-            while(Punto.getElemento()!=null){
-                if(PerAux.getElemento().getPuntos().isIn(Punto.getElemento())){
-                    Per.getPuntos().SumarListas(Per.getPuntos(), PerAux.getElemento().getPuntos());
-                    Perimetros.eliminar(PerAux.getElemento());
-                    PerAux=PerAux.getSiguiente();
-                } else{
-                    Punto=Punto.getSiguiente();
+        if(Perimetros.getTamanio()!=0){
+            Nodo<Perimetro> PerAux = Perimetros.getInicio();
+            Nodo<Punto> Punto = Per.getPuntos().getInicio();
+            while(PerAux.getElemento()!=null){
+                while(Punto.getElemento()!=null){
+                    if(PerAux.getElemento().getPuntos().isIn(Punto.getElemento())){
+                        Per.getPuntos().SumarListas(Per.getPuntos(), PerAux.getElemento().getPuntos());
+                        Perimetros.eliminar(PerAux.getElemento());
+                        PerAux=PerAux.getSiguiente();
+                    } else{
+                        Punto=Punto.getSiguiente();
+                    }
                 }
+                PerAux=PerAux.getSiguiente();
+                Punto=Per.getPuntos().getInicio();
             }
-            PerAux=PerAux.getSiguiente();
-            Punto=Per.getPuntos().getInicio();
-        }
+        }    
     }
 
     public LinkedList<Punto> getPuntos() {

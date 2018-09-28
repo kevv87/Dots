@@ -31,6 +31,7 @@ public class Recorrido {
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
+                System.out.println("KKK");
                 Perimetro nuevo = new Perimetro(Camino);
                 nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                 PerimetrosCerrados.anadirFinal(nuevo);
@@ -53,6 +54,7 @@ public class Recorrido {
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
+                    System.out.println(Marcador.getElemento().getPosX()*10 + Marcador.getElemento().getPosY());
                     if(pertenecePer(Marcador.getElemento())!=null){     //Validacion de si se topa con una figura cerrada
                         if(pertenecePer(Origen)!=null){     //Si contiene al origen, se cerró
                             Camino.anadirFinal(Marcador.getElemento());
@@ -150,19 +152,24 @@ public class Recorrido {
     }
   
     //Funcion que busca si en la lista de perimetros, alguno contiene un punto específico
-    public Perimetro pertenecePer(Punto punto){
-        Nodo<Perimetro> Marcador = PerimetrosCerrados.getInicio();
-        boolean Encontrado = false;
-        Perimetro Resultado = null;
-        while(Marcador.getElemento()!=null && Encontrado==false){
-            if(Marcador.getElemento().getPuntos().isIn(punto)){
-                Resultado=Marcador.getElemento();
-                Encontrado=true;
+    public Perimetro pertenecePer(Punto pto){
+        if(PerimetrosCerrados.getInicio()==null){
+            return null;
+        } else{
+            Nodo<Perimetro> Marcador = PerimetrosCerrados.getInicio();
+            boolean Encontrado = false;
+            Perimetro Resultado = null;
+            System.out.println(Marcador.getElemento().getPuntos());
+            while(Marcador!=null && Marcador.getElemento()!=null && Encontrado==false){
+                if(Marcador.getElemento().getPuntos()!= null && Marcador.getElemento().getPuntos().isIn(pto)){
+                    Resultado=Marcador.getElemento();
+                    Encontrado=true;
+                }
+                else{
+                    Marcador=Marcador.getSiguiente();
+                }
             }
-            else{
-                Marcador=Marcador.getSiguiente();
-            }
+            return Resultado;
         }
-        return Resultado;
-    }
+    }    
 }
