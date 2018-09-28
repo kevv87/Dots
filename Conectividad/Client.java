@@ -41,11 +41,12 @@ public class Client{
     private static Socket socket_comandos;
     private BufferedReader in_comandos; // entrada
     private static PrintWriter out_comandos; //salida
-   
-    private final ObjectMapper mapper = new ObjectMapper();  // Mapeador de JSON
-    
-    private static boolean alive=true;  
-    private static  ListaSimple puntos_a_enviar = new ListaSimple();  //Lista de puntos a ser enviados
+
+    private final ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper2 = new ObjectMapper(); //para métodos estáticos
+    private static boolean alive=true;
+    private static ListaSimple puntos_a_enviar = new ListaSimple();
+
     
 
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -115,10 +116,12 @@ public class Client{
      */
     public Client(String serverAddress, JuegoController interfaz) throws Exception{
         this.interfaz = interfaz;
-        myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3));  // Crea un nuevo jugador
+
+        myPlayer = new Player((String)interfaz.getUserDataList().getValor(1),(String)interfaz.getUserDataList().getValor(3)); // Crea un nuevo jugador
         init(serverAddress);  // Inicializa la conexion al server
         
-        Thread juego = new Thread(){  // Creando el hilo discreto 
+        Thread juego = new Thread(){ // Creando el hilo discreto
+
             @Override
             public void run(){
                 try {
@@ -128,22 +131,10 @@ public class Client{
                 }
             }
         };
-        Thread comandos = new Thread(){  // Creando el hilo continuo
-            @Override
-            public void run(){
-                try {
-                    run_comando();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
+
         
         // Corre los hilos
         juego.start();
-        comandos.start();
         
         // Arduino
         /*
@@ -160,7 +151,7 @@ public class Client{
      * @param serverAddress direccion IP del server
      * @throws java.io.IOException
      */
-    public void init(String serverAddress) throws IOException{
+    public void init(String serverAddress) throws IOException, Exception{
         // Crea la conexion e inicializa los streams
       socket_game = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_game = new BufferedReader(new InputStreamReader(socket_game.getInputStream()));
@@ -182,14 +173,19 @@ public class Client{
      */
     private void run_juego() throws IOException, MismatchedInputException, Exception{
       String line = null;
+      String jsonMessage = null;
+      Mensaje jsonToClass = new Mensaje();
 
       while(true){  // Debe procesar todos los mensajes del server
           try{
-            line = in_game.readLine();  //Lee un mensaje entrante
+              jsonMessage = in_game.readLine();//Lee un mensaje entrante
+              jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+              line = jsonToClass.getAccion();
+
           } catch(Exception e){
               line = null;
           }
-          // Protocolo.
+          // Protocolo
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
@@ -205,6 +201,19 @@ public class Client{
               interfaz.setFoeName(oponente.getName());
               interfaz.setFoeImage(oponente.getImage_url());
               System.out.println("Inicia juego");
+              Thread comandos = new Thread(){  // Creando el hilo continuo
+                  @Override
+                  public void run(){
+                      try {
+                          run_comando();
+                      } catch (IOException ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      } catch (Exception ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                  }
+              };
+              comandos.start();
           }else if(line.startsWith("END")){  // Fin del juego
               Client.close();
           }else if(line.startsWith("YW")){  //Yo gano
@@ -217,37 +226,51 @@ public class Client{
           }
       }
     }
-    
-    
+
     /**
      * Maneja el protocolo de comandos
      * @throws java.io.IOException
      */
     @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
+        System.out.println("hgfdsdg");
         String line = null;
-        long n_segundos = 10;  // Intervalo entre cada refresh 
-        
+
+        long n_segundos = 10; // Intervalo entre cada refresh
+        String jsonMessage = null;
+        Mensaje jsonToClass = new Mensaje();
+
         // Loop principal del socket continuo
         while(true){
-            out_comandos.println("GST");  // Get estado al server
+            jsonToClass.setAccion("GST"); // Get estado al server
+            jsonMessage = mapper.writeValueAsString(jsonToClass);
+            out_comandos.println(jsonMessage);
             try{
-                line = in_comandos.readLine();  // Espera y lee la respuesta
+                System.out.println("before");
+                jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
+                System.out.println("After");
+                jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+                line = jsonToClass.getAccion();  //Lee un mensaje entrante
+
               } catch(IOException e){
                   line = null;
               }
-
+            System.out.println("line: " + line);
             if(line==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
                 close();
                 break;
             }else if("END".equals(line)){  // Si la respuesta es END, termina el juego y cierra sockets
                 close();
-            }else if("DWL".equals(line)){  // Comando Draw Line
-                MensajeLinea linea= mapper.readValue(in_comandos.readLine(), MensajeLinea.class);  //
-                
-                int id1 = linea.getId1();  // Id del primer punto de la linea
-                int id2 = linea.getId2();  // Id del segundo punto de la linea
-                String colorm = linea.getColor();  // Color de la linea
+
+            }else if("DWL".equals(line)){
+                System.out.println("linea!!!: "+line);
+                line = in_comandos.readLine();
+
+                Mensaje linea= mapper.readValue(line, Mensaje.class);
+
+                int id1 = linea.getSegmento().getId1();
+                int id2 = linea.getSegmento().getId2();
+                String colorm = linea.getSegmento().getColor();
                 Color color;
                 if("red".equals(colorm)){
                     color = Color.RED;
@@ -269,7 +292,7 @@ public class Client{
      * @param msg Mensaje a enviar al servidor
      */
     public static void send_game(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
-        out_game.println(msg);
+        out_game.println(msg); //NO USAR (HASTA PASAR A FORMATO JSON)
     }
     
     
@@ -277,15 +300,19 @@ public class Client{
      * Envia un mensaje al servidor mediante el protocolo de comandos.
      * @param msg Mensaje a enviar al servidor
      */
-    public static void send_comando(String msg){  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
-        out_comandos.println(msg);
+    public static void send_comando(String msg) throws Exception{  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
+
+        Mensaje jsonToClass = new Mensaje(msg);
+        String jsonMessage = mapper2.writeValueAsString(jsonToClass);
+        out_comandos.println(jsonMessage);
     }
     
     /**
      * Termina la conexion con el server
      * @throws java.io.IOException
      */
-    public static void close() throws IOException, Exception{
+    public static void close() throws Exception{
+
         send_comando("END");
         socket_game.close();
         socket_comandos.close();

@@ -60,6 +60,7 @@ public class JuegoController {
     public void addtoPane(Group group){
         gamePane.getChildren().add(group);
     }
+
     
     /**
      * Manejador de los eventos del click
@@ -351,7 +352,8 @@ public class JuegoController {
         
     }
     
-    public void setFoeName(String name){
+    public void setFoeName(String name) {
+
         Platform.runLater(() -> {
             foeName.setText(name);
         });
@@ -359,6 +361,7 @@ public class JuegoController {
     }
     
     public void setFoeImage(String url){
+        System.out.println(url);
         Platform.runLater(() -> {
             foeImage.setImage(new Image((getClass().getResource(url)).toExternalForm()));
         });

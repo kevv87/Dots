@@ -7,9 +7,10 @@ package Conectividad;
  */
 public class Mensaje {
 
-    private String accion;  // Mensaje
-
+    private String accion;
     private Mensaje siguiente;
+    private MensajeLinea segmento;
+
     
     /**
      * Dummy constructor
@@ -29,7 +30,22 @@ public class Mensaje {
         siguiente = null;
     }
 
-    //Getters & Setters
+    public Mensaje(String msj, MensajeLinea mensajeLinea){
+        accion = msj;
+        siguiente = null;
+        segmento = mensajeLinea;
+    }
+
+    //Getter & Setter
+
+
+    public MensajeLinea getSegmento() {
+        return segmento;
+    }
+
+    public void setSegmento(MensajeLinea segmento) {
+        this.segmento = segmento;
+    }
 
     public String getAccion() {
         return accion;
