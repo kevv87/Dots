@@ -1,17 +1,13 @@
-package InterfazJavaFX;
+package Interfaz;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 
-public class Main_Stage extends Application implements EventHandler<ActionEvent>{
+public class Main_Stage extends Application{
 
     Stage window;
 
@@ -32,10 +28,6 @@ public class Main_Stage extends Application implements EventHandler<ActionEvent>
         window.show();
     }
 
-    @Override
-    public void handle(ActionEvent event) {
-
-    }
 
     public void closeRequest(){
 

@@ -1,25 +1,35 @@
 package Conectividad;
 
-
+/**
+ * Clase mensaje, utilizada para enviar mensajes entre cliente y server consistentes
+ * solo de texto plano.
+ * @author kevv87
+ */
 public class Mensaje {
 
-    private String accion;
-    private int id1;
-    private int id2;
+    private String accion;  // Mensaje
+
     private Mensaje siguiente;
-
-
+    
+    /**
+     * Dummy constructor
+     */
     public Mensaje(){
         accion = "";
         siguiente = null;
         
     }
-
+    
+    /**
+     * Constructor.
+     * @param acc Mensaje.
+     */
     public Mensaje(String acc){
         accion = acc;
+        siguiente = null;
     }
 
-    //Getter & Setter
+    //Getters & Setters
 
     public String getAccion() {
         return accion;
@@ -27,22 +37,6 @@ public class Mensaje {
 
     public void setAccion(String accion) {
         this.accion = accion;
-    }
-
-    public int getId1() {
-        return id1;
-    }
-
-    public int getId2() {
-        return id2;
-    }
-
-    public void setId1(int id1) {
-        this.id1 = id1;
-    }
-
-    public void setId2(int id2) {
-        this.id2 = id2;
     }
 
     public Mensaje getSiguiente() {
