@@ -156,9 +156,9 @@ public class Server{
                             if(cola_mensajes_p1.getTamanio() == 0){
                                 player1.getComandos_out().println("0");
                             }else{
-                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
-                                System.out.println(cola_mensajes_p1.peek());
-                                player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                                while(cola_mensajes_p1.getTamanio()!=0){
+                                    player1.getComandos_out().println(cola_mensajes_p1.dequeue().getAccion());
+                                }
                             }
                         }
                     }
@@ -180,9 +180,9 @@ public class Server{
                             if(cola_mensajes_p2.getTamanio() == 0){
                                 player2.getComandos_out().println("0");
                             }else{
-                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
-                                System.out.println(cola_mensajes_p2.peek().getAccion());
-                                player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                                while(cola_mensajes_p1.getTamanio()!=0){
+                                    player2.getComandos_out().println(cola_mensajes_p2.dequeue().getAccion());
+                                }
                             }
                         }else if("END".equals(line)){
                             cola_mensajes_p1.enqueue(new Mensaje("END"));
@@ -243,6 +243,8 @@ public class Server{
               
               
               //Some dumb chino logic
+              System.out.println("Punto 1:"+id1);
+              System.out.println("Punto 2:"+id2);
               Recorrido recorrido = new Recorrido();
               recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
               

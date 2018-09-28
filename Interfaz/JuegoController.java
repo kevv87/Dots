@@ -328,7 +328,7 @@ public class JuegoController {
     
     public void setFoePoints(String points){
         Platform.runLater(() -> {
-            my_points.setText(points);
+            foePoints.setText(points);
         });
         
     }
