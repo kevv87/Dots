@@ -8,6 +8,7 @@ package Conectividad;
 public class Mensaje {
 
     private String accion;  // Mensaje
+
     private Mensaje siguiente;
     
     /**
@@ -25,6 +26,7 @@ public class Mensaje {
      */
     public Mensaje(String acc){
         accion = acc;
+        siguiente = null;
     }
 
     //Getters & Setters
