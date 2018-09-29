@@ -22,12 +22,12 @@ public class Main {     //NOTA: MODULO ES PARA X, DIVICION Y
         
         B.getReferencias().anadirFinal(A_);
         B.getReferencias().anadirFinal(C);
-        /*
+
         Buscador.Entrada(00, 10);
         Buscador.Entrada(10, 11);
         Buscador.Entrada(01, 11);
         Buscador.Entrada(00, 11);
-        */
+
         LinkedList Aux = B.getReferencias();
         System.out.println("El tamanio es" + B.getReferencias().getTamanio());
         Aux.eliminar(A_);
