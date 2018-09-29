@@ -78,7 +78,27 @@ public class Recorrido {
                             Posibilidades.SumarListas(Posibilidades, Per_Aux.getPuntos());
                             inFigCerrada=true;
                         }
-                    } else{
+                    }
+
+                    else if(pertenecePer(Marcador.getElemento())==null && inFigCerrada == false){ //si esta ante una bifurcacion, que no corresponde a una figura cerrada
+
+                        boolean Seguir = true;
+
+                        while(Posibilidades.getTamanio() > 0 && Seguir == true){
+
+                            Nodo<Punto> Marcador1 = Posibilidades.getInicio();
+                            LinkedList X = BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
+                            if(X!=null){
+                                Seguir=false;
+                                Camino.SumarListas(Camino, X);
+                                return Camino;
+                            } else{
+                                Posibilidades.eliminar(Marcador1.getElemento());
+                            }
+                        }
+                    }
+
+                    else{
                         if(inFigCerrada){
                             //PRIMER CASO (para elimiar caso en el que pueda retornarse por el segmento que conecta la figura cerrada con el segmento adjunto
                             boolean Seguir = true;
