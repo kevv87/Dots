@@ -77,6 +77,12 @@ public class Recorrido {
                             
                             Posibilidades = new LinkedList<>();
                             Posibilidades.SumarListas(Posibilidades, Per_Aux.getPuntos());
+                            
+                            while(Posibilidades.getTamanio()>0){
+                                Marcador.setElemento(BuscarMenorD());
+                            }
+                            
+                            
                             inFigCerrada=true;
                         }
                     } else{
