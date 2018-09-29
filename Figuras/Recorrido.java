@@ -24,7 +24,7 @@ public class Recorrido {
     //Funcion que retorna la lista de puntos para cerrar el camino
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
-        Nodo<Punto> Marcador = new Nodo(Origen);
+        Nodo<Punto> Marcador = new Nodo();
         Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
@@ -169,7 +169,7 @@ public class Recorrido {
     }
     
     //Funcion que recibe dos puntos del usuario
-    public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
+    public LinkedList<Punto> Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
 
         Nodo nodoA = buscarPto(ID1%10, (int)ID1/10);
         Nodo nodoB= buscarPto(ID2%10, (int)ID2/10);
@@ -177,12 +177,15 @@ public class Recorrido {
         Punto PuntoB = (Punto)nodoB.getElemento();
         ((Punto)nodoA.getElemento()).addReferencia(PuntoB);
         ((Punto)nodoB.getElemento()).addReferencia(PuntoA);
-
-        if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
+        
+        LinkedList<Punto> Camino = BuscaCaminos(PuntoA, PuntoA, PuntoB);
+        if(Camino!=null){
             System.out.println("YUJU!");
             ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
+            return Camino;
         } else{
             System.out.println("No se cerró");
+            return null;
         }
     }
     
