@@ -50,9 +50,8 @@ public class Recorrido {
                 while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){     //1- Si solo hay una posibilidad, siga avanzando
                     Camino.anadirFinal(Marcador.getElemento());
                     Punto Eliminar = Marcador.getElemento();
-                    LinkedList<Punto> Excluir = new LinkedList();
-                    Excluir.anadirFinal(Eliminar);
-                    Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
+
+                    Marcador.setElemento(Posibilidades.getInicio().getElemento());
 
                     Posibilidades= new LinkedList<>();
                     Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());;    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
