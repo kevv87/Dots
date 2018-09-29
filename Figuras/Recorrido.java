@@ -50,8 +50,7 @@ public class Recorrido {
                 while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){     //1- Si solo hay una posibilidad, siga avanzando
                     Camino.anadirFinal(Marcador.getElemento());
                     Punto Eliminar = Marcador.getElemento();
-                    LinkedList<Punto> Excluir = new LinkedList();
-                    Excluir.anadirFinal(Eliminar);
+                    
                     Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
 
                     Posibilidades= new LinkedList<>();
@@ -64,17 +63,17 @@ public class Recorrido {
                         Camino.anadirFinal(Marcador.getElemento());
                     }
                     if(pertenecePer(Marcador.getElemento())!=null){     //Validacion de si se topa con una figura cerrada
-                        if(pertenecePer(Origen)!=null){     //Si contiene al origen, se cerró
-                            Camino.anadirFinal(Marcador.getElemento());
+                        Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
+                        if(Per_Aux.getPuntos().isIn(Origen)){     //Si contiene al origen, se cerró
+                            Camino.anadirFinal(Marcador.getElemento());  
                             Perimetro nuevo = new Perimetro(Camino);
                             nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                             PerimetrosCerrados.anadirFinal(nuevo);
                             Posibilidades.setTamanio(0);
                             Continuar=false;
-                        }
-                        else{       //Si no contiene al origen, se parte de los vértices de la figura
+                        }else{       //Si no contiene al origen, se parte de los vértices de la figura
                             System.out.println("No contiene origen, pero lo valida");
-                            Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
+                            
                             Posibilidades = new LinkedList<>();
                             Posibilidades.SumarListas(Posibilidades, Per_Aux.getPuntos());
                             inFigCerrada=true;
