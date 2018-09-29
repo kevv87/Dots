@@ -28,7 +28,8 @@ public class Recorrido {
         Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
-        LinkedList<Punto> Posibilidades=Marcador.getElemento().getReferencias();    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
+        LinkedList<Punto> Posibilidades= new LinkedList<>();
+        Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
         Posibilidades.eliminar(Anterior);   //Elimina el punto del que viene en caso de usar recursividad
         while(Continuar){
             //Primera condicion de finalizacion, cerró la figura
@@ -48,7 +49,8 @@ public class Recorrido {
                     Camino.anadirFinal(Marcador.getElemento());
                     Punto Eliminar = Marcador.getElemento();
                     Marcador.setElemento(Marcador.getElemento().getReferencias().getInicio().getElemento());
-                    Posibilidades=Marcador.getElemento().getReferencias();
+                    Posibilidades= new LinkedList<>();
+                    Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());;    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
                     Posibilidades.eliminar(Eliminar);
                 }
                 while(Posibilidades.getTamanio()>1){ //&& Marcador.getElemento()!=Origen){      //Si hay más de una posibilidad, evalúe
@@ -67,7 +69,8 @@ public class Recorrido {
                         else{       //Si no contiene al origen, se parte de los vértices de la figura
                             System.out.println("No contiene origen, pero lo valida");
                             Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
-                            Posibilidades=Per_Aux.getPuntos();
+                            Posibilidades = new LinkedList<>();
+                            Posibilidades.SumarListas(Posibilidades, Per_Aux.getPuntos());
                             inFigCerrada=true;
                         }
                     } else{
@@ -111,10 +114,12 @@ public class Recorrido {
     
     //Funcion que recibe dos puntos del usuario
     public void Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
-        Punto PuntoA = buscarPto(ID1%10, (int)ID1/10);
-        Punto PuntoB = buscarPto(ID2%10, (int)ID2/10);
-        PuntoA.getReferencias().anadirFinal(PuntoB);
-        PuntoB.getReferencias().anadirFinal(PuntoA);
+        Nodo nodoA = buscarPto(ID1%10, (int)ID1/10);
+        Nodo nodoB= buscarPto(ID2%10, (int)ID2/10);
+        Punto PuntoA = (Punto)nodoA.getElemento();
+        Punto PuntoB = (Punto)nodoB.getElemento();
+        ((Punto)nodoA.getElemento()).addReferencia(PuntoB);
+        ((Punto)nodoB.getElemento()).addReferencia(PuntoA);
         if(BuscaCaminos(PuntoA, PuntoA, PuntoB)!=null){
             System.out.println("YUJU!");
             ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
@@ -169,12 +174,12 @@ public class Recorrido {
     }
     
     //Funcion que busca un punto en la matriz
-    public Punto buscarPto(int X, int Y){
+    public Nodo buscarPto(int X, int Y){
         Nodo<Punto> Aux = Matriz.getInicio();
-        while(Aux.getElemento().getPosX()!=X || Aux.getElemento().getPosY()!=Y){
+        while(!(Aux.getElemento().getPosX()==X && Aux.getElemento().getPosY()==Y)){
             Aux=Aux.getSiguiente();
         }
-        return Aux.getElemento();
+        return Aux;
     }
   
     //Funcion que busca si en la lista de perimetros, alguno contiene un punto específico
