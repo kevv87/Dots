@@ -276,6 +276,8 @@ public class Client{
                     color = Color.BLUE;
                 }
                 interfaz.addLine(id1, id2, color);
+            }else if(line.equals("DWP")){
+                ;
             }else if("0".equals(line)){  // Si la respuesta es 0, es el estado normal, no dibuja nada.
                 ;
             }

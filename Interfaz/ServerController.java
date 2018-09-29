@@ -59,6 +59,8 @@ public class ServerController {
     private Image image;
     
     public void initialize(){
+        
+        serverIDTextF.setText("localhost");
         menuButton.setText("Default");
         image_url = "../img/characters/default.jpg";
         image_label.setImage(new Image(getClass().getResource(image_url).toExternalForm()));
