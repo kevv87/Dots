@@ -18,7 +18,7 @@ public class Punto {
     private int PosX; // valor de columna de matriz.
     private int PosY;   //Valor de la fila
     private Punto Siguiente; //puntero a siguiente punto.
-    private LinkedList<Punto> Referencias;
+    private final LinkedList<Punto> Referencias;
 
     /**
      * Constructor
@@ -48,6 +48,10 @@ public class Punto {
         return Referencias;
     }
     
+    public void addReferencia(Punto punto){
+        Referencias.anadirFinal(punto);
+    }
+    
 
 
     //SETTERS
@@ -65,9 +69,6 @@ public class Punto {
         this.PosY = posY;
     }
 
-    public void setReferencias(LinkedList<Punto> Referencias) {
-        this.Referencias = Referencias;
-    }
     
 
 }
