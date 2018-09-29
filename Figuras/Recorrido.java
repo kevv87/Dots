@@ -49,16 +49,16 @@ public class Recorrido {
             } else{
                 while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){     //1- Si solo hay una posibilidad, siga avanzando
                     Camino.anadirFinal(Marcador.getElemento());
-                    Punto Eliminar = Marcador.getElemento();
                     Anterior = Marcador.getElemento();
                     Marcador.setElemento(Posibilidades.getInicio().getElemento());
 
                     Posibilidades= new LinkedList<>();
                     Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());;    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
-                    Posibilidades.eliminar(Eliminar);
+                    Posibilidades.eliminar(Anterior);
 
                 }
                 while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){      //Si hay más de una posibilidad, evalúe
+                    Perimetro perAux = pertenecePer(Marcador.getElemento());
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
@@ -70,12 +70,11 @@ public class Recorrido {
                             PerimetrosCerrados.anadirFinal(nuevo);
                             Posibilidades.setTamanio(0);
                             Continuar=false;
-                        }
-                        else{       //Si no contiene al origen, se parte de los vértices de la figura
+                        }else{       //Si no contiene al origen, se parte de los vértices de la figura
                             System.out.println("No contiene origen, pero lo valida");
-                            Perimetro Per_Aux = pertenecePer(Marcador.getElemento());
+                            
                             Posibilidades = new LinkedList<>();
-                            Posibilidades.SumarListas(Posibilidades, Per_Aux.getPuntos());
+                            Posibilidades.SumarListas(Posibilidades, perAux.getPuntos());
                             inFigCerrada=true;
                         }
                     }

@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 /**
@@ -48,6 +49,7 @@ public class JuegoController {
     
     private Group lineGroup = new Group();  //Grupo de lineas para representar 
     private static Group circles = new Group(); //Grupo de circulos para representar
+    private static Group areas = new Group();
     private static Punto[] puntos = new Punto[64];  //Grupo de puntos para logica
     private static boolean activo = false; 
     private final ListaSimple puntos_a_enviar = new ListaSimple();
@@ -262,8 +264,8 @@ public class JuegoController {
      */
     public void initialize() throws Exception{
          //Dibujando circulos
-        int x = 20;
-        int y = 20;
+        double x = 20;
+        double y = 20;
         int radio = 5;
         int espacio = 50;
         int cont = 0;
@@ -288,7 +290,9 @@ public class JuegoController {
         }
         addtoPane(circles);
         addtoPane(lineGroup);
+        addtoPane(areas);
         setFoePoints("0");
+        addPolygon();
         
     }
     
@@ -303,10 +307,10 @@ public class JuegoController {
         Platform.runLater(() -> {
             Punto punto1 = puntos[id1];
             Punto punto2 = puntos[id2];
-            int x1 = punto1.getX();
-            int y1 = punto1.getY();
-            int x2 = punto2.getX();
-            int y2 = punto2.getY();
+            Double x1 = punto1.getX();
+            Double y1 = punto1.getY();
+            Double x2 = punto2.getX();
+            Double y2 = punto2.getY();
             Line new_line = new Line(x1,y1,x2,y2);
             new_line.setFill(color);
             new_line.setStroke(color);
@@ -372,6 +376,41 @@ public class JuegoController {
     }
     
     
+    /**
+     * Hace un nuevo poligono a partir de los puntos en la lista de ids que se le pasa
+     * @param ids Lista de ids de los puntos que forman el poligono, acomodados en sentido horario o antihorario 
+     * @throws java.lang.Exception 
+     */
+    public void addPolygon() throws Exception{
+        
+        Platform.runLater(() -> {
+            Polygon new_polygon = new Polygon();
+            /*
+            while(ids.getTamanio() != 0){
+                Punto punto;
+                try {
+                    punto = puntos[(int)ids.getValor(0)];
+                    new_polygon.getPoints().addAll(punto.getX(), punto.getY());
+                    ids.removerPorPosicion(0);
+                } catch (Exception ex) {
+                    Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            */
+            new_polygon.getPoints().addAll(puntos[16].getX(), puntos[16].getY());
+            new_polygon.getPoints().addAll(puntos[17].getX(), puntos[17].getY());
+            new_polygon.getPoints().addAll(puntos[8].getX(), puntos[8].getY());
+            
+            new_polygon.getPoints().addAll(puntos[0].getX(), puntos[0].getY());
+            new_polygon.getPoints().addAll(puntos[9].getX(), puntos[9].getY());
+            new_polygon.setFill(Color.BLACK);
+            areas.getChildren().add(new_polygon);
+        
+        
+        });
+        
+        
+    }
     
     
 }

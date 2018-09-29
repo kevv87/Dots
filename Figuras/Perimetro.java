@@ -46,9 +46,7 @@ public class Perimetro {
         this.Puntos = Puntos;
     }
     
-    public static void main(String args[]){
-        ;
-    }
+    
     
     
 }
