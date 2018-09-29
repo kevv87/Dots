@@ -233,7 +233,7 @@ public class Client{
      */
     @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
-        System.out.println("hgfdsdg");
+      
         String line = null;
 
         long n_segundos = 10; // Intervalo entre cada refresh
@@ -246,16 +246,15 @@ public class Client{
             jsonMessage = mapper.writeValueAsString(jsonToClass);
             out_comandos.println(jsonMessage);
             try{
-                System.out.println("before");
+               
                 jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
-                System.out.println("After");
+             
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                 line = jsonToClass.getAccion();  //Lee un mensaje entrante
 
               } catch(IOException e){
                   line = null;
               }
-            System.out.println("line: " + line);
             if(line==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
                 close();
                 break;
@@ -263,7 +262,6 @@ public class Client{
                 close();
 
             }else if("DWL".equals(line)){
-                System.out.println("linea!!!: "+line);
                 line = in_comandos.readLine();
 
                 Mensaje linea= mapper.readValue(line, Mensaje.class);

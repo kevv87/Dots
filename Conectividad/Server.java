@@ -29,6 +29,8 @@ public class Server{
   private static final ColaJugadores cola = new ColaJugadores();
   private static final ColaMensajes cola_mensajes_p1 = new ColaMensajes();
   private static final ColaMensajes cola_mensajes_p2 = new ColaMensajes();
+  private static final Recorrido recorrido = new Recorrido();
+  
   
   public static void main(String[] args) throws Exception{
     System.out.println("The server is running");
@@ -149,7 +151,6 @@ public class Server{
         broadcast("NEC");
 
         String json_tosend = mapper.writeValueAsString(player2);
-        System.out.println(json_tosend);
         player1.getGame_out().println(json_tosend);
         json_tosend = mapper.writeValueAsString(player1);
         player2.getGame_out().println(json_tosend);
@@ -291,13 +292,16 @@ public class Server{
               }
               
               //Some dumb chino logic
-              Recorrido recorrido = new Recorrido();
-              recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
 
+              System.out.println("Punto 1:"+id1);
+              System.out.println("Punto 2:"+id2);
+
+              recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
+              System.out.println("Outing");
+              
               int id_tosend1 = (Integer.parseInt(id1,8));
               int id_tosend2 = (Integer.parseInt(id2,8));
 
-              System.out.println("id1: " + id_tosend1 + "id2: " + id_tosend2);
               MensajeLinea mensaje_linea = new MensajeLinea(color, id_tosend1, id_tosend2);
 
               
