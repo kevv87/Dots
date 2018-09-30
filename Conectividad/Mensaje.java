@@ -7,6 +7,7 @@ package Conectividad;
  */
 public class Mensaje {
 
+    private String protocolo;
     private String accion;
     private Mensaje siguiente;
     private MensajeLinea segmento;
@@ -17,15 +18,18 @@ public class Mensaje {
      */
     public Mensaje(){
         accion = "";
+        protocolo = "";
         siguiente = null;
         
     }
     
     /**
      * Constructor.
+     * @param protocolo Del mensaje.
      * @param acc Mensaje.
      */
-    public Mensaje(String acc){
+    public Mensaje(String protocolo, String acc){
+        this.protocolo = protocolo;
         accion = acc;
         siguiente = null;
     }
@@ -62,6 +66,15 @@ public class Mensaje {
     public void setSiguiente(Mensaje siguiente) {
         this.siguiente = siguiente;
     }
+
+    public String getProtocolo() {
+        return protocolo;
+    }
+
+    public void setProtocolo(String protocolo) {
+        this.protocolo = protocolo;
+    }
+    
     
     
     

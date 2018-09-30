@@ -1,6 +1,7 @@
 package Conectividad;
 
 import Clases.Player;
+import Figuras.LinkedList;
 import Interfaz.JuegoController;
 
 import gnu.io.CommPortIdentifier;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -234,7 +236,7 @@ public class Client{
     @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
       
-        String line = null;
+        String protocolo = null;
 
         long n_segundos = 10; // Intervalo entre cada refresh
         String jsonMessage = null;
@@ -245,30 +247,31 @@ public class Client{
             jsonToClass.setAccion("GST"); // Get estado al server
             jsonMessage = mapper.writeValueAsString(jsonToClass);
             out_comandos.println(jsonMessage);
+            String accion = mapper.writeValueAsString(new Mensaje("",""));
             try{
                
                 jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
              
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
-                line = jsonToClass.getAccion();  //Lee un mensaje entrante
+                protocolo = jsonToClass.getProtocolo();  //Lee un mensaje entrante
+                accion = jsonToClass.getAccion();
 
               } catch(IOException e){
-                  line = null;
+                  protocolo = null;
               }
-            if(line==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
+            if(protocolo==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
                 close();
                 break;
-            }else if("END".equals(line)){  // Si la respuesta es END, termina el juego y cierra sockets
+            }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
                 close();
 
-            }else if("DWL".equals(line)){
-                line = in_comandos.readLine();
+            }else if("DWL".equals(protocolo)){
+                
+                MensajeLinea linea= mapper.readValue(accion, MensajeLinea.class);
 
-                Mensaje linea= mapper.readValue(line, Mensaje.class);
-
-                int id1 = linea.getSegmento().getId1();
-                int id2 = linea.getSegmento().getId2();
-                String colorm = linea.getSegmento().getColor();
+                int id1 = linea.getId1();
+                int id2 = linea.getId2();
+                String colorm = linea.getColor();
                 Color color;
                 if("red".equals(colorm)){
                     color = Color.RED;
@@ -276,9 +279,21 @@ public class Client{
                     color = Color.BLUE;
                 }
                 interfaz.addLine(id1, id2, color);
-            }else if(line.equals("DWP")){
-                ;
-            }else if("0".equals(line)){  // Si la respuesta es 0, es el estado normal, no dibuja nada.
+            }else if(protocolo.equals("DWP")){
+                LinkedList<LinkedHashMap> lista_puntos = mapper.readValue(accion, Figuras.LinkedList.class);
+                ListaSimple lista_ids = new ListaSimple();
+                Figuras.Nodo<LinkedHashMap> aux = lista_puntos.getInicio();
+                while(aux!=null){
+                    int posX = (int)aux.getElemento().get("posX");
+                    int posY = (int)aux.getElemento().get("posY");
+             
+                    int id1 = Integer.parseInt(Integer.toString((posX+posY*10)),8);
+                    
+                    lista_ids.agregarAlInicio(id1);
+                    aux = aux.getSiguiente();
+                }
+                interfaz.addPolygon(lista_ids);
+            }else if("NNT".equals(protocolo)){  // Si la respuesta es No New Things, es el estado normal, no dibuja nada.
                 ;
             }
             
@@ -302,7 +317,7 @@ public class Client{
      */
     public static void send_comando(String msg) throws Exception{  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
 
-        Mensaje jsonToClass = new Mensaje(msg);
+        Mensaje jsonToClass = new Mensaje("",msg);
         String jsonMessage = mapper2.writeValueAsString(jsonToClass);
         out_comandos.println(jsonMessage);
     }

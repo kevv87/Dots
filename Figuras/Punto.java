@@ -5,6 +5,8 @@
  */
 package Figuras;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author Sebastián
@@ -17,8 +19,8 @@ public class Punto {
 
     private int PosX; // valor de columna de matriz.
     private int PosY;   //Valor de la fila
-    private Punto Siguiente; //puntero a siguiente punto.
-    private final LinkedList<Punto> Referencias;
+    @JsonIgnore private Punto Siguiente; //puntero a siguiente punto.
+    @JsonIgnore private final LinkedList<Punto> Referencias;
 
     /**
      * Constructor
@@ -35,7 +37,7 @@ public class Punto {
     public int getPosX() {
         return PosX;
     }
-
+    
     public Punto getSiguiente() {
         return Siguiente;
     }
@@ -43,7 +45,8 @@ public class Punto {
     public int getPosY() {
         return PosY;
     }
-
+    
+    @JsonIgnore
     public LinkedList<Punto> getReferencias() {
         return Referencias;
     }

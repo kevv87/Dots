@@ -25,7 +25,11 @@ public class ColaMensajes {
         if(first == null){
             first = mensaje;
         }else{
-            first.setSiguiente(mensaje);
+            Mensaje aux = first;
+            while(aux.getSiguiente() != null){
+                aux = aux.getSiguiente();
+            }
+            aux.setSiguiente(mensaje);
         }
         tamanio++;
     }
