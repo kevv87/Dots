@@ -32,22 +32,27 @@ public class Recorrido {
         LinkedList<Punto> Posibilidades= new LinkedList<>();
         Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
         Posibilidades.eliminar(Anterior);   //Elimina el punto del que viene en caso de usar recursividad
-
+        System.out.println(Posibilidades.getTamanio());
+        
         while(Continuar){
-            //Primera condicion de finalizacion, cerró la figura
+            //      _________________________________________________
+            //_____/Primer condicion de finalizacion, cerro la figura
             if(Marcador.getElemento()==Origen){ //Cambiar por origen
                 Perimetro nuevo = new Perimetro(Camino);
                 nuevo.getPuntos().setInicio(Camino.getInicio());
                 nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                 PerimetrosCerrados.anadirFinal(nuevo);
                 Continuar=false;
-            //Segunda condicion de finalizacion, no pudo cerrar
+            //      _______________________________
+            //_____/Segunda condicion, no cerro
             } else if(Posibilidades.getTamanio()==0){ //Eliminar anterior
                 Camino=null;                
                 Continuar=false;
-            //Recorre los puntos según sus referencias    
+            //      _______________________________
+            //_____/Tercer condicion, debe recorrer
             } else{
-                while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){     //1- Si solo hay una posibilidad, siga avanzando
+                // A) Si solo existe una posibilidad, continue avanzando
+                while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){
                     Camino.anadirFinal(Marcador.getElemento());
                     Anterior = Marcador.getElemento();
                     Marcador.setElemento(Posibilidades.getInicio().getElemento());
@@ -55,37 +60,38 @@ public class Recorrido {
                     Posibilidades= new LinkedList<>();
                     Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());;    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
                     Posibilidades.eliminar(Anterior);
-
                 }
-                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){      //Si hay más de una posibilidad, evalúe
-                    Perimetro perAux = pertenecePer(Marcador.getElemento());
+                // B) Si hay mas de una posibilidad, evalue los casos
+                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){
+                    Perimetro PerActual = pertenecePer(Marcador.getElemento());
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
                     }
-                    if(pertenecePer(Marcador.getElemento())!=null && inFigCerrada == false){     //Validacion de si se topa con una figura cerrada
-                        if(pertenecePer(Origen)!=null){     //Si contiene al origen, se cerró
-                            //Camino.anadirFinal(Marcador.getElemento());
+                    // B.1) Si se topa con una figura cerrada
+                    if(PerActual!=null && inFigCerrada == false){
+                        // B.1.1) Si el perimetro contiene al origen
+                        if(PerActual.getPuntos().isIn(Origen)==true){
                             Perimetro nuevo = new Perimetro(Camino);
                             nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                             PerimetrosCerrados.anadirFinal(nuevo);
                             Posibilidades.setTamanio(0);
                             Continuar=false;
-                        }else{       //Si no contiene al origen, se parte de los vértices de la figura
+                        }
+                        // B.1.2) Si no contiene al origen, se sigue el recorrido a partir de los vertices de la figura
+                        else{
                             System.out.println("No contiene origen, pero lo valida");
-                            
-                            Posibilidades = new LinkedList<>();
-                            Posibilidades.SumarListas(Posibilidades, perAux.getPuntos());
+                            Posibilidades = new LinkedList<Punto>();
+                            Posibilidades.SumarListas(Posibilidades, PerActual.getPuntos());
                             inFigCerrada=true;
                         }
                     }
-
-                    else if(pertenecePer(Marcador.getElemento())==null && inFigCerrada == false){ //si esta ante una bifurcacion, que no corresponde a una figura cerrada
-
+                    // B.2) Si llega a una bifurcacion, pero no es de una figura cerrada
+                    else if(pertenecePer(Marcador.getElemento())==null){
                         boolean Seguir = true;
-
+                        
                         while(Posibilidades.getTamanio() > 0 && Seguir == true){
-
                             Nodo<Punto> Marcador1 = Posibilidades.getInicio();
+                            System.out.println("Posibilidad 1");
                             LinkedList X = BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
                             if(X!=null){
                                 Seguir=false;
@@ -96,7 +102,7 @@ public class Recorrido {
                             }
                         }
                     }
-
+                    
                     else{
                         if(inFigCerrada){
                             //PRIMER CASO (para elimiar caso en el que pueda retornarse por el segmento que conecta la figura cerrada con el segmento adjunto
@@ -117,6 +123,7 @@ public class Recorrido {
                             }
                             else{
                                 Nodo<Punto> Marcador1 = Conexiones.getInicio();
+                                System.out.println("Posibilidad 2");                                
                                 LinkedList X = BuscaCaminos(Origen, Pos.getElemento(), Marcador1.getElemento());
                                 if(X!=null){
                                     Seguir=false;
@@ -138,10 +145,13 @@ public class Recorrido {
                                 }
                                 else{
                                     Nodo<Punto> Marcador1 = Conexiones.getInicio();
+                                    System.out.println("Posibilidad 3");
+                                    System.out.println("Pos es " + Pos.getElemento().getPosX()+Pos.getElemento().getPosY());
+                                    System.out.println("Marcador 1 es " + Marcador1.getElemento().getPosX()*+Marcador1.getElemento().getPosY());
                                     LinkedList X = BuscaCaminos(Origen, Pos.getElemento(), Marcador1.getElemento());
                                     if(X!=null){
-                                    Seguir=false;
-                                    Camino.SumarListas(Camino, X);
+                                        Seguir=false;
+                                        Camino.SumarListas(Camino, X);
                                     return Camino;
 
                                     } else{
@@ -151,6 +161,7 @@ public class Recorrido {
                             }
                         } else{
                             Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
+                            System.out.println("Posibilidad 4");
                             LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
                             if(X!=null){    //Aplica recursividad para recorrer los subcaminos
                                 Camino.SumarListas(Camino, X);    //Funcion sumar listas
