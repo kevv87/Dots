@@ -222,6 +222,7 @@ public class ServerController {
         if (bool == true){
             window.close();
             Client.close();
+            System.exit(0);
             
         }
 

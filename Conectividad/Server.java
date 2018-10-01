@@ -203,6 +203,8 @@ public class Server{
                             Mensaje mensaje = new Mensaje("END", "");
                             tosend = mapper.writeValueAsString(mensaje);
                             cola_mensajes_p2.enqueue(mensaje);
+                            player1.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "YW")));
+                            player2.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "YW")));
                             System.out.println("DEATH");
                             break;
                         }else if("GST".equals(line)){
@@ -263,6 +265,9 @@ public class Server{
                             Mensaje msj = new Mensaje("END","");
                             tosend = mapper.writeValueAsString(msj);
                             cola_mensajes_p1.enqueue(msj);
+                            player1.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "YW")));
+                            player2.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "YW")));
+                            
                             System.out.println("DEATH");
                             break;
                         }
@@ -311,7 +316,8 @@ public class Server{
               }
               
               if(msj.equals("END")){
-                if(current*-1 == 1){
+                  current = current*-1;
+                if(current == 1){
                   current_player = player1;
                 }else{
                   current_player = player2;
@@ -454,18 +460,12 @@ public class Server{
      * @param accion Accion a ejecutar por el cliente acorde con el protocolo, debe estar en formato JSON.
    */
   public static void broadcast_queue(String protocolo, String accion){
-      if(protocolo == "END"){
-          System.out.println("HEY!");
-      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion));
       
   }
   
   public static void broadcast_queue(String protocolo, String accion, String puntaje){
-      if(protocolo == "END"){
-          System.out.println("HEY!");
-      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion, puntaje));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion, puntaje));
       

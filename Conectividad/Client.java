@@ -279,15 +279,6 @@ public class Client{
               
               System.out.println("Inicia juego");
               
-          }else if(line.startsWith("END")){  // Fin del juego
-              try{
-                enviarDatosArduino("rr");
-                serialPort.close();
-                output = null;
-            }catch(Exception e){
-                ;
-            }
-              close();
           }else if(line.startsWith("YW")){  //Yo gano
               stop();
               interfaz.openWin();
@@ -347,24 +338,8 @@ public class Client{
                 }
                 
                 close();
+                interfaz.openWin();
                 break;
-            }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
-                try{
-
-                    enviarDatosArduino("rr");
-                }catch(Exception e){
-                    ;
-                }
-                System.out.println("Comando end");
-                try{
-                    enviarDatosArduino("rr");
-                    serialPort.close();
-                    output = null;
-                }catch(Exception e){
-                    ;
-                }
-                close();
-
             }else if("DWL".equals(protocolo)){
                 
                 MensajeLinea linea= mapper.readValue(accion, MensajeLinea.class);
