@@ -394,7 +394,6 @@ public class JuegoController {
         LinkedList<Punto> puntos_dentro = new LinkedList<>();
         Platform.runLater(() -> {
             Polygon new_polygon = new Polygon();
-        ids.listar();
         while(ids.getTamanio() != 0){
                     Punto punto;
                     try {
@@ -413,10 +412,36 @@ public class JuegoController {
             areas.getChildren().add(new_polygon);
             System.out.println(areas.getChildren().get(0));
             
+            ids.listar();
             for(Punto punto:puntos){  //Verifica los puntos que estan dentro del Poligono
                 if(new_polygon.contains(punto.getX(), punto.getY())){
-                    puntos_dentro.anadirInicio(punto);
-                    punto.setBloqueado(true);  //Bloquea los puntos que va agregando
+                    boolean alternador = true;
+                    boolean agregarx = true;
+                    boolean agregary = true;
+                    boolean agregar = true;
+                    for(Double coordenada:new_polygon.getPoints()){
+                        if(alternador){
+                            if(punto.getX() == coordenada){
+                                agregarx = false;
+                            }
+                        }else{
+                            if(punto.getY()==coordenada){
+                                agregary = false;
+                            }
+                            if(!(agregarx && agregary)){
+                                agregar = false;
+                            }else{
+                                agregar = true;
+                            }
+                        }
+                        alternador = !alternador;
+                    }
+                    
+                    if(agregar){
+                        System.out.println(punto.getId());
+                        puntos_dentro.anadirInicio(punto);
+                        punto.setBloqueado(true);  //Bloquea los puntos que va agregando
+                    }
                 }
             }
         });
