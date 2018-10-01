@@ -36,6 +36,9 @@ public class Server{
   
   
   public static void main(String[] args) throws Exception{
+      System.out.println("ss");
+      String libPathProperty = System.getProperty("java.library.path");
+      System.out.println(libPathProperty);
     System.out.println("The server is running");
     listener = new ServerSocket(PORT);  //Escuchando el socket
     new Handler("juego").start();
@@ -116,7 +119,6 @@ public class Server{
             send(new_player,"ENC");  // Le dice al jugador que esta en cola. !!!!!!!!!!!!!!!!
             System.out.println("Nuevo jugador en cola!");
             System.out.println("Tamanno de la cola: "+cola.getTamanio());
-
         }
       }finally{
           stop_socket();

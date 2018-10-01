@@ -10,7 +10,8 @@ package Figuras;
  * @author Sebastián
  */
 public class Perimetro {
-    
+
+    public Object unirPerimetros;
     LinkedList<Punto> Puntos;
     
     /**

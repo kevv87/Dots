@@ -85,7 +85,7 @@ public class JuegoController {
         
         
         for(Punto punto:puntos){  // Para cada punto en los puntos de la pantalla
-            if(punto.contiene(x,y) && !punto.isBloqueado()){  try {
+            if(punto.contiene(x,y) /**&& !punto.isBloqueado()*/){  try {
                 Boolean valido = false;  // Guarda si el nuevo punto es valido de conectar con el actual
                 // si el punto contiene a la coordenada donde se clickea
                 if(puntos_a_enviar.getTamanio() == 1){  // Si ya se tiene un punto preparado para enviar, entonces...

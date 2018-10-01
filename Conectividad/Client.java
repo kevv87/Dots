@@ -79,6 +79,7 @@ public class Client{
     /**
      * Inicializa la conexion con el arduino
      */
+    /*
     public void inicializarConexionArduino(){
         CommPortIdentifier puertoID =null;
         Enumeration puertoEnum = CommPortIdentifier.getPortIdentifiers();
@@ -104,7 +105,7 @@ public class Client{
         enviarDatosArduino("00");  // Marcador en 0
         enviarDatosArduino("ff");  // Leds apagados
     }
-    
+    */
     /**
      * Envia datos al serial al que escucha el arduino
      * @param datos Datos a enviar.
@@ -192,12 +193,14 @@ public class Client{
         // Corre los hilos
         juego.start();
         
-        // Arduino        
+        // Arduino
+        /*
         try{
             inicializarConexionArduino();
         }catch(Exception e){
             System.out.println("Error con arduino");
         }
+        */
     }
     
     
