@@ -242,7 +242,6 @@ public class Recorrido {
                     Punto1=Punto1.getSiguiente();
                 }
             }
-            Puntaje+=2;
         }
         return Puntaje;
     }
