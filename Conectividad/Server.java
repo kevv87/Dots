@@ -147,7 +147,9 @@ public class Server{
 
         player1 = cola.dequeue();
         player2 = cola.dequeue();
-
+        
+        player2.setNumber(2);
+        player1.setNumber(1);
 
         broadcast("NEC");
 
@@ -307,7 +309,9 @@ public class Server{
                  
                 String camino_puntos_json = mapper.writeValueAsString(camino_puntos);
                 
-                broadcast_queue("DWP", camino_puntos_json);
+                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(current),Integer.toString(camino_puntos.getTamanio()*2)));
+                
+                broadcast_queue("DWP", camino_puntos_json, puntaje_json);
                 
               }
               
@@ -365,6 +369,12 @@ public class Server{
   public static void broadcast_queue(String protocolo, String accion){
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion));
+      
+  }
+  
+  public static void broadcast_queue(String protocolo, String accion, String puntaje){
+      cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion, puntaje));
+      cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion, puntaje));
       
   }
 

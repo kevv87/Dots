@@ -202,6 +202,16 @@ public class Client{
               // Pone el nombre y la imagen del oponente en la interfaz
               interfaz.setFoeName(oponente.getName());
               interfaz.setFoeImage(oponente.getImage_url());
+              
+              int numero_oponente = oponente.getNumber();
+              if(numero_oponente == 1){
+                  myPlayer.setNumber(2);
+              }else{
+                  myPlayer.setNumber(1);
+              }
+              
+              System.out.println(myPlayer.getNumber());
+              
               System.out.println("Inicia juego");
               Thread comandos = new Thread(){  // Creando el hilo continuo
                   @Override
@@ -237,9 +247,11 @@ public class Client{
     public void run_comando() throws IOException, Exception{
       
         String protocolo = null;
+        Mensaje puntaje = null;
 
         long n_segundos = 10; // Intervalo entre cada refresh
         String jsonMessage = null;
+        
         Mensaje jsonToClass = new Mensaje();
 
         // Loop principal del socket continuo
@@ -255,7 +267,9 @@ public class Client{
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                 protocolo = jsonToClass.getProtocolo();  //Lee un mensaje entrante
                 accion = jsonToClass.getAccion();
-
+                if(jsonToClass.getPuntaje() != null){
+                    puntaje = mapper.readValue(jsonToClass.getPuntaje(), Mensaje.class);
+                }
               } catch(IOException e){
                   protocolo = null;
               }
@@ -283,6 +297,16 @@ public class Client{
                 LinkedList<LinkedHashMap> lista_puntos = mapper.readValue(accion, Figuras.LinkedList.class);
                 ListaSimple lista_ids = new ListaSimple();
                 Figuras.Nodo<LinkedHashMap> aux = lista_puntos.getInicio();
+                
+                int jugador_del_puntaje = Integer.parseInt(puntaje.getProtocolo());
+                int puntos_agregados = Integer.parseInt(puntaje.getAccion());
+                
+                if(jugador_del_puntaje == myPlayer.getNumber()){
+                    interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
+                }else{
+                    interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
+                }
+                
                 while(aux!=null){
                     int posX = (int)aux.getElemento().get("posX");
                     int posY = (int)aux.getElemento().get("posY");
@@ -293,6 +317,8 @@ public class Client{
                     aux = aux.getSiguiente();
                 }
                 interfaz.addPolygon(lista_ids);
+                
+                
             }else if("NNT".equals(protocolo)){  // Si la respuesta es No New Things, es el estado normal, no dibuja nada.
                 ;
             }

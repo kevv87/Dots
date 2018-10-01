@@ -27,6 +27,8 @@ public class Player{
   private Player siguiente; // Siguiente jugador, en caso de estar en cola
   private String image_url;  // Url de la imagen del jugador
   
+  private int number;
+  
     /**
      * Constructor
      * @param socket1 Socket del juego, discreto
@@ -124,4 +126,16 @@ public class Player{
     public Player getSiguiente() {
         return siguiente;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+    
+    
+    
+    
 }

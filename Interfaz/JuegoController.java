@@ -293,7 +293,7 @@ public class JuegoController {
         addtoPane(circles);
         addtoPane(lineGroup);
         addtoPane(areas);
-        setFoePoints("0");
+        setFoePoints(0);
         
     }
     
@@ -343,16 +343,16 @@ public class JuegoController {
         my_name.setText(text);
     }
     
-    public void setMyPoints(String points){
+    public void setMyPoints(int points){
         Platform.runLater(() -> {
-            my_points.setText(points);
+            my_points.setText(Integer.toString(points));
         });
         
     }
     
-    public void setFoePoints(String points){
+    public void setFoePoints(int points){
         Platform.runLater(() -> {
-            foePoints.setText(points);
+            foePoints.setText(Integer.toString(points));
         });
         
     }
@@ -408,6 +408,13 @@ public class JuegoController {
         
         
         
+    }
+    
+    public int getMyPoints(){
+        return Integer.parseInt(my_points.getText());
+    }
+    public int getFoePoints(){
+        return Integer.parseInt(foePoints.getText());
     }
     
     
