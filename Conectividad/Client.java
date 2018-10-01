@@ -65,6 +65,7 @@ public class Client{
     private gnu.io.SerialPort serialPort;
     private final String PUERTO1= "/dev/ttyACM0";
     private final String PUERTO2= "/dev/ttyUSB0";
+    private final String PUERTO3= "COM3";
     private static final  int TIMEOUT=2000; //Milisegundos
     private static final int DATA_RATE = 9600;
     
@@ -79,7 +80,7 @@ public class Client{
         
         while(puertoEnum.hasMoreElements()){  // Mientras existan puertos
             CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
-            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName())){
+            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName()) || PUERTO3.equals(actualPuertoID.getName())){
                 puertoID=actualPuertoID;
                 break;
             }
@@ -326,7 +327,11 @@ public class Client{
                 
                 if(jugador_del_puntaje == myPlayer.getNumber()){
                     interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
+                    try{
                     enviarDatosArduino(Integer.toString(interfaz.getMyPoints()+puntos_agregados));
+                    }catch(Exception e){
+                        ;
+                    }
                 }else{
                     interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
                 }
