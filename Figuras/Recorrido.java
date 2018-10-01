@@ -10,8 +10,7 @@ package Figuras;
  * @author Sebastián
  */
 public class Recorrido {
-    
-    private LinkedList<LinkedList> Matriz;
+    private final LinkedList<LinkedList> Matriz;
     private LinkedList<Perimetro> PerimetrosCerrados;
     private boolean inFigCerrada;
     
@@ -196,8 +195,18 @@ public class Recorrido {
         
         LinkedList<Punto> Camino = BuscaCaminos(PuntoA, PuntoA, PuntoB);
         if(Camino!=null){
+            LinkedList<Punto> Area = new LinkedList();
+            if(Camino.getInicio().getElemento().getReferencias().isIn(Camino.getUltimo().getElemento())==false){
+                Perimetro PerInicio = pertenecePer(Camino.getInicio().getElemento());
+                Perimetro PerUltimo = pertenecePer(Camino.getUltimo().getElemento());
+                if(PerInicio == PerUltimo){
+                    Area=PerInicio.obtenerSeccion(PerInicio, PuntoA, PuntoB);
+                }
+            }
             System.out.println("YUJU!");
-            ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
+            LinkedList<Punto> Total = Camino;
+            Total.SumarListas(Total, Area);
+            ImpresionLista(Total);
             return Camino;
         } else{
             System.out.println("No se cerró");
@@ -225,6 +234,7 @@ public class Recorrido {
                 Punto1=Punto1.getSiguiente();
                 Punto2=Punto2.getSiguiente();
             }
+            Puntaje+=2;
         }
         return Puntaje;
     }
@@ -341,5 +351,4 @@ public class Recorrido {
     public void setInFigCerrada(boolean inFigCerrada) {
         this.inFigCerrada = inFigCerrada;
     }
-    
 }

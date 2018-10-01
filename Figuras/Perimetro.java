@@ -47,6 +47,36 @@ public class Perimetro {
         }    
     }
     
+    /**
+     * Retorna una lista de puntos del perimetro
+     * @param Per Perimetro al cual pertenecen PuntoA y PuntoB
+     * @param PuntoA Punto en la lista de puntos de Per
+     * @param PuntoB Punto en la lista de puntos de Per
+     * @return LinkedList de los puntos secuenciales entre PuntoA y PuntoB
+     */    
+    public LinkedList<Punto> obtenerSeccion(Perimetro Per, Punto PuntoA, Punto PuntoB){
+        LinkedList<Punto> Camino = new LinkedList();
+        Punto Inicio = new Punto(0,0);
+        Punto Fin = new Punto(0,0);
+        Nodo<Punto> Marcador1 = Per.getPuntos().getInicio();
+        while(Marcador1.getElemento()!=PuntoA || Marcador1.getElemento()!=PuntoB){
+            Marcador1=Marcador1.getSiguiente();
+        }
+        if (Marcador1.getElemento()==PuntoA){
+            Inicio = PuntoA;
+            Fin = PuntoB;
+        } else{
+            Inicio = PuntoB;
+            Fin = PuntoA;
+        }    
+        Nodo<Punto> Marcador2 = Marcador1.getSiguiente();
+        while(Marcador2.getElemento()!=Fin){
+            Camino.anadirFinal(Marcador2.getElemento());
+            Marcador2=Marcador2.getSiguiente();
+        }
+        return Camino;
+    }
+    
     //GETTER
     public LinkedList<Punto> getPuntos() {
         return Puntos;
