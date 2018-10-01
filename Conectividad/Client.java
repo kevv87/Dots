@@ -26,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.util.Scanner;
+
 
 /**
  * Clase encargada de la parte grafica del juego.
@@ -61,7 +63,8 @@ public class Client{
     // Variables necesarias para la conexion con arduino
     private OutputStream output=null;
     private gnu.io.SerialPort serialPort;
-    private final String PUERTO= "/dev/ttyUSB0";
+    private final String PUERTO1= "/dev/ttyACM0";
+    private final String PUERTO2= "/dev/ttyUSB0";
     private static final  int TIMEOUT=2000; //Milisegundos
     private static final int DATA_RATE = 9600;
     
@@ -76,26 +79,37 @@ public class Client{
         
         while(puertoEnum.hasMoreElements()){  // Mientras existan puertos
             CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
-            if(PUERTO.equals(actualPuertoID.getName())){
+            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName())){
                 puertoID=actualPuertoID;
                 break;
             }
         }
         
-        if(puertoID == null){
-            System.exit(ERROR);
-            return;
-        }
-        
         try{
             serialPort = (gnu.io.SerialPort) puertoID.open(this.getClass().getName(), TIMEOUT);
             // Parametros puerto serie
-            
             serialPort.setSerialPortParams(DATA_RATE, gnu.io.SerialPort.DATABITS_8, gnu.io.SerialPort.STOPBITS_1, gnu.io.SerialPort.PARITY_NONE);
             output = serialPort.getOutputStream();
         }catch(PortInUseException | UnsupportedCommOperationException | IOException e){
             System.exit(ERROR);
         }
+        Thread lmao = new Thread(){
+            @Override
+            public void run(){
+                // create a scanner so we can read the command-line input
+                Scanner scanner = new Scanner(System.in);
+
+                //  prompt for the user's name
+                while(true){
+                    System.out.print("Enter comando: ");
+
+                    // get their input as a String
+                    String username = scanner.next();
+                    enviarDatosArduino(username);
+                }
+            }
+        };
+        lmao.start();
     }
     
     /**
@@ -138,13 +152,12 @@ public class Client{
         // Corre los hilos
         juego.start();
         
-        // Arduino
-        /*
+        // Arduino        
         try{
-            inicializarConexion();
+            inicializarConexionArduino();
         }catch(Exception e){
             System.out.println("Error con arduino");
-        }*/
+        }
     }
     
     
@@ -191,8 +204,18 @@ public class Client{
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
-            interfaz.setActivo(true);
+              try{
+              enviarDatosArduino("oo");
+              }catch (Exception e){
+                  ;
+              }
+              interfaz.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
+              try{
+              enviarDatosArduino("ff");
+              }catch (Exception e){
+                  ;
+              }
               interfaz.setActivo(false);
           }else if(line.startsWith("ENC")){  // En cola
               System.out.println("Estoy en cola");
@@ -303,6 +326,7 @@ public class Client{
                 
                 if(jugador_del_puntaje == myPlayer.getNumber()){
                     interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
+                    enviarDatosArduino(Integer.toString(interfaz.getMyPoints()+puntos_agregados));
                 }else{
                     interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
                 }
