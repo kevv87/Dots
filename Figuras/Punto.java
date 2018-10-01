@@ -8,7 +8,7 @@ package Figuras;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- *
+ * Clase encargada de la creación de puntos de la matriz en el server
  * @author Sebastián
  */
 
@@ -24,7 +24,8 @@ public class Punto {
 
     /**
      * Constructor
-     * @param columna posicion en X del punto.
+     * @param columna Columna de la matriz en donde se encuentra el punto
+     * @param fila Fila de la matriz en donde se encuentra el punto
      */
     Punto(int columna, int fila){
         PosX = columna;
@@ -54,12 +55,9 @@ public class Punto {
     public void addReferencia(Punto punto){
         Referencias.anadirFinal(punto);
     }
-    
 
 
     //SETTERS
-
-
     public void setSiguiente(Punto siguiente) {
         this.Siguiente = siguiente;
     }

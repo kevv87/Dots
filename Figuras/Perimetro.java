@@ -6,17 +6,26 @@
 package Figuras;
 
 /**
- *
+ * Clase encargada de crear un perimetro correspondiente a una figura cerrada
  * @author Sebastián
  */
 public class Perimetro {
     
     LinkedList<Punto> Puntos;
-
+    
+    /**
+     * Constructor
+     * @param Lista Lista de puntos que componen al perimetro
+     */
     public Perimetro(LinkedList<Punto> Lista){
         Puntos=Lista;
     }
     
+    /**
+     * Une en un solo perimetro todos los que compartan puntos
+     * @param Perimetros Lista de perimetros cerrados
+     * @param Per Nuevo perimetro formado
+     */
     public void UnirPerimetros(LinkedList<Perimetro> Perimetros, Perimetro Per){
         if(Perimetros.getInicio()!=null){
             Nodo<Perimetro> PerAux = Perimetros.getInicio();
@@ -37,17 +46,16 @@ public class Perimetro {
             }
         }    
     }
-
+    
+    //GETTER
     public LinkedList<Punto> getPuntos() {
         return Puntos;
     }
-
+    
+    //SETTER
     public void setPuntos(LinkedList<Punto> Puntos) {
         this.Puntos = Puntos;
-    }
-    
-    
-    
+    }    
     
 }
 
