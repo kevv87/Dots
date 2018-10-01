@@ -9,12 +9,17 @@ import Conectividad.Client;
 import Figuras.LinkedList;
 import Matriz.ListaSimple;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 import javafx.scene.paint.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,6 +51,7 @@ public class JuegoController {
     private Label foeName;
     @FXML
     private ImageView foeImage;
+    private Stage myStage;
     
     
     private Group lineGroup = new Group();  //Grupo de lineas para representar 
@@ -426,6 +432,49 @@ public class JuegoController {
     }
     public int getFoePoints(){
         return Integer.parseInt(foePoints.getText());
+    }
+    
+    public void openWin(){
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("Win.fxml"));
+            Parent menuParent;
+            try {
+                menuParent = loader.load();
+                Scene menuScene = new Scene(menuParent);
+                //This line gets the Stage information
+                Stage window = this.myStage;
+
+                window.setScene(menuScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+    
+    public void openLose(){
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("Lose.fxml"));
+            Parent menuParent;
+            try {
+                menuParent = loader.load();
+                Scene menuScene = new Scene(menuParent);
+                //This line gets the Stage information
+                Stage window = new Stage();
+
+                window.setScene(menuScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+   
+    
+    public void setStage(Stage stage){
+        this.myStage = stage;
     }
     
     

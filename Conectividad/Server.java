@@ -136,13 +136,35 @@ public class Server{
     
     // Server loop
     while(true){
+        
         boolean found = false;
         // Esperando jugadores
         System.out.println("Esperando jugadores");
         while(!found){
             if(cola.getTamanio()>=2){
-                found = true;
+                player1 = cola.peek();
+                player1.getGame_out().println(mapper.writeValueAsString(new Mensaje("","RYR")));
+                if(player1.getGame_in().readLine()!=null){
+                        player1 = cola.dequeue();
+                        while(cola.getTamanio()>=1){
+                            player2 = cola.peek();
+                            player2.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "RYR")));
+                            if(player2.getGame_in().readLine() != null){
+                                player2 = cola.dequeue();
+                                found = true;
+                                break;
+                            }else{
+                                cola.dequeue();
+                            }
+                        }
+                        if(!found){
+                            cola.enqueue(player1);
+                        }
+                }else{
+                    cola.dequeue();
+                }
             }else{
+                System.out.println("Tamanio"+cola.getTamanio());
                 Thread.sleep(1000);  //Delay
             }
         }
@@ -151,9 +173,6 @@ public class Server{
         cola_mensajes_p1.eliminar();
         cola_mensajes_p2.eliminar();
         puntos_bloqueados.eliminar();
-        
-        player1 = cola.dequeue();
-        player2 = cola.dequeue();
         
         player2.setNumber(2);
         player1.setNumber(1);
@@ -174,12 +193,9 @@ public class Server{
                     while(true){
 
                         String jsonMessage = player1.getComandos_in().readLine();
-                        System.out.println("P1");
-                        System.out.println("Recibo:"+jsonMessage);
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
                         String tosend = "";
-                        System.out.println("Accion:"+line);
 
                         if(line == null){
                             break;
@@ -204,7 +220,6 @@ public class Server{
                                 player1.getComandos_out().println(tosend);
                             }
                         }
-                        System.out.println("Envio:"+tosend);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -222,8 +237,6 @@ public class Server{
                     while(true){
 
                         String jsonMessage = player2.getComandos_in().readLine(); 
-                        System.out.println("P2:");
-                        System.out.println("Recibo:" + jsonMessage);
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
                         String tosend="";
@@ -253,7 +266,6 @@ public class Server{
                             System.out.println("DEATH");
                             break;
                         }
-                        System.out.println("Envio:"+tosend);
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -360,11 +372,8 @@ public class Server{
                 
                 int puntaje_obtenido = recorrido.calcularPuntaje(camino_puntos);
                 
-                /*
-                if(puntaje_obtenido+current_player.getPuntaje()>=99){  //Condicion de partida ganada
-                    send(current);
-                    send(current);
-                }*/
+                
+                
                 
                 current_player.setPuntaje(current_player.getPuntaje()+puntaje_obtenido);
                 
@@ -373,6 +382,20 @@ public class Server{
                 broadcast_queue("DWP", camino_puntos_json, puntaje_json);
                 LinkedList<Punto> nuevos_bloqueados = mapper.readValue(listen(current), Figuras.LinkedList.class);
                 puntos_bloqueados.SumarListas(puntos_bloqueados, nuevos_bloqueados);
+                
+                if(puntaje_obtenido+current_player.getPuntaje()>=99 || puntos_bloqueados.getTamanio() == 49){  //Condicion de partida ganada
+                    Player ganador;
+                    Player perdedor;
+                    if(current == 1){
+                        ganador = player1;
+                        perdedor = player2;
+                    }else{
+                        ganador = player2;
+                        perdedor = player1;
+                    }
+                    send(ganador, "YW");
+                    send(perdedor, "YL");
+                }
                 
                 
                 

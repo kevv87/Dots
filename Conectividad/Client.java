@@ -101,23 +101,8 @@ public class Client{
         }catch(PortInUseException | UnsupportedCommOperationException | IOException e){
             System.exit(ERROR);
         }
-        Thread lmao = new Thread(){
-            @Override
-            public void run(){
-                // create a scanner so we can read the command-line input
-                Scanner scanner = new Scanner(System.in);
-
-                //  prompt for the user's name
-                while(true){
-                    System.out.print("Enter comando: ");
-
-                    // get their input as a String
-                    String username = scanner.next();
-                    enviarDatosArduino(username);
-                }
-            }
-        };
-        lmao.start();
+        enviarDatosArduino("00");  // Marcador en 0
+        enviarDatosArduino("ff");  // Leds apagados
     }
     
     /**
@@ -222,6 +207,7 @@ public class Client{
      * @throws java.io.IOException
      */
     public void init(String serverAddress) throws IOException, Exception{
+        interfaz.openWin();
         // Crea la conexion e inicializa los streams
       socket_game = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_game = new BufferedReader(new InputStreamReader(socket_game.getInputStream()));
@@ -274,6 +260,8 @@ public class Client{
               interfaz.setActivo(false);
           }else if(line.startsWith("ENC")){  // En cola
               System.out.println("Estoy en cola");
+          }else if(line.startsWith("RYR")){
+              send_game("YES");
           }else if(line.startsWith("NEC")){  //Salida de cola
               oponente = mapper.readValue(in_game.readLine(), Player.class);  // Defino mi oponente
               
@@ -296,6 +284,7 @@ public class Client{
               Client.close();
           }else if(line.startsWith("YW")){  //Yo gano
               System.out.println("I win");
+              interfaz.openWin();
           }else if(line.startsWith("YL")){  // Yo pierdo
               System.out.println("I lose");
           }else if(line.startsWith("ISA")){

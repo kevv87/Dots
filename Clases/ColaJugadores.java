@@ -50,10 +50,13 @@ public class ColaJugadores {
      */
     public Player dequeue(){
         Player result = first;
-        first = first.getSiguiente();
+        if(tamanio>1){
+            first = first.getSiguiente();
+        }else{
+            first = null;
+        }
         tamanio--;
         return result;
-        
     }
     
     /**
