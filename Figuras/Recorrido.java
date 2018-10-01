@@ -11,14 +11,14 @@ package Figuras;
  */
 public class Recorrido {
     
-    private final LinkedList<Punto> Matriz = genMatriz();
+    private LinkedList<LinkedList> Matriz;
     private LinkedList<Perimetro> PerimetrosCerrados;
-    private LinkedList<Segmento> SegmentosHechos;
+    private int Puntaje;
     private boolean inFigCerrada;
     
     public Recorrido(){
+        Matriz = genMatriz();
         PerimetrosCerrados = new LinkedList();
-        SegmentosHechos = new LinkedList();
         inFigCerrada=false;
     }
     //Funcion que retorna la lista de puntos para cerrar el camino
@@ -107,7 +107,7 @@ public class Recorrido {
                         if(inFigCerrada){
                             //PRIMER CASO (para elimiar caso en el que pueda retornarse por el segmento que conecta la figura cerrada con el segmento adjunto
                             boolean Seguir = true;
-                            Nodo<Punto> Pos = new Nodo(Marcador.getElemento());  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
+                            Nodo<Punto> Pos = new Nodo(Posibilidades.getInicio().getElemento());  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
                              //!!!verificar distintos
                             Posibilidades.anadirInicio(Anterior); //Para eliminar conexion con segmento adjunto
                             LinkedList<Punto> Conexiones = new LinkedList<>();
@@ -116,7 +116,7 @@ public class Recorrido {
                             Posibilidades.eliminar(Anterior);//Vuelve al valor original de posibilidades
 
                             LinkedList<Punto> verticesPerimetro = new LinkedList<>();
-                            verticesPerimetro.SumarListas(verticesPerimetro,Posibilidades);
+                            verticesPerimetro.SumarListas(verticesPerimetro, Posibilidades);
 
                             if(Conexiones.getTamanio()==0){
                                 Posibilidades.eliminar(Pos.getElemento());
@@ -124,7 +124,7 @@ public class Recorrido {
                             else{
                                 Nodo<Punto> Marcador1 = Conexiones.getInicio();
                                 System.out.println("Posibilidad 2");                                
-                                LinkedList X = BuscaCaminos(Origen, Pos.getElemento(), Marcador1.getElemento());
+                                LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
                                 if(X!=null){
                                     Seguir=false;
                                     Camino.SumarListas(Camino, X);
@@ -139,16 +139,18 @@ public class Recorrido {
                                 Conexiones = new LinkedList<>();
                                 Conexiones.SumarListas(Conexiones,Pos.getElemento().getReferencias());
                                 Conexiones.RestarListas(Conexiones, verticesPerimetro);     //Para continuar, se deben eliminar las conexiones dentro del perímetro hecho
-
+                                System.out.println("Conexiones tiene:");
+                                ImpresionLista(Conexiones);
                                 if(Conexiones.getTamanio()==0){
                                     Posibilidades.eliminar(Pos.getElemento());
                                 }
                                 else{
+                                    
                                     Nodo<Punto> Marcador1 = Conexiones.getInicio();
                                     System.out.println("Posibilidad 3");
                                     System.out.println("Pos es " + Pos.getElemento().getPosX()+Pos.getElemento().getPosY());
-                                    System.out.println("Marcador 1 es " + Marcador1.getElemento().getPosX()*+Marcador1.getElemento().getPosY());
-                                    LinkedList X = BuscaCaminos(Origen, Pos.getElemento(), Marcador1.getElemento());
+                                    System.out.println("Marcador 1 es " + Marcador1.getElemento().getPosX()*10 +Marcador1.getElemento().getPosY());
+                                    LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
                                     if(X!=null){
                                         Seguir=false;
                                         Camino.SumarListas(Camino, X);
@@ -179,7 +181,7 @@ public class Recorrido {
     }
     
     //Funcion que recibe dos puntos del usuario
-    public LinkedList<Punto> Entrada(int ID1, int ID2){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
+    public LinkedList<Punto> Entrada(int ID2, int ID1){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
 
         Nodo nodoA = buscarPto(ID1%10, (int)ID1/10);
         Nodo nodoB= buscarPto(ID2%10, (int)ID2/10);
@@ -199,6 +201,32 @@ public class Recorrido {
         }
     }
     
+    public int calcularPuntaje(LinkedList<Punto> Camino){
+        int Puntaje = 0;
+        if(Camino!=null){
+            LinkedList<Punto> Puntos = new LinkedList();
+            Puntos.SumarListas(Puntos, Camino);
+            Nodo<Punto> Punto1 = Puntos.getInicio();
+            Nodo<Punto> Punto2 = Punto1.getSiguiente();
+            while(Punto2!=null){
+                if(isColineales(Punto1.getElemento(), Punto2.getElemento())==false){
+                    Puntaje++;
+                }
+                Puntaje+=2;
+                Punto1=Punto1.getSiguiente();
+                Punto2=Punto2.getSiguiente();
+            }
+        }
+        return Puntaje;
+    }
+    
+    public boolean isColineales(Punto PuntoA, Punto PuntoB){
+        if(PuntoA.getPosX()!=PuntoB.getPosX() && PuntoA.getPosY()!=PuntoB.getPosY()){
+            return true;
+        } else{
+            return false;
+        }
+    }
     //Funcion que determina la distancia entre dos puntos
     public double Distancia(Punto PuntoA, Punto PuntoB){    //Punto A es el origen al que se debe volver, Punto B es el punto comparado
         double D=Math.sqrt(Math.pow((PuntoA.getPosX()-PuntoB.getPosX()),2)+Math.pow((PuntoA.getPosY()-PuntoB.getPosY()),2));
@@ -233,24 +261,39 @@ public class Recorrido {
     }
     
     //Funcion para generar matriz de puntos
-    public LinkedList<Punto> genMatriz(){
-        LinkedList<Punto> Matriz = new LinkedList();
-        for(int Filas=0; Filas<8; Filas++){
-            for(int Columnas=0; Columnas<8; Columnas++){
-                Punto punto = new Punto(Filas, Columnas);
-                Matriz.anadirFinal(punto);
+    public LinkedList<LinkedList> genMatriz(){
+        LinkedList<LinkedList> Matriz = new LinkedList();
+        int columnas = 0;
+        int filas = 0;
+        while(columnas<8){
+            LinkedList<Punto> Columna = new LinkedList();
+            while(filas<8){
+                Punto punto = new Punto(columnas, filas);
+                Columna.anadirFinal(punto);
+                filas++;
             }
+            Matriz.anadirFinal(Columna);
+            columnas++;
+            filas=0;
         }
         return Matriz;
     }
     
     //Funcion que busca un punto en la matriz
-    public Nodo buscarPto(int X, int Y){
-        Nodo<Punto> Aux = Matriz.getInicio();
-        while(!(Aux.getElemento().getPosX()==X && Aux.getElemento().getPosY()==Y)){
-            Aux=Aux.getSiguiente();
+    public Nodo<Punto> buscarPto(int X, int Y){
+        int col = 0;
+        Nodo<LinkedList> Columna = Matriz.getInicio();
+        while(col!=X){
+            Columna=Columna.getSiguiente();
+            col++;
         }
-        return Aux;
+        Nodo<Punto> punto = Columna.getElemento().getInicio();
+        int fil = 0;
+        while(fil!=Y){
+            punto=punto.getSiguiente();
+            fil++;
+        }
+        return punto;
     }
   
     //Funcion que busca si en la lista de perimetros, alguno contiene un punto específico
@@ -280,14 +323,6 @@ public class Recorrido {
 
     public void setPerimetrosCerrados(LinkedList<Perimetro> PerimetrosCerrados) {
         this.PerimetrosCerrados = PerimetrosCerrados;
-    }
-
-    public LinkedList<Segmento> getSegmentosHechos() {
-        return SegmentosHechos;
-    }
-
-    public void setSegmentosHechos(LinkedList<Segmento> SegmentosHechos) {
-        this.SegmentosHechos = SegmentosHechos;
     }
 
     public boolean isInFigCerrada() {
