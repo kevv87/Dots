@@ -125,6 +125,41 @@ public class Client{
      */
     private void enviarDatosArduino(String datos){
         try{
+            switch(datos){
+                case("0"):
+                    datos = "00";
+                    break;
+                case("1"):
+                    datos = "01";
+                    break;
+                case("2"):
+                    datos = "02";
+                    break;
+                case("3"):
+                    datos = "03";
+                    break;
+                case("4"):
+                    datos = "04";
+                    break;
+                case("5"):
+                    datos = "05";
+                    break;
+                case("6"):
+                    datos = "06";
+                    break;
+                case("7"):
+                    datos = "07";
+                    break;
+                case("8"):
+                    datos = "08";
+                    break;
+                case("9"):
+                    datos = "09";
+                    break;
+                default:
+                    datos = datos;
+                    break;
+            }
             output.write(datos.getBytes());
         }catch( IOException e){
             System.out.println("Hubo un problema con el arduino");
@@ -343,11 +378,13 @@ public class Client{
                 if(jugador_del_puntaje == myPlayer.getNumber()){
                     interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
                     try{
-                    enviarDatosArduino(Integer.toString(interfaz.getMyPoints()+puntos_agregados));
+                        enviarDatosArduino(Integer.toString(interfaz.getMyPoints())+puntos_agregados);
                     }catch(Exception e){
                         ;
                     }
                 }else{
+                    System.out.println("Yo:"+myPlayer.getNumber());
+                    System.out.println("Los puntos a"+jugador_del_puntaje);
                     interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
                 }
                 

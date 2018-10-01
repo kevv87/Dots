@@ -346,7 +346,15 @@ public class Server{
                  
                 String camino_puntos_json = mapper.writeValueAsString(camino_puntos);
                 
-                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(current),Integer.toString(camino_puntos.getTamanio()*2)));
+                int jugador_puntos;
+                
+                if(current == -1){
+                    jugador_puntos = 2;
+                }else{
+                    jugador_puntos = 1;
+                }
+                
+                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(jugador_puntos),Integer.toString(recorrido.calcularPuntaje(camino_puntos))));
                 
                 broadcast_queue("DWP", camino_puntos_json, puntaje_json);
                 
