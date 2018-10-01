@@ -6,22 +6,31 @@
 package Figuras;
 
 /**
- *
+ * Clase encargada de determinar perimetros cerrados
  * @author Sebastián
  */
 public class Recorrido {
     
     private LinkedList<LinkedList> Matriz;
     private LinkedList<Perimetro> PerimetrosCerrados;
-    private int Puntaje;
     private boolean inFigCerrada;
     
+    /**
+     * Constructor
+     */
     public Recorrido(){
         Matriz = genMatriz();
         PerimetrosCerrados = new LinkedList();
         inFigCerrada=false;
     }
-    //Funcion que retorna la lista de puntos para cerrar el camino
+    
+    /**
+     * Retorna lista de puntos de un perimetro nuevo que acaba de cerrar
+     * @param Origen Punto donde se comienza el recorrido
+     * @param Anterior Conexion de donde viene el punto Actual
+     * @param Actual Punto donde se sigue el recorrido
+     * @return  LinkedList de los puntos que componen el perimetro nuevo
+     */
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
         Nodo<Punto> Marcador = new Nodo();
@@ -161,16 +170,6 @@ public class Recorrido {
                                     }
                                 }
                             }
-                        } else{
-                            Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
-                            System.out.println("Posibilidad 4");
-                            LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
-                            if(X!=null){    //Aplica recursividad para recorrer los subcaminos
-                                Camino.SumarListas(Camino, X);    //Funcion sumar listas
-                                Continuar=false;
-                            } else{
-                                Posibilidades.eliminar(Marcador1.getElemento());
-                            }
                         }
                     }    
                 }    
@@ -180,7 +179,12 @@ public class Recorrido {
         return Camino;
     }
     
-    //Funcion que recibe dos puntos del usuario
+    /**
+     * Retorna la lista del camino de puntos si los últimos puntos ingresador cierran una figura
+     * @param ID1 Numero en base octal cuya decena es la coordenada en X del punto y la unidad es la coordenada en Y del primer punto iingresado
+     * @param ID2 Numero en base octal cuya decena es la coordenada en X del punto y la unidad es la coordenada en Y del segundo punto ingresado
+     * @return LinkedList de los puntos con los que cerró la figura
+     */
     public LinkedList<Punto> Entrada(int ID2, int ID1){      //Con base en los valores de su ID, busca el punto equivalente en la Matriz lógica
 
         Nodo nodoA = buscarPto(ID1%10, (int)ID1/10);
@@ -201,6 +205,11 @@ public class Recorrido {
         }
     }
     
+    /**
+     * Retorna el valor del puntaje segun una lista de puntos
+     * @param Camino Lista de puntos que corresponden a los que el jugador ganó
+     * @return Puntaje obtenido del nuevo perimetro
+     */
     public int calcularPuntaje(LinkedList<Punto> Camino){
         int Puntaje = 0;
         if(Camino!=null){
@@ -220,32 +229,18 @@ public class Recorrido {
         return Puntaje;
     }
     
+    /**
+     * Retorna true si dos puntos son colineales 
+     * @param PuntoA Primer punto que se une con el segundo
+     * @param PuntoB Segundo punto que se une con el primero
+     * @return true si los dos puntos comparten uno de los ejes
+     */    
     public boolean isColineales(Punto PuntoA, Punto PuntoB){
         if(PuntoA.getPosX()!=PuntoB.getPosX() && PuntoA.getPosY()!=PuntoB.getPosY()){
-            return true;
-        } else{
             return false;
+        } else{
+            return true;
         }
-    }
-    //Funcion que determina la distancia entre dos puntos
-    public double Distancia(Punto PuntoA, Punto PuntoB){    //Punto A es el origen al que se debe volver, Punto B es el punto comparado
-        double D=Math.sqrt(Math.pow((PuntoA.getPosX()-PuntoB.getPosX()),2)+Math.pow((PuntoA.getPosY()-PuntoB.getPosY()),2));
-        return D;
-    }
-    
-    //Funcion que determina de una lista, cual de los puntos se acerca más al que busco.x 
-    public Punto BuscarMenorD(Punto Origen, LinkedList<Punto> Lista){
-         Nodo<Punto> Menor = Lista.getInicio();
-         Nodo<Punto> Aux = Lista.getInicio().getSiguiente();
-         while(Aux!=null){
-            if(Distancia(Origen, Menor.getElemento())>Distancia(Origen, (Punto) Aux.getElemento())){
-                Menor=Aux;
-                Aux=Aux.getSiguiente();
-            } else{
-                Aux=Aux.getSiguiente();
-            }
-        }
-        return Menor.getElemento();
     }
     
     //Funcion para imprimir puntos, debe borrarse
@@ -260,7 +255,10 @@ public class Recorrido {
         }
     }
     
-    //Funcion para generar matriz de puntos
+    /**
+     * Retorna Matriz de juego
+     * @return LinkedList de LinkedLists que corresponden a la implementación de matriz
+     */        
     public LinkedList<LinkedList> genMatriz(){
         LinkedList<LinkedList> Matriz = new LinkedList();
         int columnas = 0;
@@ -279,7 +277,12 @@ public class Recorrido {
         return Matriz;
     }
     
-    //Funcion que busca un punto en la matriz
+    /**
+     * Retorna el Nodo que contiene el punto que se busca
+     * @param X Columna a la que pertenece el punto
+     * @param Y Fila a la que pertenece el punto
+     * @return Nodo que contiene al punto
+     */    
     public Nodo<Punto> buscarPto(int X, int Y){
         int col = 0;
         Nodo<LinkedList> Columna = Matriz.getInicio();
@@ -296,7 +299,11 @@ public class Recorrido {
         return punto;
     }
   
-    //Funcion que busca si en la lista de perimetros, alguno contiene un punto específico
+    /**
+     * Retorna Perimetro que contiene el punto actual
+     * @param pto Punto que se busca dentro de algún perímetro
+     * @return Perimetro que contiene el punto buscado
+     */        
     public Perimetro pertenecePer(Punto pto){
         if(PerimetrosCerrados.getInicio()==null){
             return null;
@@ -317,10 +324,12 @@ public class Recorrido {
         }
     }
 
+    //GETTERS
     public LinkedList<Perimetro> getPerimetrosCerrados() {
         return PerimetrosCerrados;
     }
 
+    //SETTERS
     public void setPerimetrosCerrados(LinkedList<Perimetro> PerimetrosCerrados) {
         this.PerimetrosCerrados = PerimetrosCerrados;
     }

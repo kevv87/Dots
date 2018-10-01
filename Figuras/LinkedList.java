@@ -6,8 +6,8 @@
 package Figuras;
 
 /**
- *
- * @author 
+ *  Clase encargada de crear listas de datos genéricas
+ * @author Sebastián
  */
 public class LinkedList<T>{ //Lista para nodos genericos
     
@@ -15,12 +15,20 @@ public class LinkedList<T>{ //Lista para nodos genericos
     private Nodo<T> Ultimo;
     private int Tamanio;
     
+    /**
+     * Dummy Constructor
+     */
     public LinkedList(){    
         Inicio=null;
         Ultimo=null;
         Tamanio=0;
     }
     
+    /**
+     * Anade un elemento al inicio de la lista
+     * @param <T> Tipo de dato asignado
+     * @param dato Objeto del tipo de dato establecido
+     */
     public void anadirInicio(T dato){
         Nodo<T> nuevo = new Nodo<T>(dato);
         if(Inicio == null)
@@ -32,6 +40,11 @@ public class LinkedList<T>{ //Lista para nodos genericos
         Tamanio++;
     }
     
+    /**
+     * Anade un elemento al final de la lista
+     * @param <T> Tipo de dato asignado
+     * @param dato Objeto del tipo de dato establecido
+     */
     public void anadirFinal(T dato){
         Nodo<T> nuevo = new Nodo<T>(dato);
         if(Inicio==null){
@@ -46,7 +59,12 @@ public class LinkedList<T>{ //Lista para nodos genericos
         Ultimo=nuevo;
         Tamanio++;
     }
-             
+    /**
+     * Retorna true si un objeto pertenece a una lista
+     * @param <T> Tipo de dato asignado
+     * @param dato Objeto del tipo de dato establecido
+     * @return True si dato se encuentra en la lista
+     */             
     public boolean isIn(T dato){
         boolean dentro=false;
         if(Inicio==null){
@@ -65,7 +83,11 @@ public class LinkedList<T>{ //Lista para nodos genericos
         }
     }
 
-    
+    /**
+     * Elimina un dato de una lista
+     * @param <T> Tipo de dato asignado
+     * @param dato Objeto del tipo de dato establecido
+     */    
     public void eliminar(T dato){
         if(isIn(dato)){
             Nodo<T> aux = Inicio;
@@ -87,6 +109,12 @@ public class LinkedList<T>{ //Lista para nodos genericos
             Tamanio--;
         }
     }
+    
+    /**
+     * Suma los elementos de una lista a otra
+     * @param Lista1 Lista a la que le serán sumados los elementos
+     * @param Lista2 Lista cuyos elementos serán sumados
+     */    
     public void SumarListas(LinkedList Lista1, LinkedList Lista2){
         Nodo<Punto> Aux = Lista2.getInicio();
         while(Aux!=null){
@@ -100,6 +128,11 @@ public class LinkedList<T>{ //Lista para nodos genericos
         }
     }
     
+    /**
+     * Resta todos los elementos de una lista presente en otra
+     * @param Lista1 Lista a la que se le eliminarán los elementos
+     * @param Lista2 Lista cuyos elementos deben borrarse en Lista1
+     */    
     public void RestarListas(LinkedList Lista1, LinkedList Lista2){
         Nodo<Punto> Aux = Lista2.getInicio();
         while(Aux!=null){
@@ -108,6 +141,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
         }
     }
 
+    //GETTERS
     public Nodo<T> getInicio() {
         return Inicio;
     }
@@ -115,13 +149,14 @@ public class LinkedList<T>{ //Lista para nodos genericos
     public Nodo<T> getUltimo() {
         return Ultimo;
     }
-    
-    public void setInicio(Nodo<T> inicio) {
-        this.Inicio = inicio;
-    }
 
     public int getTamanio() {
         return Tamanio;
+    }
+    
+    //SETTERS
+    public void setInicio(Nodo<T> inicio) {
+        this.Inicio = inicio;
     }
 
     public void setUltimo(Nodo<T> Ultimo) {
@@ -130,8 +165,5 @@ public class LinkedList<T>{ //Lista para nodos genericos
     
     public void setTamanio(int tamanio) {
         this.Tamanio = tamanio;
-    }
-    
-    
-    
+    }    
 }
