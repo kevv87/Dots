@@ -30,7 +30,9 @@ public class Server{
   private static final ColaJugadores cola = new ColaJugadores();
   private static final ColaMensajes cola_mensajes_p1 = new ColaMensajes();
   private static final ColaMensajes cola_mensajes_p2 = new ColaMensajes();
-  private static final Recorrido recorrido = new Recorrido();
+  private static  Recorrido recorrido;
+  private static final LinkedList<Punto> puntos_bloqueados = new LinkedList<>();
+  
   
   
   public static void main(String[] args) throws Exception{
@@ -117,7 +119,6 @@ public class Server{
             send(new_player,"ENC");  // Le dice al jugador que esta en cola. !!!!!!!!!!!!!!!!
             System.out.println("Nuevo jugador en cola!");
             System.out.println("Tamanno de la cola: "+cola.getTamanio());
-
         }
       }finally{
           stop_socket();
@@ -137,19 +138,43 @@ public class Server{
     
     // Server loop
     while(true){
+        
         boolean found = false;
         // Esperando jugadores
         System.out.println("Esperando jugadores");
         while(!found){
             if(cola.getTamanio()>=2){
-                found = true;
+                player1 = cola.peek();
+                player1.getGame_out().println(mapper.writeValueAsString(new Mensaje("","RYR")));
+                if(player1.getGame_in().readLine()!=null){
+                        player1 = cola.dequeue();
+                        while(cola.getTamanio()>=1){
+                            player2 = cola.peek();
+                            player2.getGame_out().println(mapper.writeValueAsString(new Mensaje("", "RYR")));
+                            if(player2.getGame_in().readLine() != null){
+                                player2 = cola.dequeue();
+                                found = true;
+                                break;
+                            }else{
+                                cola.dequeue();
+                            }
+                        }
+                        if(!found){
+                            cola.enqueue(player1);
+                        }
+                }else{
+                    cola.dequeue();
+                }
             }else{
+                System.out.println("Tamanio"+cola.getTamanio());
                 Thread.sleep(1000);  //Delay
             }
         }
-
-        player1 = cola.dequeue();
-        player2 = cola.dequeue();
+        
+        recorrido = new Recorrido();
+        cola_mensajes_p1.eliminar();
+        cola_mensajes_p2.eliminar();
+        puntos_bloqueados.eliminar();
         
         player2.setNumber(2);
         player1.setNumber(1);
@@ -172,21 +197,29 @@ public class Server{
                         String jsonMessage = player1.getComandos_in().readLine();
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
+                        String tosend = "";
 
                         if(line == null){
                             break;
                         }else if("END".equals(line)){
-                            cola_mensajes_p2.enqueue(new Mensaje("END",""));
+                            Mensaje mensaje = new Mensaje("END", "");
+                            tosend = mapper.writeValueAsString(mensaje);
+                            cola_mensajes_p2.enqueue(mensaje);
+                            System.out.println("DEATH");
                             break;
                         }else if("GST".equals(line)){
+                            
                             if(cola_mensajes_p1.getTamanio() == 0){
                                 jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
-                                player1.getComandos_out().println(jsonMessage);
+                                tosend = jsonMessage;
+                                player1.getComandos_out().println(tosend);
+                                
                             }else{
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
-                                player1.getComandos_out().println(mensajeToJson);
+                                tosend = mensajeToJson;
+                                player1.getComandos_out().println(tosend);
                             }
                         }
                     }
@@ -205,9 +238,10 @@ public class Server{
                 try {
                     while(true){
 
-                        String jsonMessage = player2.getComandos_in().readLine();
+                        String jsonMessage = player2.getComandos_in().readLine(); 
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
+                        String tosend="";
 
                         if(line == null){
                             break;
@@ -216,15 +250,22 @@ public class Server{
                                 jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
-                                player2.getComandos_out().println(jsonMessage);
-
+                                tosend = jsonMessage;
+                                player2.getComandos_out().println(tosend);
+                                
                             }else{
+                                
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
-                                player2.getComandos_out().println(mensajeToJson);
+                                tosend = mensajeToJson;
+                                player2.getComandos_out().println(tosend);
                                 
                             }
                         }else if("END".equals(line)){
-                            cola_mensajes_p1.enqueue(new Mensaje("END",""));
+                            
+                            Mensaje msj = new Mensaje("END","");
+                            tosend = mapper.writeValueAsString(msj);
+                            cola_mensajes_p1.enqueue(msj);
+                            System.out.println("DEATH");
                             break;
                         }
                     }
@@ -261,14 +302,31 @@ public class Server{
               
               msj = listen(current);
               
-              if(msj==null || msj.equals("END")){
-                  if(current*-1 == 1){
+              if(msj==null){
+                  current_player.getGame_out().println(new Mensaje("","ISA"));
+                  String aux = current_player.getGame_in().readLine();
+                  if(aux == "YES"){
+                      continue;
+                  }else{
+                      break;
+                  }
+              }
+              
+              if(msj.equals("END")){
+                if(current*-1 == 1){
                   current_player = player1;
                 }else{
                   current_player = player2;
                 }
                 try{
                     send(current_player, "YW");
+                    System.out.println("Listening");
+                    listenp1.join();
+                    listenp2.join();
+                    cola_mensajes_p1.eliminar();
+                    cola_mensajes_p2.eliminar();
+                    player1 = null;
+                    player2 = null;
                     break;
                 }
                 catch (Exception ex){
@@ -279,12 +337,6 @@ public class Server{
               
               String id1 = msj.substring(0,2);
               String id2 = msj.substring(3);
-              
-              
-              if( !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
-                  stop_socket();
-                  break;
-              }
 
               try{
                   send(current_player,"NYT");
@@ -312,9 +364,42 @@ public class Server{
                  
                 String camino_puntos_json = mapper.writeValueAsString(camino_puntos);
                 
-                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(current),Integer.toString(camino_puntos.getTamanio()*2)));
+                int jugador_puntos;
+                
+                if(current == -1){
+                    jugador_puntos = 2;
+                }else{
+                    jugador_puntos = 1;
+                }
+                
+                int puntaje_obtenido = recorrido.calcularPuntaje(camino_puntos);
+                
+                
+                
+                
+                current_player.setPuntaje(current_player.getPuntaje()+puntaje_obtenido);
+                
+                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(jugador_puntos),Integer.toString(current_player.getPuntaje())));
                 
                 broadcast_queue("DWP", camino_puntos_json, puntaje_json);
+                LinkedList<Punto> nuevos_bloqueados = mapper.readValue(listen(current), Figuras.LinkedList.class);
+                puntos_bloqueados.SumarListas(puntos_bloqueados, nuevos_bloqueados);
+                
+                if(puntaje_obtenido+current_player.getPuntaje()>=99 || puntos_bloqueados.getTamanio() == 49){  //Condicion de partida ganada
+                    Player ganador;
+                    Player perdedor;
+                    if(current == 1){
+                        ganador = player1;
+                        perdedor = player2;
+                    }else{
+                        ganador = player2;
+                        perdedor = player1;
+                    }
+                    send(ganador, "YW");
+                    send(perdedor, "YL");
+                }
+                
+                
                 
               }
               
@@ -322,7 +407,8 @@ public class Server{
               
 
               current *= -1;  // Cambio de turno
-        }      
+        }
+          
     }
 
   }
@@ -370,12 +456,18 @@ public class Server{
      * @param accion Accion a ejecutar por el cliente acorde con el protocolo, debe estar en formato JSON.
    */
   public static void broadcast_queue(String protocolo, String accion){
+      if(protocolo == "END"){
+          System.out.println("HEY!");
+      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion));
       
   }
   
   public static void broadcast_queue(String protocolo, String accion, String puntaje){
+      if(protocolo == "END"){
+          System.out.println("HEY!");
+      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion, puntaje));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion, puntaje));
       

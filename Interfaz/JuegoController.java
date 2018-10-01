@@ -9,12 +9,17 @@ import Conectividad.Client;
 import Figuras.LinkedList;
 import Matriz.ListaSimple;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 import javafx.scene.paint.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,6 +51,7 @@ public class JuegoController {
     private Label foeName;
     @FXML
     private ImageView foeImage;
+    private Stage myStage;
     
     
     private Group lineGroup = new Group();  //Grupo de lineas para representar 
@@ -79,7 +85,7 @@ public class JuegoController {
         
         
         for(Punto punto:puntos){  // Para cada punto en los puntos de la pantalla
-            if(punto.contiene(x,y)){  try {
+            if(punto.contiene(x,y) /**&& !punto.isBloqueado()*/){  try {
                 Boolean valido = false;  // Guarda si el nuevo punto es valido de conectar con el actual
                 // si el punto contiene a la coordenada donde se clickea
                 if(puntos_a_enviar.getTamanio() == 1){  // Si ya se tiene un punto preparado para enviar, entonces...
@@ -381,9 +387,11 @@ public class JuegoController {
     /**
      * Hace un nuevo poligono a partir de los puntos en la lista de ids que se le pasa
      * @param ids Lista de ids de los puntos que forman el poligono, acomodados en sentido horario o antihorario 
+     * @return  Lista de puntos dentro del perimetro
      * @throws java.lang.Exception 
      */
-    public void addPolygon(ListaSimple ids) throws Exception{
+    public LinkedList<Punto> addPolygon(ListaSimple ids) throws Exception{
+        LinkedList<Punto> puntos_dentro = new LinkedList<>();
         Platform.runLater(() -> {
             Polygon new_polygon = new Polygon();
         ids.listar();
@@ -404,8 +412,16 @@ public class JuegoController {
             new_polygon.setStroke(Color.BLACK);
             areas.getChildren().add(new_polygon);
             System.out.println(areas.getChildren().get(0));
-//            gamePane.getChildren().add(areas);
+            
+            for(Punto punto:puntos){  //Verifica los puntos que estan dentro del Poligono
+                if(new_polygon.contains(punto.getX(), punto.getY())){
+                    puntos_dentro.anadirInicio(punto);
+                    punto.setBloqueado(true);  //Bloquea los puntos que va agregando
+                }
+            }
         });
+        
+        return puntos_dentro;
         
         
         
@@ -416,6 +432,49 @@ public class JuegoController {
     }
     public int getFoePoints(){
         return Integer.parseInt(foePoints.getText());
+    }
+    
+    public void openWin(){
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("Win.fxml"));
+            Parent menuParent;
+            try {
+                menuParent = loader.load();
+                Scene menuScene = new Scene(menuParent);
+                //This line gets the Stage information
+                Stage window = this.myStage;
+
+                window.setScene(menuScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+    
+    public void openLose(){
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("Lose.fxml"));
+            Parent menuParent;
+            try {
+                menuParent = loader.load();
+                Scene menuScene = new Scene(menuParent);
+                //This line gets the Stage information
+                Stage window = this.myStage;
+
+                window.setScene(menuScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+   
+    
+    public void setStage(Stage stage){
+        this.myStage = stage;
     }
     
     

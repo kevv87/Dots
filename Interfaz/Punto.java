@@ -15,6 +15,7 @@ public class Punto{
     private final Double y;
     private final int radio = 5;
     private final int id;
+    private boolean bloqueado = false;
     
     /**
      * Constructor
@@ -66,7 +67,15 @@ public class Punto{
     public Double getY() {
         return y;
     }
+
+    public boolean isBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.bloqueado = bloqueado;
+    }
     
-    
+        
     
 }

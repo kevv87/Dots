@@ -166,6 +166,8 @@ public class ServerController {
         ((JuegoController)loader.getController()).setMyPoints(0);
         ((JuegoController)loader.getController()).setFoePoints(0);
         ((JuegoController)loader.getController()).setFoeName("Esperando\n Jugador");
+        ((JuegoController)loader.getController()).setStage(window);
+        
       
         Thread juego = new Thread(){
             public void run(){

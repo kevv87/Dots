@@ -59,5 +59,10 @@ public class ColaMensajes {
         return tamanio;
     }
     
+    public void eliminar(){
+        first = null;
+        tamanio = 0;
+    }
+    
     
 }

@@ -29,6 +29,8 @@ public class Player{
   
   private int number;
   
+  private int puntaje;
+  
     /**
      * Constructor
      * @param socket1 Socket del juego, discreto
@@ -134,6 +136,16 @@ public class Player{
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public int getPuntaje() {
+        return puntaje;
+    }
+
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
+    }
+    
+    
     
     
     

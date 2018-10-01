@@ -24,13 +24,12 @@ public class Main_Stage extends Application{
             e.consume();
             closeRequest();
         });
-        window.setScene(new Scene(root, 500,400));
+        window.setScene(new Scene(root, 329,275));
         window.show();
     }
 
 
     public void closeRequest(){
-
         boolean booli = AlertWindow.display();
         if (booli == true){
             window.close();
