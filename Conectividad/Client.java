@@ -296,6 +296,7 @@ public class Client{
                 jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
              
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
+                
                 protocolo = jsonToClass.getProtocolo();  //Lee un mensaje entrante
                 accion = jsonToClass.getAccion();
                 if(jsonToClass.getPuntaje() != null){
