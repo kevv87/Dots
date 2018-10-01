@@ -202,7 +202,7 @@ public class Server{
                 try {
                     while(true){
 
-                        String jsonMessage = player2.getComandos_in().readLine();
+                        String jsonMessage = player2.getComandos_in().readLine(); 
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
 
@@ -258,14 +258,29 @@ public class Server{
               
               msj = listen(current);
               
-              if(msj==null || msj.equals("END")){
-                  if(current*-1 == 1){
+              if(msj==null){
+                  current_player.getGame_out().println(new Mensaje("","ISA"));
+                  String aux = current_player.getGame_in().readLine();
+                  if(aux == "YES"){
+                      continue;
+                  }else{
+                      break;
+                  }
+              }
+              
+              if(msj.equals("END")){
+                if(current*-1 == 1){
                   current_player = player1;
                 }else{
                   current_player = player2;
                 }
                 try{
                     send(current_player, "YW");
+                    System.out.println("Listening");
+                    listenp1.join();
+                    listenp2.join();
+                    player1 = null;
+                    player2 = null;
                     break;
                 }
                 catch (Exception ex){
@@ -276,12 +291,6 @@ public class Server{
               
               String id1 = msj.substring(0,2);
               String id2 = msj.substring(3);
-              
-              
-              if( !listenp1.isAlive() || !listenp2.isAlive()){  //Alguno de los dos jugadores salio del juego, cierra el socket.
-                  stop_socket();
-                  break;
-              }
 
               try{
                   send(current_player,"NYT");

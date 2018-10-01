@@ -35,7 +35,11 @@ public class ColaJugadores {
         if(first == null){
             first = jugador;
         }else{
-            first.setSiguiente(jugador);
+            Player aux = first;
+            while(aux.getSiguiente() != null){
+                aux = aux.getSiguiente();
+            }
+            aux.setSiguiente(jugador);
         }
         tamanio++;
     }
