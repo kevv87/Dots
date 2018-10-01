@@ -1,6 +1,7 @@
 package Conectividad;
 
 import Clases.Player;
+import Figuras.LinkedList;
 import Interfaz.JuegoController;
 
 import gnu.io.CommPortIdentifier;
@@ -21,8 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import gnu.io.PortInUseException;
 import gnu.io.UnsupportedCommOperationException;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import java.util.Scanner;
 
 
 /**
@@ -59,7 +63,8 @@ public class Client{
     // Variables necesarias para la conexion con arduino
     private OutputStream output=null;
     private gnu.io.SerialPort serialPort;
-    private final String PUERTO= "/dev/ttyUSB0";
+    private final String PUERTO1= "/dev/ttyACM0";
+    private final String PUERTO2= "/dev/ttyUSB0";
     private static final  int TIMEOUT=2000; //Milisegundos
     private static final int DATA_RATE = 9600;
     
@@ -74,26 +79,37 @@ public class Client{
         
         while(puertoEnum.hasMoreElements()){  // Mientras existan puertos
             CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
-            if(PUERTO.equals(actualPuertoID.getName())){
+            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName())){
                 puertoID=actualPuertoID;
                 break;
             }
         }
         
-        if(puertoID == null){
-            System.exit(ERROR);
-            return;
-        }
-        
         try{
             serialPort = (gnu.io.SerialPort) puertoID.open(this.getClass().getName(), TIMEOUT);
             // Parametros puerto serie
-            
             serialPort.setSerialPortParams(DATA_RATE, gnu.io.SerialPort.DATABITS_8, gnu.io.SerialPort.STOPBITS_1, gnu.io.SerialPort.PARITY_NONE);
             output = serialPort.getOutputStream();
         }catch(PortInUseException | UnsupportedCommOperationException | IOException e){
             System.exit(ERROR);
         }
+        Thread lmao = new Thread(){
+            @Override
+            public void run(){
+                // create a scanner so we can read the command-line input
+                Scanner scanner = new Scanner(System.in);
+
+                //  prompt for the user's name
+                while(true){
+                    System.out.print("Enter comando: ");
+
+                    // get their input as a String
+                    String username = scanner.next();
+                    enviarDatosArduino(username);
+                }
+            }
+        };
+        lmao.start();
     }
     
     /**
@@ -136,13 +152,12 @@ public class Client{
         // Corre los hilos
         juego.start();
         
-        // Arduino
-        /*
+        // Arduino        
         try{
-            inicializarConexion();
+            inicializarConexionArduino();
         }catch(Exception e){
             System.out.println("Error con arduino");
-        }*/
+        }
     }
     
     
@@ -189,8 +204,18 @@ public class Client{
           if(line == null){  // Maneja los mensajes nulos
           }else if(line.startsWith("MSG")){  //Imprima en consola
           }else if(line.startsWith("YT")){  // Es su turno
-            interfaz.setActivo(true);
+              try{
+              enviarDatosArduino("oo");
+              }catch (Exception e){
+                  ;
+              }
+              interfaz.setActivo(true);
           }else if(line.startsWith("NYT")){  //No es su turno
+              try{
+              enviarDatosArduino("ff");
+              }catch (Exception e){
+                  ;
+              }
               interfaz.setActivo(false);
           }else if(line.startsWith("ENC")){  // En cola
               System.out.println("Estoy en cola");
@@ -200,6 +225,16 @@ public class Client{
               // Pone el nombre y la imagen del oponente en la interfaz
               interfaz.setFoeName(oponente.getName());
               interfaz.setFoeImage(oponente.getImage_url());
+              
+              int numero_oponente = oponente.getNumber();
+              if(numero_oponente == 1){
+                  myPlayer.setNumber(2);
+              }else{
+                  myPlayer.setNumber(1);
+              }
+              
+              System.out.println(myPlayer.getNumber());
+              
               System.out.println("Inicia juego");
               Thread comandos = new Thread(){  // Creando el hilo continuo
                   @Override
@@ -234,10 +269,12 @@ public class Client{
     @SuppressWarnings("empty-statement")
     public void run_comando() throws IOException, Exception{
       
-        String line = null;
+        String protocolo = null;
+        Mensaje puntaje = null;
 
         long n_segundos = 10; // Intervalo entre cada refresh
         String jsonMessage = null;
+        
         Mensaje jsonToClass = new Mensaje();
 
         // Loop principal del socket continuo
@@ -245,30 +282,33 @@ public class Client{
             jsonToClass.setAccion("GST"); // Get estado al server
             jsonMessage = mapper.writeValueAsString(jsonToClass);
             out_comandos.println(jsonMessage);
+            String accion = mapper.writeValueAsString(new Mensaje("",""));
             try{
                
                 jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
              
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
-                line = jsonToClass.getAccion();  //Lee un mensaje entrante
-
+                protocolo = jsonToClass.getProtocolo();  //Lee un mensaje entrante
+                accion = jsonToClass.getAccion();
+                if(jsonToClass.getPuntaje() != null){
+                    puntaje = mapper.readValue(jsonToClass.getPuntaje(), Mensaje.class);
+                }
               } catch(IOException e){
-                  line = null;
+                  protocolo = null;
               }
-            if(line==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
+            if(protocolo==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
                 close();
                 break;
-            }else if("END".equals(line)){  // Si la respuesta es END, termina el juego y cierra sockets
+            }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
                 close();
 
-            }else if("DWL".equals(line)){
-                line = in_comandos.readLine();
+            }else if("DWL".equals(protocolo)){
+                
+                MensajeLinea linea= mapper.readValue(accion, MensajeLinea.class);
 
-                Mensaje linea= mapper.readValue(line, Mensaje.class);
-
-                int id1 = linea.getSegmento().getId1();
-                int id2 = linea.getSegmento().getId2();
-                String colorm = linea.getSegmento().getColor();
+                int id1 = linea.getId1();
+                int id2 = linea.getId2();
+                String colorm = linea.getColor();
                 Color color;
                 if("red".equals(colorm)){
                     color = Color.RED;
@@ -276,9 +316,34 @@ public class Client{
                     color = Color.BLUE;
                 }
                 interfaz.addLine(id1, id2, color);
-            }else if(line.equals("DWP")){
-                ;
-            }else if("0".equals(line)){  // Si la respuesta es 0, es el estado normal, no dibuja nada.
+            }else if(protocolo.equals("DWP")){
+                LinkedList<LinkedHashMap> lista_puntos = mapper.readValue(accion, Figuras.LinkedList.class);
+                ListaSimple lista_ids = new ListaSimple();
+                Figuras.Nodo<LinkedHashMap> aux = lista_puntos.getInicio();
+                
+                int jugador_del_puntaje = Integer.parseInt(puntaje.getProtocolo());
+                int puntos_agregados = Integer.parseInt(puntaje.getAccion());
+                
+                if(jugador_del_puntaje == myPlayer.getNumber()){
+                    interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
+                    enviarDatosArduino(Integer.toString(interfaz.getMyPoints()+puntos_agregados));
+                }else{
+                    interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
+                }
+                
+                while(aux!=null){
+                    int posX = (int)aux.getElemento().get("posX");
+                    int posY = (int)aux.getElemento().get("posY");
+             
+                    int id1 = Integer.parseInt(Integer.toString((posX+posY*10)),8);
+                    
+                    lista_ids.agregarAlInicio(id1);
+                    aux = aux.getSiguiente();
+                }
+                interfaz.addPolygon(lista_ids);
+                
+                
+            }else if("NNT".equals(protocolo)){  // Si la respuesta es No New Things, es el estado normal, no dibuja nada.
                 ;
             }
             
@@ -302,7 +367,7 @@ public class Client{
      */
     public static void send_comando(String msg) throws Exception{  // Es estatico porque ocupo poder mandar lugares desde cualquier lugar del codigo
 
-        Mensaje jsonToClass = new Mensaje(msg);
+        Mensaje jsonToClass = new Mensaje("",msg);
         String jsonMessage = mapper2.writeValueAsString(jsonToClass);
         out_comandos.println(jsonMessage);
     }

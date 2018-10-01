@@ -163,8 +163,8 @@ public class ServerController {
         ((JuegoController)loader.getController()).setUserDataList(lista);
         ((JuegoController)loader.getController()).createMyImage();
         ((JuegoController)loader.getController()).setMyName((String)lista.getValor(1));
-        ((JuegoController)loader.getController()).setMyPoints("0");
-        ((JuegoController)loader.getController()).setFoePoints("0");
+        ((JuegoController)loader.getController()).setMyPoints(0);
+        ((JuegoController)loader.getController()).setFoePoints(0);
         ((JuegoController)loader.getController()).setFoeName("Esperando\n Jugador");
       
         Thread juego = new Thread(){

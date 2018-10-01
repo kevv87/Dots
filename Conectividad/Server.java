@@ -6,6 +6,7 @@
 package Conectividad;
 import Clases.ColaJugadores;
 import Clases.Player;
+import Figuras.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Interfaz.Punto;
@@ -146,7 +147,9 @@ public class Server{
 
         player1 = cola.dequeue();
         player2 = cola.dequeue();
-
+        
+        player2.setNumber(2);
+        player1.setNumber(1);
 
         broadcast("NEC");
 
@@ -170,17 +173,16 @@ public class Server{
                         if(line == null){
                             break;
                         }else if("END".equals(line)){
-                            cola_mensajes_p2.enqueue(new Mensaje("END"));
+                            cola_mensajes_p2.enqueue(new Mensaje("END",""));
                             break;
                         }else if("GST".equals(line)){
                             if(cola_mensajes_p1.getTamanio() == 0){
+                                jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
                                 player1.getComandos_out().println(jsonMessage);
                             }else{
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
-                                player1.getComandos_out().println(mensajeToJson);
-                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
                                 player1.getComandos_out().println(mensajeToJson);
                             }
                         }
@@ -208,21 +210,18 @@ public class Server{
                             break;
                         }else if("GST".equals(line)){  // Get State
                             if(cola_mensajes_p2.getTamanio() == 0){
+                                jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
                                 player2.getComandos_out().println(jsonMessage);
 
                             }else{
-
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
                                 player2.getComandos_out().println(mensajeToJson);
-                                mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
-                                player2.getComandos_out().println(mensajeToJson);
-
-
+                                
                             }
                         }else if("END".equals(line)){
-                            cola_mensajes_p1.enqueue(new Mensaje("END"));
+                            cola_mensajes_p1.enqueue(new Mensaje("END",""));
                             break;
                         }
                     }
@@ -296,17 +295,28 @@ public class Server{
               System.out.println("Punto 1:"+id1);
               System.out.println("Punto 2:"+id2);
 
-              recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
-              System.out.println("Outing");
+              Figuras.LinkedList<Figuras.Punto> camino_puntos = recorrido.Entrada(Integer.parseInt(id1), Integer.parseInt(id2));
               
-              int id_tosend1 = (Integer.parseInt(id1,8));
-              int id_tosend2 = (Integer.parseInt(id2,8));
+              int id_tosend1 = (Integer.parseInt(id1,8));  // Convierte a base 10
+              int id_tosend2 = (Integer.parseInt(id2,8));  // Convierte a base 10
 
               MensajeLinea mensaje_linea = new MensajeLinea(color, id_tosend1, id_tosend2);
-
+              String mensaje_lineaJson = mapper.writeValueAsString(mensaje_linea);
               
-              broadcast_queue("DWL");
-              broadcast_queue("",mensaje_linea);
+              broadcast_queue("DWL", mensaje_lineaJson);
+             
+              if(camino_puntos!=null){
+                 
+                String camino_puntos_json = mapper.writeValueAsString(camino_puntos);
+                
+                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(current),Integer.toString(camino_puntos.getTamanio()*2)));
+                
+                broadcast_queue("DWP", camino_puntos_json, puntaje_json);
+                
+              }
+              
+              System.out.println("No me maten");
+              
 
               current *= -1;  // Cambio de turno
         }      
@@ -353,26 +363,21 @@ public class Server{
   
   /**
    * Agrega un mensaje a la cola de mensajes de cada jugador
-     * @param msg A ingresar en cola
+     * @param protocolo Protocolo a utilizar para el mensaje
+     * @param accion Accion a ejecutar por el cliente acorde con el protocolo, debe estar en formato JSON.
    */
-  public static void broadcast_queue(String msg){
-      cola_mensajes_p1.enqueue(new Mensaje(msg));
-      cola_mensajes_p2.enqueue(new Mensaje(msg));
+  public static void broadcast_queue(String protocolo, String accion){
+      cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion));
+      cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion));
+      
+  }
+  
+  public static void broadcast_queue(String protocolo, String accion, String puntaje){
+      cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion, puntaje));
+      cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion, puntaje));
       
   }
 
-    /**
-     * Agrega un mensaje linea a la cola de mensajes de cada jugador
-     * @param msg A ingresar en cola
-     */
-    public static void broadcast_queue(String msg, MensajeLinea linea) throws Exception{
-        ObjectMapper mapper = new ObjectMapper();
-        Mensaje lineToSend = new Mensaje(msg, linea);
-
-        cola_mensajes_p1.enqueue(lineToSend);
-        cola_mensajes_p2.enqueue(lineToSend);
-
-    }
   
   /**
    * Se detiene a escuchar un cierto socket hasta recibir una respuesta

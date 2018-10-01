@@ -6,6 +6,7 @@
 package Interfaz;
 
 import Conectividad.Client;
+import Figuras.LinkedList;
 import Matriz.ListaSimple;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.scene.paint.Color;
@@ -264,6 +265,7 @@ public class JuegoController {
      */
     public void initialize() throws Exception{
          //Dibujando circulos
+        Platform.setImplicitExit(false);
         double x = 20;
         double y = 20;
         int radio = 5;
@@ -291,7 +293,8 @@ public class JuegoController {
         addtoPane(circles);
         addtoPane(lineGroup);
         addtoPane(areas);
-        setFoePoints("0");
+
+        setFoePoints(0);
         
     }
     
@@ -341,16 +344,16 @@ public class JuegoController {
         my_name.setText(text);
     }
     
-    public void setMyPoints(String points){
+    public void setMyPoints(int points){
         Platform.runLater(() -> {
-            my_points.setText(points);
+            my_points.setText(Integer.toString(points));
         });
         
     }
     
-    public void setFoePoints(String points){
+    public void setFoePoints(int points){
         Platform.runLater(() -> {
-            foePoints.setText(points);
+            foePoints.setText(Integer.toString(points));
         });
         
     }
@@ -380,35 +383,39 @@ public class JuegoController {
      * @param ids Lista de ids de los puntos que forman el poligono, acomodados en sentido horario o antihorario 
      * @throws java.lang.Exception 
      */
-    public void addPolygon() throws Exception{
-        
+    public void addPolygon(ListaSimple ids) throws Exception{
         Platform.runLater(() -> {
             Polygon new_polygon = new Polygon();
-            /*
-            while(ids.getTamanio() != 0){
-                Punto punto;
-                try {
-                    punto = puntos[(int)ids.getValor(0)];
-                    new_polygon.getPoints().addAll(punto.getX(), punto.getY());
-                    ids.removerPorPosicion(0);
-                } catch (Exception ex) {
-                    Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+        ids.listar();
+        while(ids.getTamanio() != 0){
+                    Punto punto;
+                    try {
+                        punto = puntos[(int)ids.getValor(0)];
+                        
+                        new_polygon.getPoints().addAll(punto.getX(), punto.getY());
+                        ids.removerPorPosicion(0);
+                    } catch (Exception ex) {
+                        Logger.getLogger(JuegoController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            }
-            */
-            new_polygon.getPoints().addAll(puntos[16].getX(), puntos[16].getY());
-            new_polygon.getPoints().addAll(puntos[17].getX(), puntos[17].getY());
-            new_polygon.getPoints().addAll(puntos[8].getX(), puntos[8].getY());
-            
-            new_polygon.getPoints().addAll(puntos[0].getX(), puntos[0].getY());
-            new_polygon.getPoints().addAll(puntos[9].getX(), puntos[9].getY());
+        
+            System.out.println("Drawing");
             new_polygon.setFill(Color.BLACK);
+            new_polygon.setStroke(Color.BLACK);
             areas.getChildren().add(new_polygon);
-        
-        
+            System.out.println(areas.getChildren().get(0));
+//            gamePane.getChildren().add(areas);
         });
         
         
+        
+    }
+    
+    public int getMyPoints(){
+        return Integer.parseInt(my_points.getText());
+    }
+    public int getFoePoints(){
+        return Integer.parseInt(foePoints.getText());
     }
     
     
