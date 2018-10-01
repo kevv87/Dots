@@ -34,6 +34,9 @@ public class Server{
   
   
   public static void main(String[] args) throws Exception{
+      System.out.println("ss");
+      String libPathProperty = System.getProperty("java.library.path");
+      System.out.println(libPathProperty);
     System.out.println("The server is running");
     listener = new ServerSocket(PORT);  //Escuchando el socket
     new Handler("juego").start();

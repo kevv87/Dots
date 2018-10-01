@@ -5,6 +5,8 @@
  */
 package Figuras;
 
+import com.sun.jdi.connect.spi.TransportService;
+
 /**
  *
  * @author Sebastián
@@ -22,13 +24,13 @@ public class Recorrido {
         inFigCerrada=false;
     }
     //Funcion que retorna la lista de puntos para cerrar el camino
-    public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual){  //Punto de origen, punto anterior, punto actual
+    public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual, Punto Referencia){  //Punto de origen, punto anterior, punto actual
         LinkedList<Punto> Camino = new LinkedList();
         Nodo<Punto> Marcador = new Nodo();
         Camino.anadirFinal(Origen);
         Marcador.setElemento(Actual);
         boolean Continuar=true;
-
+        inFigCerrada = false;
         LinkedList<Punto> Posibilidades= new LinkedList<>();
         Posibilidades.SumarListas(Posibilidades, Marcador.getElemento().getReferencias());    //Lista de posibles bifurcaciones al camino en el punto en el que estoy
         Posibilidades.eliminar(Anterior);   //Elimina el punto del que viene en caso de usar recursividad
@@ -37,7 +39,7 @@ public class Recorrido {
         while(Continuar){
             //      _________________________________________________
             //_____/Primer condicion de finalizacion, cerro la figura
-            if(Marcador.getElemento()==Origen){ //Cambiar por origen
+            if(Marcador.getElemento()==Referencia){ //Cambiar por origen
                 Perimetro nuevo = new Perimetro(Camino);
                 nuevo.getPuntos().setInicio(Camino.getInicio());
                 nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
@@ -52,7 +54,7 @@ public class Recorrido {
             //_____/Tercer condicion, debe recorrer
             } else{
                 // A) Si solo existe una posibilidad, continue avanzando
-                while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Origen){
+                while(Posibilidades.getTamanio()==1 && Marcador.getElemento()!=Referencia){
                     Camino.anadirFinal(Marcador.getElemento());
                     Anterior = Marcador.getElemento();
                     Marcador.setElemento(Posibilidades.getInicio().getElemento());
@@ -62,7 +64,7 @@ public class Recorrido {
                     Posibilidades.eliminar(Anterior);
                 }
                 // B) Si hay mas de una posibilidad, evalue los casos
-                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Origen){
+                while(Posibilidades.getTamanio()>1 && Marcador.getElemento()!=Referencia){
                     Perimetro PerActual = pertenecePer(Marcador.getElemento());
                     if(Camino.isIn(Marcador.getElemento())==false){
                         Camino.anadirFinal(Marcador.getElemento());
@@ -70,8 +72,10 @@ public class Recorrido {
                     // B.1) Si se topa con una figura cerrada
                     if(PerActual!=null && inFigCerrada == false){
                         // B.1.1) Si el perimetro contiene al origen
-                        if(PerActual.getPuntos().isIn(Origen)==true){
-                            Perimetro nuevo = new Perimetro(Camino);
+                        if(PerActual.getPuntos().isIn(Referencia)==true){ ///////revisar camino
+                            LinkedList<Punto> caminoPer = new LinkedList<>();
+                            caminoPer.SumarListas(caminoPer,Camino);
+                            Perimetro nuevo = new Perimetro(caminoPer);
                             nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
                             PerimetrosCerrados.anadirFinal(nuevo);
                             Posibilidades.setTamanio(0);
@@ -92,7 +96,7 @@ public class Recorrido {
                         while(Posibilidades.getTamanio() > 0 && Seguir == true){
                             Nodo<Punto> Marcador1 = Posibilidades.getInicio();
                             System.out.println("Posibilidad 1");
-                            LinkedList X = BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
+                            LinkedList X = BuscaCaminos(Marcador.getElemento(), Marcador.getElemento(), Marcador1.getElemento(), Referencia);
                             if(X!=null){
                                 Seguir=false;
                                 Camino.SumarListas(Camino, X);
@@ -107,11 +111,11 @@ public class Recorrido {
                         if(inFigCerrada){
                             //PRIMER CASO (para elimiar caso en el que pueda retornarse por el segmento que conecta la figura cerrada con el segmento adjunto
                             boolean Seguir = true;
-                            Nodo<Punto> Pos = new Nodo(Posibilidades.getInicio().getElemento());  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
+                            Nodo<Punto> Pos = new Nodo(Marcador.getElemento());  //Busca el primer vertice de la lista Perimetro
                              //!!!verificar distintos
                             Posibilidades.anadirInicio(Anterior); //Para eliminar conexion con segmento adjunto
                             LinkedList<Punto> Conexiones = new LinkedList<>();
-                            Conexiones.SumarListas(Conexiones,Pos.getElemento().getReferencias());
+                            Conexiones.SumarListas(Conexiones, Pos.getElemento().getReferencias());
                             Conexiones.RestarListas(Conexiones, Posibilidades);     //Para continuar, se deben eliminar las conexiones dentro del perímetro hecho
                             Posibilidades.eliminar(Anterior);//Vuelve al valor original de posibilidades
 
@@ -124,7 +128,7 @@ public class Recorrido {
                             else{
                                 Nodo<Punto> Marcador1 = Conexiones.getInicio();
                                 System.out.println("Posibilidad 2");                                
-                                LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
+                                LinkedList X = BuscaCaminos(Marcador.getElemento(), Marcador.getElemento(), Marcador1.getElemento(), Referencia);
                                 if(X!=null){
                                     Seguir=false;
                                     Camino.SumarListas(Camino, X);
@@ -148,28 +152,30 @@ public class Recorrido {
                                     
                                     Nodo<Punto> Marcador1 = Conexiones.getInicio();
                                     System.out.println("Posibilidad 3");
-                                    System.out.println("Pos es " + Pos.getElemento().getPosX()+Pos.getElemento().getPosY());
+                                    System.out.println("Pos es " + Pos.getElemento().getPosX()*10+Pos.getElemento().getPosY());
                                     System.out.println("Marcador 1 es " + Marcador1.getElemento().getPosX()*10 +Marcador1.getElemento().getPosY());
-                                    LinkedList X = BuscaCaminos(Origen, null, Marcador1.getElemento());
+                                    LinkedList X = BuscaCaminos(Pos.getElemento(), Pos.getElemento(), Marcador1.getElemento(), Referencia);
                                     if(X!=null){
+
                                         Seguir=false;
-                                        Camino.SumarListas(Camino, X);
-                                    return Camino;
+
+                                        LinkedList<Punto> caminoPer = new LinkedList<>();
+
+                                        Camino.SumarListas(Camino,X);
+
+                                        caminoPer.SumarListas(caminoPer,Camino);
+                                        Perimetro nuevo = new Perimetro(caminoPer);
+
+                                        nuevo.UnirPerimetros(PerimetrosCerrados, nuevo);
+                                        PerimetrosCerrados.anadirFinal(nuevo);
+                                        Posibilidades.setTamanio(0);
+
+                                        return Camino;
 
                                     } else{
                                         Conexiones.eliminar(Marcador1.getElemento());
                                     }
                                 }
-                            }
-                        } else{
-                            Nodo<Punto> Marcador1 = new Nodo(BuscarMenorD(Origen, Posibilidades));  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
-                            System.out.println("Posibilidad 4");
-                            LinkedList X=BuscaCaminos(Origen, Marcador.getElemento(), Marcador1.getElemento());
-                            if(X!=null){    //Aplica recursividad para recorrer los subcaminos
-                                Camino.SumarListas(Camino, X);    //Funcion sumar listas
-                                Continuar=false;
-                            } else{
-                                Posibilidades.eliminar(Marcador1.getElemento());
                             }
                         }
                     }    
@@ -190,10 +196,10 @@ public class Recorrido {
         ((Punto)nodoA.getElemento()).addReferencia(PuntoB);
         ((Punto)nodoB.getElemento()).addReferencia(PuntoA);
         
-        LinkedList<Punto> Camino = BuscaCaminos(PuntoA, PuntoA, PuntoB);
+        LinkedList<Punto> Camino = BuscaCaminos(PuntoA, PuntoA, PuntoB, PuntoA);
         if(Camino!=null){
             System.out.println("YUJU!");
-            ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB));
+            ImpresionLista(BuscaCaminos(PuntoA, PuntoA, PuntoB, PuntoA));
             return Camino;
         } else{
             System.out.println("No se cerró");
