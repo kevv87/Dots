@@ -3,6 +3,7 @@ package Conectividad;
 import Clases.Player;
 import Figuras.LinkedList;
 import Interfaz.JuegoController;
+import Interfaz.Punto;
 
 import gnu.io.CommPortIdentifier;
 import Matriz.ListaSimple;
@@ -50,7 +51,7 @@ public class Client{
     private static ObjectMapper mapper2 = new ObjectMapper(); //para métodos estáticos
     private static boolean alive=true;
     private static ListaSimple puntos_a_enviar = new ListaSimple();
-
+    private LinkedList<Interfaz.Punto> puntos_bloqueados = new LinkedList<>();
     
 
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -372,21 +373,7 @@ public class Client{
                 ListaSimple lista_ids = new ListaSimple();
                 Figuras.Nodo<LinkedHashMap> aux = lista_puntos.getInicio();
                 
-                int jugador_del_puntaje = Integer.parseInt(puntaje.getProtocolo());
-                int puntos_agregados = Integer.parseInt(puntaje.getAccion());
                 
-                if(jugador_del_puntaje == myPlayer.getNumber()){
-                    interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
-                    try{
-                        enviarDatosArduino(Integer.toString(interfaz.getMyPoints())+puntos_agregados);
-                    }catch(Exception e){
-                        ;
-                    }
-                }else{
-                    System.out.println("Yo:"+myPlayer.getNumber());
-                    System.out.println("Los puntos a"+jugador_del_puntaje);
-                    interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
-                }
                 
                 while(aux!=null){
                     int posX = (int)aux.getElemento().get("posX");
@@ -397,7 +384,30 @@ public class Client{
                     lista_ids.agregarAlInicio(id1);
                     aux = aux.getSiguiente();
                 }
-                interfaz.addPolygon(lista_ids);
+                
+                LinkedList<Interfaz.Punto> nuevos_bloqueados = interfaz.addPolygon(lista_ids);
+                puntos_bloqueados.SumarListas(puntos_bloqueados, nuevos_bloqueados);
+                
+                
+                
+                
+                int jugador_del_puntaje = Integer.parseInt(puntaje.getProtocolo());
+                int puntos_agregados = Integer.parseInt(puntaje.getAccion());
+                
+                if(jugador_del_puntaje == myPlayer.getNumber()){
+                    interfaz.setMyPoints(puntos_agregados);
+                    try{
+                        enviarDatosArduino(Integer.toString(puntos_agregados));
+                    }catch(Exception e){
+                        ;
+                    }
+                    String nuevos_bloqueados_json = mapper.writeValueAsString(nuevos_bloqueados);
+                    send_game(nuevos_bloqueados_json);
+                }else{
+                    interfaz.setFoePoints(puntos_agregados);
+                }
+                
+                
                 
                 
             }else if("NNT".equals(protocolo)){  // Si la respuesta es No New Things, es el estado normal, no dibuja nada.

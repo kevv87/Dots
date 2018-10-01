@@ -79,7 +79,7 @@ public class JuegoController {
         
         
         for(Punto punto:puntos){  // Para cada punto en los puntos de la pantalla
-            if(punto.contiene(x,y)){  try {
+            if(punto.contiene(x,y) && !punto.isBloqueado()){  try {
                 Boolean valido = false;  // Guarda si el nuevo punto es valido de conectar con el actual
                 // si el punto contiene a la coordenada donde se clickea
                 if(puntos_a_enviar.getTamanio() == 1){  // Si ya se tiene un punto preparado para enviar, entonces...
@@ -381,9 +381,11 @@ public class JuegoController {
     /**
      * Hace un nuevo poligono a partir de los puntos en la lista de ids que se le pasa
      * @param ids Lista de ids de los puntos que forman el poligono, acomodados en sentido horario o antihorario 
+     * @return  Lista de puntos dentro del perimetro
      * @throws java.lang.Exception 
      */
-    public void addPolygon(ListaSimple ids) throws Exception{
+    public LinkedList<Punto> addPolygon(ListaSimple ids) throws Exception{
+        LinkedList<Punto> puntos_dentro = new LinkedList<>();
         Platform.runLater(() -> {
             Polygon new_polygon = new Polygon();
         ids.listar();
@@ -404,8 +406,16 @@ public class JuegoController {
             new_polygon.setStroke(Color.BLACK);
             areas.getChildren().add(new_polygon);
             System.out.println(areas.getChildren().get(0));
-//            gamePane.getChildren().add(areas);
+            
+            for(Punto punto:puntos){  //Verifica los puntos que estan dentro del Poligono
+                if(new_polygon.contains(punto.getX(), punto.getY())){
+                    puntos_dentro.anadirInicio(punto);
+                    punto.setBloqueado(true);  //Bloquea los puntos que va agregando
+                }
+            }
         });
+        
+        return puntos_dentro;
         
         
         

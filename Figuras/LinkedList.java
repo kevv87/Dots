@@ -166,4 +166,9 @@ public class LinkedList<T>{ //Lista para nodos genericos
     public void setTamanio(int tamanio) {
         this.Tamanio = tamanio;
     }    
+    
+    public void eliminar(){
+        Inicio = null;
+        Tamanio = 0;
+    }
 }

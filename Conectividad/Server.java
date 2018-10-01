@@ -30,7 +30,9 @@ public class Server{
   private static final ColaJugadores cola = new ColaJugadores();
   private static final ColaMensajes cola_mensajes_p1 = new ColaMensajes();
   private static final ColaMensajes cola_mensajes_p2 = new ColaMensajes();
-  private static final Recorrido recorrido = new Recorrido();
+  private static  Recorrido recorrido;
+  private static final LinkedList<Punto> puntos_bloqueados = new LinkedList<>();
+  
   
   
   public static void main(String[] args) throws Exception{
@@ -145,8 +147,10 @@ public class Server{
             }
         }
         
+        recorrido = new Recorrido();
         cola_mensajes_p1.eliminar();
         cola_mensajes_p2.eliminar();
+        puntos_bloqueados.eliminar();
         
         player1 = cola.dequeue();
         player2 = cola.dequeue();
@@ -354,9 +358,23 @@ public class Server{
                     jugador_puntos = 1;
                 }
                 
-                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(jugador_puntos),Integer.toString(recorrido.calcularPuntaje(camino_puntos))));
+                int puntaje_obtenido = recorrido.calcularPuntaje(camino_puntos);
+                
+                /*
+                if(puntaje_obtenido+current_player.getPuntaje()>=99){  //Condicion de partida ganada
+                    send(current);
+                    send(current);
+                }*/
+                
+                current_player.setPuntaje(current_player.getPuntaje()+puntaje_obtenido);
+                
+                String puntaje_json = mapper.writeValueAsString(new Mensaje(Integer.toString(jugador_puntos),Integer.toString(current_player.getPuntaje())));
                 
                 broadcast_queue("DWP", camino_puntos_json, puntaje_json);
+                LinkedList<Punto> nuevos_bloqueados = mapper.readValue(listen(current), Figuras.LinkedList.class);
+                puntos_bloqueados.SumarListas(puntos_bloqueados, nuevos_bloqueados);
+                
+                
                 
               }
               
