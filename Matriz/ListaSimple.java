@@ -286,4 +286,16 @@ public class ListaSimple {
             }
         }
     }
+    
+    public boolean isIn(int valor){
+        Nodo aux = inicio;
+        while(aux!=null){
+            if((int)aux.getValor()==valor){
+                return true;
+            }
+            aux = aux.getSiguiente();
+        }
+        return false;
+        
+    }
 }

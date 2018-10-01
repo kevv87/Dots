@@ -18,11 +18,6 @@ public class Recorrido {
     
     /**
      * Constructor
-     * Retorna lista de puntos de un perimetro nuevo que acaba de cerrar
-     * @param Origen Punto donde se comienza el recorrido
-     * @param Anterior Conexion de donde viene el punto Actual
-     * @param Actual Punto donde se sigue el recorrido
-     * @return  LinkedList de los puntos que componen el perimetro nuevo
      */
     public Recorrido(){
         Matriz = genMatriz();
@@ -30,6 +25,15 @@ public class Recorrido {
         inFigCerrada=false;
     }
 
+    /**
+     * Constructor
+     * Retorna lista de puntos de un perimetro nuevo que acaba de cerrar
+     * @param Origen Punto donde se comienza el recorrido
+     * @param Anterior Conexion de donde viene el punto Actual
+     * @param Actual Punto donde se sigue el recorrido
+     * @param Referencia Punto estático del origen del recorrido
+     * @return  LinkedList de los puntos que componen el perimetro nuevo
+     */
     //Funcion que retorna la lista de puntos para cerrar el camino
     public LinkedList BuscaCaminos(Punto Origen, Punto Anterior, Punto Actual, Punto Referencia){  //Punto de origen, punto anterior, punto actual
 
