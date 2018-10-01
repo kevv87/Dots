@@ -126,17 +126,20 @@ public class Recorrido {
                                 Posibilidades.eliminar(Pos.getElemento());
                             }
                             else{
-                                Nodo<Punto> Marcador1 = Conexiones.getInicio();
-                                System.out.println("Posibilidad 2");                                
-                                LinkedList X = BuscaCaminos(Marcador.getElemento(), Marcador.getElemento(), Marcador1.getElemento(), Referencia);
-                                if(X!=null){
-                                    Seguir=false;
-                                    Camino.SumarListas(Camino, X);
-                                    return Camino;
+                                while(Conexiones.getTamanio() > 0){
+                                    Nodo<Punto> Marcador1 = Conexiones.getInicio();
+                                    System.out.println("Posibilidad 2");
+                                    LinkedList X = BuscaCaminos(Marcador.getElemento(), Marcador.getElemento(), Marcador1.getElemento(), Referencia);
+                                    if(X!=null){
+                                        Seguir=false;
+                                        Camino.SumarListas(Camino, X);
+                                        return Camino;
 
-                                } else{
-                                    Conexiones.eliminar(Marcador1.getElemento());
+                                    } else{
+                                        Conexiones.eliminar(Marcador1.getElemento());
+                                    }
                                 }
+
                             }//SE ITERA
                             while(Posibilidades.getTamanio()>0 && Seguir==true){
                                 Pos = new Nodo(Posibilidades.getInicio().getElemento());  //Busca de las bifurcaciones, cuál se acerca más al punto Origen
