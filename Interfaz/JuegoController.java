@@ -292,7 +292,6 @@ public class JuegoController {
         addtoPane(lineGroup);
         addtoPane(areas);
         setFoePoints("0");
-        addPolygon();
         
     }
     
