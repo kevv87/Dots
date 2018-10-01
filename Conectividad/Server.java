@@ -144,7 +144,10 @@ public class Server{
                 Thread.sleep(1000);  //Delay
             }
         }
-
+        
+        cola_mensajes_p1.eliminar();
+        cola_mensajes_p2.eliminar();
+        
         player1 = cola.dequeue();
         player2 = cola.dequeue();
         
@@ -167,25 +170,37 @@ public class Server{
                     while(true){
 
                         String jsonMessage = player1.getComandos_in().readLine();
+                        System.out.println("P1");
+                        System.out.println("Recibo:"+jsonMessage);
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
+                        String tosend = "";
+                        System.out.println("Accion:"+line);
 
                         if(line == null){
                             break;
                         }else if("END".equals(line)){
-                            cola_mensajes_p2.enqueue(new Mensaje("END",""));
+                            Mensaje mensaje = new Mensaje("END", "");
+                            tosend = mapper.writeValueAsString(mensaje);
+                            cola_mensajes_p2.enqueue(mensaje);
+                            System.out.println("DEATH");
                             break;
                         }else if("GST".equals(line)){
+                            
                             if(cola_mensajes_p1.getTamanio() == 0){
                                 jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
-                                player1.getComandos_out().println(jsonMessage);
+                                tosend = jsonMessage;
+                                player1.getComandos_out().println(tosend);
+                                
                             }else{
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p1.dequeue());
-                                player1.getComandos_out().println(mensajeToJson);
+                                tosend = mensajeToJson;
+                                player1.getComandos_out().println(tosend);
                             }
                         }
+                        System.out.println("Envio:"+tosend);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,8 +218,11 @@ public class Server{
                     while(true){
 
                         String jsonMessage = player2.getComandos_in().readLine(); 
+                        System.out.println("P2:");
+                        System.out.println("Recibo:" + jsonMessage);
                         Mensaje jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
                         String line = jsonToClass.getAccion();
+                        String tosend="";
 
                         if(line == null){
                             break;
@@ -213,17 +231,25 @@ public class Server{
                                 jsonToClass.setProtocolo("NNT");
                                 jsonToClass.setAccion("0");
                                 jsonMessage = mapper.writeValueAsString(jsonToClass);
-                                player2.getComandos_out().println(jsonMessage);
-
+                                tosend = jsonMessage;
+                                player2.getComandos_out().println(tosend);
+                                
                             }else{
+                                
                                 String mensajeToJson = mapper.writeValueAsString(cola_mensajes_p2.dequeue());
-                                player2.getComandos_out().println(mensajeToJson);
+                                tosend = mensajeToJson;
+                                player2.getComandos_out().println(tosend);
                                 
                             }
                         }else if("END".equals(line)){
-                            cola_mensajes_p1.enqueue(new Mensaje("END",""));
+                            
+                            Mensaje msj = new Mensaje("END","");
+                            tosend = mapper.writeValueAsString(msj);
+                            cola_mensajes_p1.enqueue(msj);
+                            System.out.println("DEATH");
                             break;
                         }
+                        System.out.println("Envio:"+tosend);
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,6 +305,8 @@ public class Server{
                     System.out.println("Listening");
                     listenp1.join();
                     listenp2.join();
+                    cola_mensajes_p1.eliminar();
+                    cola_mensajes_p2.eliminar();
                     player1 = null;
                     player2 = null;
                     break;
@@ -328,7 +356,8 @@ public class Server{
               
 
               current *= -1;  // Cambio de turno
-        }      
+        }
+          
     }
 
   }
@@ -376,12 +405,18 @@ public class Server{
      * @param accion Accion a ejecutar por el cliente acorde con el protocolo, debe estar en formato JSON.
    */
   public static void broadcast_queue(String protocolo, String accion){
+      if(protocolo == "END"){
+          System.out.println("HEY!");
+      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion));
       
   }
   
   public static void broadcast_queue(String protocolo, String accion, String puntaje){
+      if(protocolo == "END"){
+          System.out.println("HEY!");
+      }
       cola_mensajes_p1.enqueue(new Mensaje(protocolo, accion, puntaje));
       cola_mensajes_p2.enqueue(new Mensaje(protocolo, accion, puntaje));
       
