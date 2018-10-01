@@ -39,6 +39,7 @@ void setup() {
   pinMode(BF, OUTPUT);
   pinMode(BG, OUTPUT);
   pinMode(LED, OUTPUT);
+  reset();
 }
 
 void loop() {
@@ -58,13 +59,33 @@ void loop() {
       analogWrite(LED, 255);
     } else if (Byte_entrada == 102){
       analogWrite(LED,0);
+    } else if(Byte_entrada == 114){
+      reset();
     }
     numeros_der(Byte_entrada);
     derecha = !derecha;
   }
 
 }
-
+void reset(){
+    digitalWrite(BA, LOW);
+    digitalWrite(BB, LOW);
+    digitalWrite(BC, LOW);
+    analogWrite(BD, 0);
+    analogWrite(BE, 0);
+    analogWrite(BF, 0);
+    analogWrite(BG, 0);
+    analogWrite(BDP, HIGH);
+    digitalWrite(AA, LOW);
+    digitalWrite(AB, LOW);
+    digitalWrite(AC, LOW);
+    digitalWrite(AD, LOW);
+    digitalWrite(AE, LOW);
+    digitalWrite(AF, LOW);
+    digitalWrite(AG, LOW);
+    digitalWrite(ADP, LOW);
+    
+  }
 void numeros_der(int num){
   if (num == '0'){
     digitalWrite(AA, LOW);

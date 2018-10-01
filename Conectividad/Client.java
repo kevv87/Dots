@@ -65,6 +65,11 @@ public class Client{
     private gnu.io.SerialPort serialPort;
     private final String PUERTO1= "/dev/ttyACM0";
     private final String PUERTO2= "/dev/ttyUSB0";
+
+
+    private final String PUERTOW= "COM3";
+
+
     private static final  int TIMEOUT=2000; //Milisegundos
     private static final int DATA_RATE = 9600;
     
@@ -79,7 +84,9 @@ public class Client{
         
         while(puertoEnum.hasMoreElements()){  // Mientras existan puertos
             CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
-            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName())){
+
+
+            if(PUERTO1.equals(actualPuertoID.getName()) || PUERTO2.equals(actualPuertoID.getName()) || PUERTOW.equals(actualPuertoID.getName())){
                 puertoID=actualPuertoID;
                 break;
             }
@@ -147,8 +154,20 @@ public class Client{
                 }
             }
         };
-
         
+        Thread comandos = new Thread(){  // Creando el hilo continuo
+                  @Override
+                  public void run(){
+                      try {
+                          run_comando();
+                      } catch (IOException ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      } catch (Exception ex) {
+                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                  }
+              };
+        comandos.start();
         // Corre los hilos
         juego.start();
         
@@ -236,25 +255,15 @@ public class Client{
               System.out.println(myPlayer.getNumber());
               
               System.out.println("Inicia juego");
-              Thread comandos = new Thread(){  // Creando el hilo continuo
-                  @Override
-                  public void run(){
-                      try {
-                          run_comando();
-                      } catch (IOException ex) {
-                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                      } catch (Exception ex) {
-                          Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                      }
-                  }
-              };
-              comandos.start();
+              
           }else if(line.startsWith("END")){  // Fin del juego
               Client.close();
           }else if(line.startsWith("YW")){  //Yo gano
               System.out.println("I win");
           }else if(line.startsWith("YL")){  // Yo pierdo
               System.out.println("I lose");
+          }else if(line.startsWith("ISA")){
+              send_game("YES");
           }else{
               System.out.println("mensaje no identificado");     
               System.out.println(line);
@@ -284,7 +293,6 @@ public class Client{
             out_comandos.println(jsonMessage);
             String accion = mapper.writeValueAsString(new Mensaje("",""));
             try{
-               
                 jsonMessage = in_comandos.readLine(); // Espera y lee la respuesta
              
                 jsonToClass = mapper.readValue(jsonMessage, Mensaje.class);
@@ -300,6 +308,13 @@ public class Client{
                 close();
                 break;
             }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
+                try{
+
+                    enviarDatosArduino("rr");
+                }catch(Exception e){
+                    ;
+                }
+                System.out.println("Comando end");
                 close();
 
             }else if("DWL".equals(protocolo)){
@@ -326,7 +341,11 @@ public class Client{
                 
                 if(jugador_del_puntaje == myPlayer.getNumber()){
                     interfaz.setMyPoints(interfaz.getMyPoints()+puntos_agregados);
+                    try{
                     enviarDatosArduino(Integer.toString(interfaz.getMyPoints()+puntos_agregados));
+                    }catch(Exception e){
+                        ;
+                    }
                 }else{
                     interfaz.setFoePoints(interfaz.getFoePoints()+puntos_agregados);
                 }
