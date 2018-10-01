@@ -226,15 +226,22 @@ public class Recorrido {
             Puntos.SumarListas(Puntos, Camino);
             Nodo<Punto> Punto1 = Puntos.getInicio();
             Nodo<Punto> Punto2 = Punto1.getSiguiente();
-            while(Punto2!=null){
-                if(isColineales(Punto1.getElemento(), Punto2.getElemento())==false){
-                    Puntaje++;
+            while(Punto1!=null){
+                if(Punto2!=null){
+                    if(isColineales(Punto1.getElemento(), Punto2.getElemento())==false){
+                        Puntaje++;
+                    }
+                    Puntaje+=2;
+                    Punto1=Punto1.getSiguiente();
+                    Punto2=Punto2.getSiguiente();
+                } else{
+                    if(isColineales(Punto1.getElemento(), Camino.getInicio().getElemento())){
+                        Puntaje++;
+                    }
+                    Puntaje+=2;
+                    Punto1=Punto1.getSiguiente();
                 }
-                Puntaje+=2;
-                Punto1=Punto1.getSiguiente();
-                Punto2=Punto2.getSiguiente();
             }
-            Puntaje+=2;
         }
         return Puntaje;
     }
