@@ -301,7 +301,11 @@ public class Client{
                 close();
                 break;
             }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
+                try{
                 enviarDatosArduino("rr");
+                }catch(Exception e){
+                    ;
+                }
                 close();
 
             }else if("DWL".equals(protocolo)){

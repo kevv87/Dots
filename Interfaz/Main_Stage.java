@@ -30,7 +30,6 @@ public class Main_Stage extends Application{
 
 
     public void closeRequest(){
-
         boolean booli = AlertWindow.display();
         if (booli == true){
             window.close();
