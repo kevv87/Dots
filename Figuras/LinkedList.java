@@ -46,7 +46,7 @@ public class LinkedList<T>{ //Lista para nodos genericos
         Ultimo=nuevo;
         Tamanio++;
     }
-    
+             
     public boolean isIn(T dato){
         boolean dentro=false;
         if(Inicio==null){
@@ -105,26 +105,6 @@ public class LinkedList<T>{ //Lista para nodos genericos
         while(Aux!=null){
             Lista1.eliminar(Aux.getElemento());
             Aux=Aux.getSiguiente();
-        }
-    }
-    
-    public LinkedList<T> Ignorar(LinkedList<T> General, LinkedList<T> Omitir){
-        if(General.getInicio()==null){
-            return null;
-        } else if(Omitir.getInicio()==null){
-            return General;
-        }
-        else{
-            LinkedList<T> Resultado = new LinkedList();
-            Nodo<T> Aux = General.getInicio();
-            while(Aux!=null){
-                if(Omitir.isIn(Aux.getElemento())){
-                    Aux=Aux.getSiguiente();
-                } else{
-                    Resultado.anadirFinal(Aux.getElemento());
-                }
-            }
-            return Resultado;
         }
     }
 

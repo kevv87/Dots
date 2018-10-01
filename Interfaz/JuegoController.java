@@ -293,6 +293,7 @@ public class JuegoController {
         addtoPane(circles);
         addtoPane(lineGroup);
         addtoPane(areas);
+
         setFoePoints(0);
         
     }
