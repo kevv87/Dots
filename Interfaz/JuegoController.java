@@ -462,7 +462,7 @@ public class JuegoController {
                 menuParent = loader.load();
                 Scene menuScene = new Scene(menuParent);
                 //This line gets the Stage information
-                Stage window = new Stage();
+                Stage window = this.myStage;
 
                 window.setScene(menuScene);
                 window.show();

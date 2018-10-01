@@ -207,7 +207,6 @@ public class Client{
      * @throws java.io.IOException
      */
     public void init(String serverAddress) throws IOException, Exception{
-        interfaz.openWin();
         // Crea la conexion e inicializa los streams
       socket_game = new Socket(serverAddress, 9001);  //Creando socket en ip: serverAddress, puerto:9001
       in_game = new BufferedReader(new InputStreamReader(socket_game.getInputStream()));
@@ -281,12 +280,20 @@ public class Client{
               System.out.println("Inicia juego");
               
           }else if(line.startsWith("END")){  // Fin del juego
-              Client.close();
+              try{
+                enviarDatosArduino("rr");
+                serialPort.close();
+                output = null;
+            }catch(Exception e){
+                ;
+            }
+              close();
           }else if(line.startsWith("YW")){  //Yo gano
-              System.out.println("I win");
+              stop();
               interfaz.openWin();
           }else if(line.startsWith("YL")){  // Yo pierdo
-              System.out.println("I lose");
+              stop();
+              interfaz.openLose();
           }else if(line.startsWith("ISA")){
               send_game("YES");
           }else{
@@ -331,6 +338,14 @@ public class Client{
                   protocolo = null;
               }
             if(protocolo==null){  // En caso de que se ciere el socket, la respuesta es null y cierra sockets
+                try{
+                    enviarDatosArduino("rr");
+                    serialPort.close();
+                    output = null;
+                }catch(Exception e){
+                    ;
+                }
+                
                 close();
                 break;
             }else if("END".equals(protocolo)){  // Si la respuesta es END, termina el juego y cierra sockets
@@ -341,6 +356,13 @@ public class Client{
                     ;
                 }
                 System.out.println("Comando end");
+                try{
+                    enviarDatosArduino("rr");
+                    serialPort.close();
+                    output = null;
+                }catch(Exception e){
+                    ;
+                }
                 close();
 
             }else if("DWL".equals(protocolo)){
@@ -429,7 +451,7 @@ public class Client{
     }
     
     /**
-     * Termina la conexion con el server
+     * Cierra completamente el juego
      * @throws java.io.IOException
      */
     public static void close() throws Exception{
@@ -439,7 +461,19 @@ public class Client{
         socket_comandos.close();
         alive = false;
         System.out.println("Conexion terminada");
-        System.exit(0);
+    }
+    
+    /**
+     * Termina la conexion con el server
+     * @throws java.io.IOException
+     */
+    public static void stop() throws Exception{
+
+        send_comando("END");
+        socket_game.close();
+        socket_comandos.close();
+        alive = false;
+        System.out.println("Conexion terminada");
     }
     
     /**
